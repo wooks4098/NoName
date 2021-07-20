@@ -26,7 +26,7 @@ public class Player_Input : MonoBehaviour, IInput
     {
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         //Debug.Log(input.y);
-
+        Debug.Log(input.x);
         OnMovementInput?.Invoke(input);
     }
 
@@ -36,7 +36,7 @@ public class Player_Input : MonoBehaviour, IInput
         Debug.DrawRay(Camera.main.transform.position, cameraFowardDirection * 10, Color.red);
         var directionToMoveIn = Vector3.Scale(cameraFowardDirection, (Vector3.right + Vector3.forward));
         Debug.DrawRay(Camera.main.transform.position, directionToMoveIn * 10, Color.blue);
-        OnMovementDirectionInput?.Invoke(cameraFowardDirection);
+        OnMovementDirectionInput?.Invoke(directionToMoveIn.normalized);
     }
 
 }
