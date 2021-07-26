@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
+
     CharacterController controller;
     Animator animator;
 
@@ -11,8 +12,7 @@ public class Player_Movement : MonoBehaviour
     public float movementSpeed;
     public float gravity = 20;
     Vector3 movementVector = Vector3.zero;
-    private float desiredRotationAngle_Front = 0;
-    private float desiredRotationAngle_Back = 0;
+    private float desiredRotationAngle = 0;
 
 
 
@@ -32,23 +32,16 @@ public class Player_Movement : MonoBehaviour
     {
         if (controller.isGrounded)
         {
-            if (input.y > 0)
-            {//Front
-                RotatePlayer_Front();
-                movementVector = transform.forward * movementSpeed;
-                animator.SetFloat("Battle_Walk", input.y);
-            }
-            else if (input.y < 0)
-            {//Back
-                RotatePlayer_Back();
-                movementVector = transform.forward * movementSpeed;
-                //Debug.Log(input.y);
-                animator.SetFloat("Battle_Walk", -input.y);
-            }
-            else if (input.y == 0 && input.x == 0)
+            if (input.y == 0 && input.x == 0)
             {//Stop
                 movementVector = Vector3.zero;
                 animator.SetFloat("Battle_Walk", 0);
+            }
+            else
+            {
+                RotatePlayer_Front();
+                movementVector = transform.forward * movementSpeed;
+                animator.SetFloat("Battle_Walk", Mathf.Abs(input.y));
             }
         }
     }
@@ -61,21 +54,12 @@ public class Player_Movement : MonoBehaviour
 
     public void HandleMovementDirection(Vector3 direction)
     {
-        desiredRotationAngle_Front = Vector3.Angle(transform.forward, direction);
+        desiredRotationAngle = Vector3.Angle(transform.forward, direction);
         var crossProduct = Vector3.Cross(transform.forward, direction).y;
         if (crossProduct < 0)
         {
-            desiredRotationAngle_Front *= -1;
+            desiredRotationAngle *= -1;
         }
-
-        desiredRotationAngle_Back = Vector3.Angle(transform.forward, -direction);
-        var crossProduct_back = Vector3.Cross(transform.forward, -direction).y;
-        if (crossProduct_back < 0)
-        {
-            desiredRotationAngle_Back *= -1;
-        }
-
-
 
     }
 
@@ -83,17 +67,11 @@ public class Player_Movement : MonoBehaviour
     {
         //if (desiredRotationAngle_Front > 10 || desiredRotationAngle_Front < -10)
         {
-            transform.Rotate(Vector3.up * desiredRotationAngle_Front * rotationSpeed * Time.deltaTime);
+            transform.Rotate(Vector3.up * desiredRotationAngle * rotationSpeed * Time.deltaTime);
         }
     }
 
-    void RotatePlayer_Back()//뒤로 갈때 플레이어 회전
-    {
-       // if (desiredRotationAngle_Back < 10 || desiredRotationAngle_Back > -10)
-        {
-            transform.Rotate(Vector3.up * desiredRotationAngle_Back * rotationSpeed * Time.deltaTime);
-        }
-    }
+
 
 
 }
