@@ -66,10 +66,11 @@ public class Player_Movement : MonoBehaviour
             {//Stop
                 movementVector = Vector3.zero;
                 animator.SetFloat("Battle_Walk", 0);
+                animator.SetBool("IsRun", false);
             }
             else
             {
-                RotatePlayer_Front();
+                RotatePlayer_Rotation();
                 if (isRun)
                 {
                     movementVector = transform.forward * RunSpeed;
@@ -103,7 +104,7 @@ public class Player_Movement : MonoBehaviour
 
     }
 
-    void RotatePlayer_Front() //앞으로 갈때 플레이어 회전
+    void RotatePlayer_Rotation() //앞으로 갈때 플레이어 회전
     {
         //if (desiredRotationAngle_Front > 10 || desiredRotationAngle_Front < -10)
         {
