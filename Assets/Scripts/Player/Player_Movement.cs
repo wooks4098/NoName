@@ -10,11 +10,12 @@ public class Player_Movement : MonoBehaviour
 
     public float rotationSpeed;
     public float movementSpeed;
+    public float RunSpeed;
     public float gravity = 20;
     Vector3 movementVector = Vector3.zero;
     private float desiredRotationAngle = 0;
 
-
+    bool isRun = false;
 
     private void Start()
     {
@@ -25,9 +26,38 @@ public class Player_Movement : MonoBehaviour
     private void Update()
     {
         movementVector.y -= gravity;
+        RunCheck();
         controller.Move(movementVector * Time.deltaTime);
     }
 
+    void RunCheck()
+    {
+        if(Input.GetKeyDown(KeyCode.LeftShift) && isRun == false)
+        {
+            isRun = true;
+        }
+        else if(Input.GetKeyUp(KeyCode.LeftShift) && isRun == true )
+        {
+            isRun = false;
+            StartCoroutine(RunToWalk_Speed());
+        }
+    }
+    IEnumerator RunToWalk_Speed()
+    {
+        float FadeOut_Time = 0f;
+        float FadeOut_TimeCheck = 0.5f;
+        float angle = 0;
+        float ChangeMovementSpeed = movementSpeed;
+        movementSpeed = RunSpeed;
+        while (movementSpeed > ChangeMovementSpeed)
+        {
+            FadeOut_Time += Time.deltaTime / FadeOut_TimeCheck;
+            movementSpeed = Mathf.Lerp(RunSpeed, ChangeMovementSpeed, FadeOut_Time);
+            yield return null;
+        }
+        movementSpeed = ChangeMovementSpeed;
+        yield return null;
+    }
     public void HandleMovement(Vector2 input)
     {
         if (controller.isGrounded)
@@ -40,8 +70,18 @@ public class Player_Movement : MonoBehaviour
             else
             {
                 RotatePlayer_Front();
-                movementVector = transform.forward * movementSpeed;
-                animator.SetFloat("Battle_Walk", Mathf.Abs(input.y));
+                if (isRun)
+                {
+                    movementVector = transform.forward * RunSpeed;
+                    animator.SetBool("IsRun", true);
+                }
+                else
+                {
+                    movementVector = transform.forward * movementSpeed;
+                    animator.SetBool("IsRun", false);
+                    
+                    animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
+                }
             }
         }
     }

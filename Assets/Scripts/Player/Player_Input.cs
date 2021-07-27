@@ -6,8 +6,13 @@ using System;
 public class Player_Input : MonoBehaviour, IInput
 {
     public Action<Vector2> OnMovementInput { get; set; }
+
     public Action<Vector3> OnMovementDirectionInput { get; set; }
-    float lastX = 0;
+
+    [SerializeField] Vector2 LastInput = Vector2.zero;
+    [SerializeField] Vector2 _Input = Vector2.zero;
+
+    public bool test = false;
 
     private void Start()
     {
@@ -25,7 +30,8 @@ public class Player_Input : MonoBehaviour, IInput
     {
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         //Debug.Log(input.y);
-        Debug.Log(input.x);
+        Debug.Log(input.y);
+        _Input = input;
         OnMovementInput?.Invoke(input);
         return input;
     }
@@ -38,51 +44,73 @@ public class Player_Input : MonoBehaviour, IInput
         Debug.DrawRay(Camera.main.transform.position, cameraFowardDirection * 10, Color.red);
         Vector3 directionToMoveIn = Vector3.Scale(cameraFowardDirection, (Vector3.right + Vector3.forward));
         Debug.DrawRay(Camera.main.transform.position, directionToMoveIn * 10, Color.blue);
-        if (input.y > 0)
+        if(input.y != 0 || Math.Abs(LastInput.y) < input.y || Math.Abs(input.y) == 1)
         {
-            if (input.x > 0 && (input.x > lastX || input.x == 1))
+            directionToMoveIn *= (input.y > 0) ? 1 : -1;
+            if (input.x > 0 && (input.x > LastInput.x || input.x == 1))
             {
                 directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
+                test = false;
             }
-            else if (input.x < 0 && (input.x < lastX || input.x == -1))
+            else if (input.x < 0 && (input.x < LastInput.x || input.x == -1))
             {
                 directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
+                test = false;
             }
         }
-        else if (input.y < 0)
+        else if(Math.Abs(LastInput.y) > input.y || input.y == 0)
         {
-            directionToMoveIn = -directionToMoveIn;
-            if (input.x > 0 &&( input.x > lastX || input.x == 1))
+            if (input.x > 0 )
             {
-                directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
+                directionToMoveIn = -Vector3.Cross(directionToMoveIn, Vector3.up);
+                test = true;
             }
-            else if (input.x < 0 &&( input.x < lastX || input.x == -1))
+            else if (input.x < 0)
             {
-                directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
+                directionToMoveIn = (Vector3.Cross(directionToMoveIn, Vector3.up));
             }
-            
+           
         }
-        else if(input.y == 0)
-        {
-            if (input.x < 0)
-            {
-                //Quaternion v3Rotation = Camera.main.transform.rotation;  // 회전각
-                //v3Rotation *= Quaternion.Euler(0f, 90f, 0f);  // 회전각
-                //Vector3 v3Direction = Vector3.forward; // 회전시킬 벡터(테스트용으로 world forward 썼음)
-                //Vector3 v3RotatedDirection = v3Rotation * v3Direction;
-                directionToMoveIn = Vector3.Scale(Camera.main.transform.right, (Vector3.right + Vector3.forward));
+        LastInput = input;
 
-            }
-            else if (input.x > 0)
-            {
-                Quaternion v3Rotation = Quaternion.Euler(0f, -90f, 0f);  // 회전각
-                Vector3 v3Direction = Vector3.forward; // 회전시킬 벡터(테스트용으로 world forward 썼음)
-                Vector3 v3RotatedDirection = v3Rotation * v3Direction;
-                directionToMoveIn = v3RotatedDirection;
-            }
-        }
+        //if (input.y > 0)
+        //{
+        //    if (input.x > 0 && (input.x > lastX || input.x == 1))
+        //    {
+        //        directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
+        //    }
+        //    else if (input.x < 0 && (input.x < lastX || input.x == -1))
+        //    {
+        //        directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
+        //    }
+        //}
+        //else if (input.y < 0)
+        //{
+        //    directionToMoveIn = -directionToMoveIn;
+        //    if (input.x > 0 &&( input.x > lastX || input.x == 1))
+        //    {
+        //        directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
+        //    }
+        //    else if (input.x < 0 &&( input.x < lastX || input.x == -1))
+        //    {
+        //        directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
+        //    }
 
-        lastX = input.x;
+        //}
+        //else if(input.y == 0)
+        //{
+        //    if (input.x > 0)
+        //    {
+        //        directionToMoveIn = -Vector3.Cross(directionToMoveIn, Vector3.up);
+
+        //    }
+        //    else if (input.x < 0)
+        //    {
+        //        directionToMoveIn = (Vector3.Cross(directionToMoveIn, Vector3.up));
+        //    }
+        //}
+
+
 
 
         //앞 Y>0

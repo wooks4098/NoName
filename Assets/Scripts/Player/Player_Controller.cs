@@ -16,16 +16,12 @@ public class Player_Controller : MonoBehaviour
         input.OnMovementInput += movement.HandleMovement;
     }
 
-    private void Update()
-    {
-
-
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         input.OnMovementDirectionInput -= movement.HandleMovementDirection;
         input.OnMovementInput -= movement.HandleMovement;
     }
+
+
 
 }
