@@ -11,9 +11,12 @@ public class Player_Movement : MonoBehaviour
     public float rotationSpeed;
     public float movementSpeed;
     public float RunSpeed;
+    public float JumpPower;
     public float gravity = 20;
     Vector3 movementVector = Vector3.zero;
     private float desiredRotationAngle = 0;
+
+
 
     bool isRun = false;
 
@@ -23,13 +26,30 @@ public class Player_Movement : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+
     private void Update()
     {
         movementVector.y -= gravity;
-        RunCheck();
+        if(controller.isGrounded)
+        {
+           
+            Jump();
+            RunCheck();
+        }
+        else
+            RotatePlayer_Rotation();
+
+
+
         controller.Move(movementVector * Time.deltaTime);
     }
-
+    void Jump()
+    {
+        if (controller.isGrounded && Input.GetKeyDown(KeyCode.Space))
+        {
+            movementVector.y = JumpPower;
+        }
+    }
     void RunCheck()
     {
         if(Input.GetKeyDown(KeyCode.LeftShift) && isRun == false)
