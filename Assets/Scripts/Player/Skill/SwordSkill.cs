@@ -7,6 +7,8 @@ public interface ISkill
     void Attack();
     void DashAtaack();
     void Skill();
+
+    bool IsAttack();
 }
 
 public class SwordSkill : MonoBehaviour, ISkill
@@ -43,11 +45,10 @@ public class SwordSkill : MonoBehaviour, ISkill
     IEnumerator AttackCombo()
     {
         PlayAnimation(AttackNum++);
-        yield return null;
 
-        while (AttackTimeCheck <= 1.3f || AttackNum<3)
+        while (AttackTimeCheck <= AttackTime + 0.2f || AttackNum<3)
         {
-            if (AttackTimeCheck > 1.3f)
+            if (AttackTimeCheck > AttackTime + 0.2f)
                 break;
             AttackTimeCheck += Time.deltaTime * Speed;
            if(Input.GetMouseButtonDown(0))
@@ -90,5 +91,10 @@ public class SwordSkill : MonoBehaviour, ISkill
     {
         animator.SetFloat("Attack_Count", ani);
         animator.SetTrigger("Attack");
+    }
+
+    public bool IsAttack()
+    {
+        return isAttack;
     }
 }

@@ -5,14 +5,18 @@ using System;
 
 public class Player_Input : MonoBehaviour, IInput
 {
-    public Action<Vector2> OnMovementInput { get; set; }
+    public Action<Vector2,bool> OnMovementInput { get; set; }
 
     public Action<Vector3> OnMovementDirectionInput { get; set; }
+    public Action OnAttackInput { get; set; }
+    public Action<Vector3> OnAttackDirection { get; set; }
 
     [SerializeField] Vector2 LastInput = Vector2.zero;
     [SerializeField] Vector2 _Input = Vector2.zero;
 
     public bool test = false;
+
+
 
     private void Start()
     {
@@ -23,40 +27,51 @@ public class Player_Input : MonoBehaviour, IInput
 
     private void Update()
     {
-        GetMovementDirection(GetMovementInput());
+        Vector2 input = GetMovementInput();
+        GetMovementDirection(input);
     }
 
+    #region 이동
     Vector2 GetMovementInput()
     {
         Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        //Debug.Log(input.y);
-        Debug.Log(input.y);
-        _Input = input;
-        OnMovementInput?.Invoke(input);
+        OnMovementInput?.Invoke(input, GetComponent<ISkill>().IsAttack());
         return input;
+    }
+
+    Vector3 GetDirection()
+    {
+        var cameraFowardDirection = Camera.main.transform.forward;
+        Vector3 directionToMoveIn = Vector3.Scale(cameraFowardDirection, (Vector3.right + Vector3.forward));
+        //Debug.DrawRay(Camera.main.transform.position, cameraFowardDirection * 10, Color.red);
+        //Debug.DrawRay(Camera.main.transform.position, directionToMoveIn * 10, Color.blue);
+        return directionToMoveIn;
     }
 
     void GetMovementDirection(Vector2 input)
     {
-        
-
-        var cameraFowardDirection = Camera.main.transform.forward;
-        Debug.DrawRay(Camera.main.transform.position, cameraFowardDirection * 10, Color.red);
-        Vector3 directionToMoveIn = Vector3.Scale(cameraFowardDirection, (Vector3.right + Vector3.forward));
-        Debug.DrawRay(Camera.main.transform.position, directionToMoveIn * 10, Color.blue);
-        if(input.y != 0 || Math.Abs(LastInput.y) < input.y || Math.Abs(input.y) == 1)
+        Vector3 directionToMoveIn = GetDirection();
+        if (input.y != 0 || Math.Abs(LastInput.y) < Math.Abs(input.y )|| Math.Abs(input.y) == 1)
         {
             directionToMoveIn *= (input.y > 0) ? 1 : -1;
-            if (input.x > 0 && (input.x > LastInput.x || input.x == 1))
+
+            if(input.x != 0 || Math.Abs(LastInput.x) < Math.Abs(input.x)|| Math.Abs(input.x) == 1)
             {
-                directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
+                directionToMoveIn = directionToMoveIn + (input.x >0 ? 1 : -1) * Camera.main.transform.right;
                 test = false;
             }
-            else if (input.x < 0 && (input.x < LastInput.x || input.x == -1))
-            {
-                directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
-                test = false;
-            }
+
+
+            //if (input.x > 0 && (input.x > LastInput.x || input.x == 1))
+            //{
+            //    directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
+            //    
+            //}
+            //else if (input.x < 0 && (input.x < LastInput.x || input.x == -1))
+            //{
+            //    directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
+            //    test = false;
+            //}
         }
         else if(Math.Abs(LastInput.y) > input.y || input.y == 0)
         {
@@ -72,53 +87,23 @@ public class Player_Input : MonoBehaviour, IInput
            
         }
         LastInput = input;
-
-        //if (input.y > 0)
-        //{
-        //    if (input.x > 0 && (input.x > lastX || input.x == 1))
-        //    {
-        //        directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
-        //    }
-        //    else if (input.x < 0 && (input.x < lastX || input.x == -1))
-        //    {
-        //        directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
-        //    }
-        //}
-        //else if (input.y < 0)
-        //{
-        //    directionToMoveIn = -directionToMoveIn;
-        //    if (input.x > 0 &&( input.x > lastX || input.x == 1))
-        //    {
-        //        directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
-        //    }
-        //    else if (input.x < 0 &&( input.x < lastX || input.x == -1))
-        //    {
-        //        directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
-        //    }
-
-        //}
-        //else if(input.y == 0)
-        //{
-        //    if (input.x > 0)
-        //    {
-        //        directionToMoveIn = -Vector3.Cross(directionToMoveIn, Vector3.up);
-
-        //    }
-        //    else if (input.x < 0)
-        //    {
-        //        directionToMoveIn = (Vector3.Cross(directionToMoveIn, Vector3.up));
-        //    }
-        //}
-
-
-
-
-        //앞 Y>0
-        //뒤 y <0
-        //오 x>0
-        //왼 x<0
-        //if()
         OnMovementDirectionInput?.Invoke(directionToMoveIn.normalized);
+
     }
+    #endregion
+
+    #region 공격
+    void GetAttackInput()
+    {
+        OnAttackInput?.Invoke();
+    }
+
+    void GetAttackDirection()
+    {
+        
+    }
+
+
+    #endregion
 
 }

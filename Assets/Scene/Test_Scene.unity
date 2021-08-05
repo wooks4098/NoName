@@ -6455,8 +6455,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 8
-  movementSpeed: 3
+  movementSpeed: 4.5
   RunSpeed: 10
+  AttackSpeed: 3
   JumpPower: 20
   gravity: 0.9
 --- !u!114 &8654250720870161184

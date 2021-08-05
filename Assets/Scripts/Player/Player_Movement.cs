@@ -11,6 +11,7 @@ public class Player_Movement : MonoBehaviour
     public float rotationSpeed;
     public float movementSpeed;
     public float RunSpeed;
+    public float AttackSpeed;
     public float JumpPower;
     public float gravity = 20;
     Vector3 movementVector = Vector3.zero;
@@ -37,10 +38,10 @@ public class Player_Movement : MonoBehaviour
             RunCheck();
         }
         else
-            RotatePlayer_Rotation();
+            RotatePlayer_Rotation(false);
 
 
-
+       
         controller.Move(movementVector * Time.deltaTime);
     }
     void Jump()
@@ -66,7 +67,6 @@ public class Player_Movement : MonoBehaviour
     {
         float FadeOut_Time = 0f;
         float FadeOut_TimeCheck = 0.5f;
-        float angle = 0;
         float ChangeMovementSpeed = movementSpeed;
         movementSpeed = RunSpeed;
         while (movementSpeed > ChangeMovementSpeed)
@@ -78,10 +78,15 @@ public class Player_Movement : MonoBehaviour
         movementSpeed = ChangeMovementSpeed;
         yield return null;
     }
-    public void HandleMovement(Vector2 input)
+    public void HandleMovement(Vector2 input, bool isAttack)
     {
         if (controller.isGrounded)
         {
+            if (isAttack)
+            {
+                RotatePlayer_Rotation(isAttack);
+
+            }
             if (input.y == 0 && input.x == 0)
             {//Stop
                 movementVector = Vector3.zero;
@@ -90,15 +95,25 @@ public class Player_Movement : MonoBehaviour
             }
             else
             {
-                RotatePlayer_Rotation();
+                RotatePlayer_Rotation(isAttack);
+                if (isAttack)
+                {
+                    movementVector = transform.forward * AttackSpeed;
+
+                    animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
+                    return;
+                }
                 if (isRun)
                 {
+                    //movementVector = GetComponent<ISkill>().IsAttack() ? transform.forward * AttackSpeed : transform.forward * RunSpeed;
                     movementVector = transform.forward * RunSpeed;
                     animator.SetBool("IsRun", true);
                 }
                 else
                 {
+                    //movementVector = GetComponent<ISkill>().IsAttack() ? transform.forward * AttackSpeed : transform.forward * movementSpeed;
                     movementVector = transform.forward * movementSpeed;
+
                     animator.SetBool("IsRun", false);
                     
                     animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
@@ -124,7 +139,7 @@ public class Player_Movement : MonoBehaviour
 
     }
 
-    void RotatePlayer_Rotation() //앞으로 갈때 플레이어 회전
+    void RotatePlayer_Rotation(bool isAttack) //앞으로 갈때 플레이어 회전
     {
         //if (desiredRotationAngle_Front > 10 || desiredRotationAngle_Front < -10)
         {
