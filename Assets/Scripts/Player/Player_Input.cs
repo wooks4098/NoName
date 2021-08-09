@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class Player_Input : MonoBehaviour, IInput
 {
@@ -12,7 +10,7 @@ public class Player_Input : MonoBehaviour, IInput
     public Action<Vector3> OnAttackDirection { get; set; }
 
     [SerializeField] Vector2 LastInput = Vector2.zero;
-    [SerializeField] Vector2 _Input = Vector2.zero;
+    [SerializeField] Vector2 AbsInput = Vector2.zero;
 
     public bool test = false;
 
@@ -50,43 +48,30 @@ public class Player_Input : MonoBehaviour, IInput
 
     void GetMovementDirection(Vector2 input)
     {
+        AbsInput.x = Math.Abs(input.x);
+        AbsInput.y = Math.Abs(input.y);
         Vector3 directionToMoveIn = GetDirection();
-        if (input.y != 0 || Math.Abs(LastInput.y) < Math.Abs(input.y )|| Math.Abs(input.y) == 1)
+        if(input.x == 0 && input.y == 0 && LastInput.x == 0 && LastInput.y == 0)
+        {
+
+        }
+        else if (input.y != 0&&( Math.Abs(LastInput.y) < AbsInput.y || AbsInput.y == 1))
         {
             directionToMoveIn *= (input.y > 0) ? 1 : -1;
-
-            if(input.x != 0 || Math.Abs(LastInput.x) < Math.Abs(input.x)|| Math.Abs(input.x) == 1)
+            if ((input.x != 0 && Math.Abs(LastInput.x) < AbsInput.x) || AbsInput.x == 1)
             {
-                directionToMoveIn = directionToMoveIn + (input.x >0 ? 1 : -1) * Camera.main.transform.right;
-                test = false;
+                directionToMoveIn = directionToMoveIn + (input.x > 0 ? 1 : -1) * Camera.main.transform.right;
+              
             }
-
-
-            //if (input.x > 0 && (input.x > LastInput.x || input.x == 1))
-            //{
-            //    directionToMoveIn = directionToMoveIn + Camera.main.transform.right;
-            //    
-            //}
-            //else if (input.x < 0 && (input.x < LastInput.x || input.x == -1))
-            //{
-            //    directionToMoveIn = directionToMoveIn - Camera.main.transform.right;
-            //    test = false;
-            //}
         }
-        else if(Math.Abs(LastInput.y) > input.y || input.y == 0)
+        else if ((Math.Abs(LastInput.y) > input.y || input.y == 0 )&& input.x != 0)
         {
-            if (input.x > 0 )
-            {
-                directionToMoveIn = -Vector3.Cross(directionToMoveIn, Vector3.up);
-                test = true;
-            }
-            else if (input.x < 0)
-            {
-                directionToMoveIn = (Vector3.Cross(directionToMoveIn, Vector3.up));
-            }
-           
+            directionToMoveIn = (input.x > 0 ? -1 : 1) * Vector3.Cross(directionToMoveIn, Vector3.up); 
         }
+        else
+            directionToMoveIn *= (LastInput.y > 0) ? 1 : -1;
         LastInput = input;
+
         OnMovementDirectionInput?.Invoke(directionToMoveIn.normalized);
 
     }
