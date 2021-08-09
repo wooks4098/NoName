@@ -62,9 +62,9 @@ public class SwordSkill : MonoBehaviour, ISkill
     }
     IEnumerator DashAttackCooltime()
     {
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(1.1f);
         isDashAttack = false;
-        yield return new WaitForSeconds(0.9f);
+        yield return new WaitForSeconds(0.8f);
         CanDashAttack = true;
         yield return null;
     }
