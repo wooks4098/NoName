@@ -12,10 +12,13 @@ public class Player_Controller : MonoBehaviour
     {
         input = GetComponent<IInput>();
         movement = GetComponent<Player_Movement>();
-        //var skill = GetComponent<ISkill>();
-        //input.asdasd = skill.Attack;
+
+        //Input ¿¬°á
         input.OnMovementDirectionInput += movement.HandleMovementDirection;
         input.OnMovementInput += movement.HandleMovement;
+
+        var skill = GetComponent<ISkill>();
+        input.OnAttackInput += skill.Attack;
 
     }
 

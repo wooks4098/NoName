@@ -20,14 +20,14 @@ public class Player_Movement : MonoBehaviour
 
 
 
-    bool isRun = false;
+    public bool isRun = false;
+    public float RunTime = 0;
 
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
     }
-
 
     private void Update()
     {
@@ -39,10 +39,7 @@ public class Player_Movement : MonoBehaviour
             RunCheck();
         }
         else
-            RotatePlayer_Rotation(false);
-
-
-       
+            RotatePlayer_Rotation(false);     
         controller.Move(movementVector * Time.deltaTime);
     }
     void Jump()
@@ -57,6 +54,7 @@ public class Player_Movement : MonoBehaviour
 
     public void HandleMovement(Vector2 input, bool isAttack)
     {
+        Debug.Log(input);
         if (!controller.isGrounded)
             return;
 
@@ -64,9 +62,11 @@ public class Player_Movement : MonoBehaviour
         {//Stop
             if (isAttack) //공격중일 때
                 RotatePlayer_Rotation(isAttack);
+            if(isRun)
+                StartCoroutine(RunToWalk_Speed());
             movementVector = Vector3.zero;
             animator.SetFloat("Battle_Walk", 0);
-            animator.SetBool("IsRun", false);
+
         }
         else
         {
@@ -76,16 +76,20 @@ public class Player_Movement : MonoBehaviour
                 RotatePlayer_Rotation(isAttack);
                 movementVector = transform.forward * AttackSpeed;
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
+                RunTime = 0;
             }           
             else if (isRun)
             {//Run
                 movementVector = transform.forward * RunSpeed;
                 animator.SetBool("IsRun", true);
+                RunTime += Time.deltaTime;
+
             }
             else
             {//Walk
+                RunTime = 0;
                 movementVector = transform.forward * movementSpeed;
-                animator.SetBool("IsRun", false);
+                
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
             }
         }
@@ -116,7 +120,9 @@ public class Player_Movement : MonoBehaviour
         float FadeOut_Time = 0f;
         float FadeOut_TimeCheck = 0.5f;
         float ChangeMovementSpeed = movementSpeed;
+        RunTime = 0;
         movementSpeed = RunSpeed;
+        animator.SetBool("IsRun", false);
         while (movementSpeed > ChangeMovementSpeed)
         {
             FadeOut_Time += Time.deltaTime / FadeOut_TimeCheck;
@@ -124,6 +130,7 @@ public class Player_Movement : MonoBehaviour
             yield return null;
         }
         movementSpeed = ChangeMovementSpeed;
+        
         yield return null;
     }
     #endregion

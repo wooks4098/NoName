@@ -6411,7 +6411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LastInput: {x: 0, y: 0}
-  _Input: {x: 0, y: 0}
+  AbsInput: {x: 0, y: 0}
   test: 0
 --- !u!114 &8654250720870161181
 MonoBehaviour:
@@ -6458,9 +6458,11 @@ MonoBehaviour:
   attackrotationSpeed: 15
   movementSpeed: 4.5
   RunSpeed: 10
-  AttackSpeed: 2
+  AttackSpeed: 0.3
   JumpPower: 20
   gravity: 0.9
+  isRun: 0
+  RunTime: 0
 --- !u!114 &8654250720870161184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6475,8 +6477,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 1
   AttackTimeCheck: 0
-  AttackTime: 0.8
+  AttackTime: 0.5
   isAttack: 0
+  isDashAttack: 0
+  CanDashAttack: 1
 --- !u!4 &8654250720870385280
 Transform:
   m_ObjectHideFlags: 0

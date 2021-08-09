@@ -9,6 +9,7 @@ public interface ISkill
     void Skill();
 
     bool IsAttack();
+    bool isDashAttack();
 }
 
 public class SwordSkill : MonoBehaviour, ISkill
@@ -18,6 +19,8 @@ public class SwordSkill : MonoBehaviour, ISkill
     [SerializeField] float AttackTime = 0; //기본공격이 다음공격으로 갈수 있는 시간(-0.2 ~ 0.2)
     int AttackNum = 0;
     [SerializeField] bool isAttack = false;
+    [SerializeField] bool isDashAttack = false;
+    [SerializeField] bool CanDashAttack = true;
 
     Animator animator;
 
@@ -28,21 +31,52 @@ public class SwordSkill : MonoBehaviour, ISkill
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0)&& !isAttack)
-        {
-            Attack();
-        }
+       
     }
-
 
     public void Attack()
     {
-        isAttack = true;
-        AttackTimeCheck = 0;
-        StartCoroutine(AttackCombo());
+        if (isAttack)
+            return;
+        if (GetComponent<Player_Movement>().RunTime > 0.8f)
+        {
+            if (CanDashAttack )
+            {
+                DashAtaack();
+            }
+            else if (!isDashAttack)
+                AttackCombo();
+        }
+        else
+        {
+            if (!isDashAttack)
+                AttackCombo();
+        }
+    }
+    public void DashAtaack()
+    {
+        isDashAttack = true;
+        CanDashAttack = false;
+        animator.SetTrigger("DashAttack");
+        StartCoroutine(DashAttackCooltime());
+    }
+    IEnumerator DashAttackCooltime()
+    {
+        yield return new WaitForSeconds(0.9f);
+        isDashAttack = false;
+        yield return new WaitForSeconds(0.9f);
+        CanDashAttack = true;
+        yield return null;
     }
 
-    IEnumerator AttackCombo()
+    public void AttackCombo()
+    {
+        isAttack = true;
+        AttackTimeCheck = 0;
+        StartCoroutine(AttackCombostart());
+    }
+
+    IEnumerator AttackCombostart()
     {
         PlayAnimation(AttackNum++);
 
@@ -57,6 +91,7 @@ public class SwordSkill : MonoBehaviour, ISkill
                 {
                     if (AttackNum > 2)
                     {
+                        yield return new WaitForSeconds(0.5f);
                         AttackReset();
                         yield break;
                     }
@@ -79,9 +114,7 @@ public class SwordSkill : MonoBehaviour, ISkill
         isAttack = false;
     }
 
-    public void DashAtaack()
-    {
-    }
+
 
     public void Skill()
     {
@@ -96,5 +129,10 @@ public class SwordSkill : MonoBehaviour, ISkill
     public bool IsAttack()
     {
         return isAttack;
+    }
+
+    bool ISkill.isDashAttack()
+    {
+        return isDashAttack;
     }
 }
