@@ -17,6 +17,7 @@ public class SwordSkill : MonoBehaviour, ISkill
     [SerializeField] float Speed;
     [SerializeField] float AttackTimeCheck = 0; //기본공격 시간 측정용
     [SerializeField] float AttackTime = 0; //기본공격이 다음공격으로 갈수 있는 시간(-0.2 ~ 0.2)
+    [SerializeField] float DashTime = 0; //대쉬 공격 가능한시간 (Runtime)
     int AttackNum = 0;
     [SerializeField] bool isAttack = false;
     [SerializeField] bool isDashAttack = false;
@@ -38,7 +39,7 @@ public class SwordSkill : MonoBehaviour, ISkill
     {
         if (isAttack)
             return;
-        if (GetComponent<Player_Movement>().RunTime > 0.8f)
+        if (GetComponent<Player_Movement>().RunTime > DashTime)
         {
             if (CanDashAttack )
             {
@@ -80,7 +81,7 @@ public class SwordSkill : MonoBehaviour, ISkill
     {
         PlayAnimation(AttackNum++);
 
-        while (AttackTimeCheck <= AttackTime + 0.2f || AttackNum<3)
+        while (AttackTimeCheck <= AttackTime + 0.15f || AttackNum<2)
         {
             if (AttackTimeCheck > AttackTime + 0.2f)
                 break;

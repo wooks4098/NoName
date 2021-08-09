@@ -57,16 +57,15 @@ public class Player_Movement : MonoBehaviour
         Debug.Log(input);
         if (!controller.isGrounded)
             return;
-
+        animator.SetBool("IsRun", false);
         if (input.y == 0 && input.x == 0)
         {//Stop
             if (isAttack) //공격중일 때
                 RotatePlayer_Rotation(isAttack);
-            if(isRun)
-                StartCoroutine(RunToWalk_Speed());
+            animator.SetBool("IsRun", false);
             movementVector = Vector3.zero;
             animator.SetFloat("Battle_Walk", 0);
-
+            RunTime = 0;
         }
         else
         {
@@ -130,7 +129,7 @@ public class Player_Movement : MonoBehaviour
             yield return null;
         }
         movementSpeed = ChangeMovementSpeed;
-        
+
         yield return null;
     }
     #endregion
