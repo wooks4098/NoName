@@ -61,10 +61,15 @@ public class Player_Movement : MonoBehaviour
         animator.SetBool("IsRun", false);
         if (input.y == 0 && input.x == 0)
         {//Stop
-            if (IsSkill != UseSkill.None) //공격중일 때
-                RotatePlayer_Rotation(IsSkill);
-            animator.SetBool("IsRun", false);
             movementVector = Vector3.zero;
+            if (IsSkill != UseSkill.None)
+            {//공격중일 때
+                RotatePlayer_Rotation(IsSkill);
+                if(IsSkill == UseSkill.Dodge)
+                    movementVector = transform.forward * dodgeSpeed;
+            }
+            animator.SetBool("IsRun", false);
+
             animator.SetFloat("Battle_Walk", 0);
             RunTime = 0;
         }
@@ -81,7 +86,6 @@ public class Player_Movement : MonoBehaviour
             else if(IsSkill == UseSkill.Dodge)
             {
                 RotatePlayer_Rotation(IsSkill);
-
                 movementVector = transform.forward * dodgeSpeed;
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
                 RunTime = 0;

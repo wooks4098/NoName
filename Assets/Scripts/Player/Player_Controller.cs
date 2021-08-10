@@ -21,7 +21,6 @@ public class Player_Controller : MonoBehaviour
         input.OnAttackInput += skill.Attack;
         input.OnDodge += skill.Dodge;
         input.QSkill += skill.Qskill;
-
     }
 
     private void OnDestroy()

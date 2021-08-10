@@ -333,9 +333,9 @@ MonoBehaviour:
     m_Radius: 6
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
-  - {fileID: 2129867655}
-  - {fileID: 456404341}
-  - {fileID: 1213643466}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &102945344
 Transform:
   m_ObjectHideFlags: 0
@@ -1428,6 +1428,10 @@ PrefabInstance:
     - target: {fileID: 3081331959593602843, guid: 40d45559663f0864bb1b5659a967cecc, type: 3}
       propertyPath: m_Name
       value: SK_FurryS2_Style (3) Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081331959593602843, guid: 40d45559663f0864bb1b5659a967cecc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40d45559663f0864bb1b5659a967cecc, type: 3}
@@ -10164,11 +10168,14 @@ MonoBehaviour:
   AttackCoolTime: 0.55
   DashTime: 0.9
   DodgeCoolTime: 1.5
+  QSkillCoolTime: 0
   isAttack: 0
   isDashAttack: 0
   CanDashAttack: 1
   Isdodge: 0
   Candodge: 1
+  isQSkill: 0
+  CanQSkill: 1
 --- !u!114 &4366029798806931245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16555,11 +16562,14 @@ MonoBehaviour:
   AttackCoolTime: 0
   DashTime: 0
   DodgeCoolTime: 0
+  QSkillCoolTime: 0
   isAttack: 0
   isDashAttack: 0
   CanDashAttack: 1
   Isdodge: 1
   Candodge: 1
+  isQSkill: 0
+  CanQSkill: 1
 --- !u!4 &8654250720870385280
 Transform:
   m_ObjectHideFlags: 0
