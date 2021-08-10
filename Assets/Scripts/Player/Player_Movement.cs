@@ -11,6 +11,7 @@ public class Player_Movement : MonoBehaviour
     public float moverotationSpeed;
     public float attackrotationSpeed;
     public float movementSpeed;
+    public float dodgeSpeed;
     public float RunSpeed;
     public float AttackSpeed;
     public float JumpPower;
@@ -39,7 +40,7 @@ public class Player_Movement : MonoBehaviour
             RunCheck();
         }
         else
-            RotatePlayer_Rotation(false);     
+            RotatePlayer_Rotation(UseSkill.None);     
         controller.Move(movementVector * Time.deltaTime);
     }
     void Jump()
@@ -52,7 +53,7 @@ public class Player_Movement : MonoBehaviour
 
     #region Move
 
-    public void HandleMovement(Vector2 input, bool isAttack)
+    public void HandleMovement(Vector2 input, UseSkill IsSkill)
     {
         Debug.Log(input);
         if (!controller.isGrounded)
@@ -60,8 +61,8 @@ public class Player_Movement : MonoBehaviour
         animator.SetBool("IsRun", false);
         if (input.y == 0 && input.x == 0)
         {//Stop
-            if (isAttack) //공격중일 때
-                RotatePlayer_Rotation(isAttack);
+            if (IsSkill != UseSkill.None) //공격중일 때
+                RotatePlayer_Rotation(IsSkill);
             animator.SetBool("IsRun", false);
             movementVector = Vector3.zero;
             animator.SetFloat("Battle_Walk", 0);
@@ -69,14 +70,22 @@ public class Player_Movement : MonoBehaviour
         }
         else
         {
-            RotatePlayer_Rotation(isAttack);
-            if (isAttack)
+            RotatePlayer_Rotation(IsSkill);
+            if (IsSkill == UseSkill.AttackCombo || IsSkill == UseSkill.DashAttack || IsSkill == UseSkill.QSkill)
             {
-                RotatePlayer_Rotation(isAttack);
+                RotatePlayer_Rotation(IsSkill);
                 movementVector = transform.forward * AttackSpeed;
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
                 RunTime = 0;
-            }           
+            }
+            else if(IsSkill == UseSkill.Dodge)
+            {
+                RotatePlayer_Rotation(IsSkill);
+
+                movementVector = transform.forward * dodgeSpeed;
+                animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
+                RunTime = 0;
+            }
             else if (isRun)
             {//Run
                 movementVector = transform.forward * RunSpeed;
@@ -146,11 +155,11 @@ public class Player_Movement : MonoBehaviour
 
     }
 
-    void RotatePlayer_Rotation(bool isAttack) //앞으로 갈때 플레이어 회전
+    void RotatePlayer_Rotation(UseSkill IsSkill) //앞으로 갈때 플레이어 회전
     {
         //if (desiredRotationAngle_Front > 10 || desiredRotationAngle_Front < -10)
         {
-            transform.Rotate(Vector3.up * desiredRotationAngle * (isAttack == true? attackrotationSpeed : moverotationSpeed) * Time.deltaTime);
+            transform.Rotate(Vector3.up * desiredRotationAngle * (IsSkill == UseSkill.None ?  attackrotationSpeed: moverotationSpeed) * Time.deltaTime);
         }
     }
 

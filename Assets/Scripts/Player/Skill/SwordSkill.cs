@@ -2,26 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ISkill
-{
-    void Attack();
-    void DashAtaack();
-    void Skill();
 
-    bool IsAttack();
-    bool isDashAttack();
-}
 
 public class SwordSkill : MonoBehaviour, ISkill
 {
     [SerializeField] float Speed;
     [SerializeField] float AttackTimeCheck = 0; //기본공격 시간 측정용
-    [SerializeField] float AttackTime = 0; //기본공격이 다음공격으로 갈수 있는 시간(-0.2 ~ 0.2)
+    [SerializeField] float AttackCoolTime = 0; //기본공격이 다음공격으로 갈수 있는 시간(-0.2 ~ 0.2)
     [SerializeField] float DashTime = 0; //대쉬 공격 가능한시간 (Runtime)
+    [SerializeField] float DodgeCoolTime = 0; //회피 쿨타임
+    [SerializeField] float QSkillCoolTime = 0; //Qskill 쿨타임
     int AttackNum = 0;
     [SerializeField] bool isAttack = false;
     [SerializeField] bool isDashAttack = false;
     [SerializeField] bool CanDashAttack = true;
+    [SerializeField] bool Isdodge = false;
+    [SerializeField] bool Candodge = true;
+    [SerializeField] bool isQSkill = false;
+    [SerializeField] bool CanQSkill = true;
+
 
     Animator animator;
 
@@ -35,9 +34,9 @@ public class SwordSkill : MonoBehaviour, ISkill
        
     }
 
-    public void Attack()
+    public void Attack() //기본공격
     {
-        if (isAttack)
+        if (isAttack )
             return;
         if (GetComponent<Player_Movement>().RunTime > DashTime)
         {
@@ -54,14 +53,14 @@ public class SwordSkill : MonoBehaviour, ISkill
                 AttackCombo();
         }
     }
-    public void DashAtaack()
+    public void DashAtaack() //대쉬 어택
     {
         isDashAttack = true;
         CanDashAttack = false;
         animator.SetTrigger("DashAttack");
         StartCoroutine(DashAttackCooltime());
     }
-    IEnumerator DashAttackCooltime()
+    IEnumerator DashAttackCooltime() //대쉬 쿨타임
     {
         yield return new WaitForSeconds(1.1f);
         isDashAttack = false;
@@ -70,25 +69,25 @@ public class SwordSkill : MonoBehaviour, ISkill
         yield return null;
     }
 
-    public void AttackCombo()
+    public void AttackCombo() //기본공격
     {
         isAttack = true;
         AttackTimeCheck = 0;
         StartCoroutine(AttackCombostart());
     }
 
-    IEnumerator AttackCombostart()
+    IEnumerator AttackCombostart() //기본공격 콤보
     {
         PlayAnimation(AttackNum++);
 
-        while (AttackTimeCheck <= AttackTime + 0.15f || AttackNum<2)
+        while (AttackTimeCheck <= AttackCoolTime + 0.15f || AttackNum<2)
         {
-            if (AttackTimeCheck > AttackTime + 0.2f)
+            if (AttackTimeCheck > AttackCoolTime + 0.2f)
                 break;
             AttackTimeCheck += Time.deltaTime * Speed;
            if(Input.GetMouseButtonDown(0))
             {
-                if (AttackTimeCheck >= AttackTime- 0.2f && AttackTimeCheck <= AttackTime+0.2f)
+                if (AttackTimeCheck >= AttackCoolTime- 0.1f && AttackTimeCheck <= AttackCoolTime+0.2f)
                 {
                     if (AttackNum > 2)
                     {
@@ -108,24 +107,60 @@ public class SwordSkill : MonoBehaviour, ISkill
         AttackReset();
     }
 
-    private void AttackReset()
+    void PlayAnimation(int ani) //기본공격 콤보 애니메이션
+    {
+        animator.SetFloat("Attack_Count", ani);
+        animator.SetTrigger("Attack");
+    }
+
+    private void AttackReset() //기본공격 리셋
     {
         AttackNum = 0;
         AttackTimeCheck = 0;
         isAttack = false;
     }
 
-
-
-    public void Skill()
+    public void Dodge() //회피
     {
+        if (!isDashAttack && Candodge && !Isdodge)
+        {
+            Isdodge = true;
+            Candodge = false;
+            animator.SetTrigger("Dodge");
+            StartCoroutine(DodgeCooltime());
+        }
+
+
+    }
+    
+    IEnumerator DodgeCooltime()
+    {
+        yield return new WaitForSeconds(0.225f);
+        Isdodge = false;
+        isQSkill = false;
+        isDashAttack = false;
+        yield return new WaitForSeconds(DodgeCoolTime - 0.225f);
+        Candodge = true;
     }
 
-    void PlayAnimation(int ani)
+    public void Qskill()
     {
-        animator.SetFloat("Attack_Count", ani);
-        animator.SetTrigger("Attack");
+        if (CanQSkill && !isQSkill &&!isDashAttack && !Isdodge)
+        {
+            isQSkill = true;
+            CanQSkill = false;
+            animator.SetTrigger("QSkill");
+            StartCoroutine(QSkillCooltime());
+        }
     }
+    IEnumerator QSkillCooltime()
+    {
+        yield return new WaitForSeconds(1.1f);
+        isQSkill = false;
+        yield return new WaitForSeconds(QSkillCoolTime - 1.1f);
+        CanQSkill = true;
+    }
+
 
     public bool IsAttack()
     {
@@ -135,5 +170,18 @@ public class SwordSkill : MonoBehaviour, ISkill
     bool ISkill.isDashAttack()
     {
         return isDashAttack;
+    }
+
+    public UseSkill isSkill()
+    {
+        if (isDashAttack)
+            return UseSkill.DashAttack;
+        if (Isdodge)
+            return UseSkill.Dodge;
+        if (isQSkill)
+            return UseSkill.QSkill;
+        if (isAttack)
+            return UseSkill.AttackCombo;
+        return UseSkill.None;
     }
 }

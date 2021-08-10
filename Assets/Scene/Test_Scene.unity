@@ -10161,11 +10161,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 1
   AttackTimeCheck: 0
-  AttackTime: 0.55
+  AttackCoolTime: 0.55
   DashTime: 0.9
+  DodgeCoolTime: 1.5
   isAttack: 0
   isDashAttack: 0
   CanDashAttack: 1
+  Isdodge: 0
+  Candodge: 1
 --- !u!114 &4366029798806931245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10181,6 +10184,7 @@ MonoBehaviour:
   moverotationSpeed: 10
   attackrotationSpeed: 15
   movementSpeed: 4.5
+  dodgeSpeed: 25
   RunSpeed: 10
   AttackSpeed: 0.3
   JumpPower: 20
@@ -16527,6 +16531,7 @@ MonoBehaviour:
   moverotationSpeed: 10
   attackrotationSpeed: 15
   movementSpeed: 4.5
+  dodgeSpeed: 0
   RunSpeed: 10
   AttackSpeed: 0.3
   JumpPower: 20
@@ -16547,11 +16552,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 1
   AttackTimeCheck: 0
-  AttackTime: 0.5
+  AttackCoolTime: 0
   DashTime: 0
+  DodgeCoolTime: 0
   isAttack: 0
   isDashAttack: 0
   CanDashAttack: 1
+  Isdodge: 1
+  Candodge: 1
 --- !u!4 &8654250720870385280
 Transform:
   m_ObjectHideFlags: 0

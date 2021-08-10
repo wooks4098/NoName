@@ -19,6 +19,8 @@ public class Player_Controller : MonoBehaviour
 
         var skill = GetComponent<ISkill>();
         input.OnAttackInput += skill.Attack;
+        input.OnDodge += skill.Dodge;
+        input.QSkill += skill.Qskill;
 
     }
 
