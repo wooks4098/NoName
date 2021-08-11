@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79548ce8a8b327743a7039bb70be2c9e, type: 3}
+  m_Name: TestSword
+  m_EditorClassIdentifier: 
+  animatorOverride: {fileID: 0}
+  weaponPrefab: {fileID: 4821287523263164888, guid: b783714ec3bd01445a2e91cba11b9e25, type: 3}
+  weaponType: 0
+  isRightHanded: 1
+  AttackCoolTime: 0.45
+  DashTime: 0.9
+  DodgeCoolTime: 1.5
+  QSkillCoolTime: 1.5

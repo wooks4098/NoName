@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
-public class SwordSkill : MonoBehaviour, ISkill
+public class Player_Attack : MonoBehaviour, ISkill
 {
     [SerializeField] Transform rightHandTransform = null;
     [SerializeField] Transform leftHandTransform = null;
@@ -33,21 +31,21 @@ public class SwordSkill : MonoBehaviour, ISkill
     void Start()
     {
         animator = GetComponent<Animator>();
-        weapon.ChangeWeapon(rightHandTransform, leftHandTransform, animator,weapon);
+        weapon.ChangeWeapon(rightHandTransform, leftHandTransform, animator, weapon);
     }
 
     void Update()
     {
-       
+
     }
 
     public void Attack() //기본공격
     {
-        if (isAttack )
+        if (isAttack||Isdodge||isQSkill)
             return;
         if (GetComponent<Player_Movement>().RunTime > weapon.DashTime)
         {
-            if (CanDashAttack )
+            if (CanDashAttack)
             {
                 DashAtaack();
             }
@@ -87,14 +85,14 @@ public class SwordSkill : MonoBehaviour, ISkill
     {
         PlayAnimation(AttackNum++);
 
-        while (AttackTimeCheck <= weapon.AttackCoolTime + 0.15f || AttackNum<2)
+        while (AttackTimeCheck <= weapon.AttackCoolTime + 0.15f || AttackNum < 2)
         {
             if (AttackTimeCheck > weapon.AttackCoolTime + 0.2f)
                 break;
             AttackTimeCheck += Time.deltaTime;
-           if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
-                if (AttackTimeCheck >= weapon.AttackCoolTime - 0.1f && AttackTimeCheck <= weapon.AttackCoolTime +0.2f)
+                if (AttackTimeCheck >= weapon.AttackCoolTime - 0.1f && AttackTimeCheck <= weapon.AttackCoolTime + 0.2f)
                 {
                     if (AttackNum > 2)
                     {
@@ -107,7 +105,7 @@ public class SwordSkill : MonoBehaviour, ISkill
                     AttackTimeCheck = 0;
                 }
             }
-            
+
             yield return null;
         }
 
@@ -139,7 +137,7 @@ public class SwordSkill : MonoBehaviour, ISkill
 
 
     }
-    
+
     IEnumerator DodgeCooltime()
     {
         yield return new WaitForSeconds(0.225f);
@@ -152,7 +150,7 @@ public class SwordSkill : MonoBehaviour, ISkill
 
     public void Qskill()
     {
-        if (CanQSkill && !isQSkill &&!isDashAttack && !Isdodge)
+        if (CanQSkill && !isQSkill && !isDashAttack && !Isdodge)
         {
             isQSkill = true;
             CanQSkill = false;

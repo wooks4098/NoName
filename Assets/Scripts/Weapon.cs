@@ -7,7 +7,6 @@ public enum WeaponType
     Sword = 0,
     Hammer,
 }
-
 [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
 public class Weapon : ScriptableObject
 {
@@ -73,6 +72,7 @@ public class Weapon : ScriptableObject
         Destroy(oldWeaponTransform.gameObject);
     }
 
+    //무기가 오른손인지 왼손인지 리턴하는 함수
     private Transform GetTransform(Transform righthandTransform, Transform lefthandTransform)
     {
         return isRightHanded ? righthandTransform : lefthandTransform;
