@@ -7,7 +7,6 @@ public class Player_Controller : MonoBehaviour
     IInput input;
     Player_Movement movement;
 
-
     private void Start()
     {
         input = GetComponent<IInput>();
@@ -21,13 +20,15 @@ public class Player_Controller : MonoBehaviour
         input.OnAttackInput += skill.Attack;
         input.OnDodge += skill.Dodge;
         input.QSkill += skill.Qskill;
+
+
     }
 
-    private void OnDestroy()
-    {
-        input.OnMovementDirectionInput -= movement.HandleMovementDirection;
-        input.OnMovementInput -= movement.HandleMovement;
-    }
+    //private void OnDestroy()
+    //{
+    //    input.OnMovementDirectionInput -= movement.HandleMovementDirection;
+    //    input.OnMovementInput -= movement.HandleMovement;
+    //}
 
 
 

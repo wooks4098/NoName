@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79548ce8a8b327743a7039bb70be2c9e, type: 3}
+  m_Name: TestHammer
+  m_EditorClassIdentifier: 
+  animatorOverride: {fileID: 22100000, guid: 7d9481282a4c6e340865b5297f99aa8e, type: 2}
+  weaponPrefab: {fileID: 2117149826871784551, guid: 1ab024016370cce47938547ece9d6f70, type: 3}
+  weaponType: 1
+  isRightHanded: 1
+  AttackCoolTime: 0.7
+  DashTime: 0.9
+  DodgeCoolTime: 1.5
+  QSkillCoolTime: 1.8
