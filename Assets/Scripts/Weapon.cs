@@ -13,6 +13,7 @@ public class Weapon : ScriptableObject
 
     [SerializeField] AnimatorOverrideController animatorOverride = null;
     [SerializeField] GameObject weaponPrefab = null;
+    [SerializeField] BoxCollider Hitbox = null;
 
     [Space(10f)]
     public WeaponType weaponType;
@@ -37,6 +38,7 @@ public class Weapon : ScriptableObject
             Transform handTransform;
             handTransform = GetTransform(righthandTransform, lefthandTransform);
             GameObject weapon = Instantiate(weaponPrefab, handTransform);
+            Hitbox = weapon.GetComponent<BoxCollider>();
             weapon.name = weaponName;
         }
 
@@ -76,6 +78,11 @@ public class Weapon : ScriptableObject
     private Transform GetTransform(Transform righthandTransform, Transform lefthandTransform)
     {
         return isRightHanded ? righthandTransform : lefthandTransform;
+    }
+
+    public BoxCollider GetHitbox()
+    {
+        return Hitbox;
     }
 
 }

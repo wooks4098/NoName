@@ -7,6 +7,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     [SerializeField] Transform rightHandTransform = null;
     [SerializeField] Transform leftHandTransform = null;
     [SerializeField] Weapon weapon;
+    [SerializeField] BoxCollider Hitbox = null;
 
     Animator animator;
 
@@ -31,12 +32,29 @@ public class Player_Attack : MonoBehaviour, ISkill
     void Start()
     {
         animator = GetComponent<Animator>();
-        weapon.ChangeWeapon(rightHandTransform, leftHandTransform, animator, weapon);
+        ChangeWeapon();
     }
 
     void Update()
     {
 
+    }
+
+    void ChangeWeapon()
+    {
+        weapon.ChangeWeapon(rightHandTransform, leftHandTransform, animator, weapon);
+        Hitbox = weapon.GetHitbox();
+        HitboxOff();
+    }
+
+    public void HitboxOn()
+    {
+        Hitbox.enabled = true;
+    }
+
+    public void HitboxOff()
+    {
+        Hitbox.enabled = false;
     }
 
     public void Attack() //기본공격

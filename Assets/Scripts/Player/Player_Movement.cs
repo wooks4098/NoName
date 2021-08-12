@@ -55,7 +55,7 @@ public class Player_Movement : MonoBehaviour
 
     public void HandleMovement(Vector2 input, UseSkill IsSkill)
     {
-        Debug.Log(input);
+        //Debug.Log(input);
         if (!controller.isGrounded)
             return;
         animator.SetBool("IsRun", false);
