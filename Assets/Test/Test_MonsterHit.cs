@@ -7,12 +7,14 @@ public class Test_MonsterHit : MonoBehaviour
     [SerializeField] Material idle;
     [SerializeField] Material hit;
     [SerializeField] SkinnedMeshRenderer skin;
+    [SerializeField] ParticleSystem hitpar;
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Weapon")
         {
             Debug.Log("Hit");
-            StartCoroutine(Hit());
+            hitpar.Play();
+            //StartCoroutine(Hit());
         }
     }
     IEnumerator Hit()
