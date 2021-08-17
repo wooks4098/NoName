@@ -8,12 +8,17 @@ public class Test_MonsterHit : MonoBehaviour
     [SerializeField] Material hit;
     [SerializeField] SkinnedMeshRenderer skin;
     [SerializeField] ParticleSystem hitpar;
+    [SerializeField] Transform particleTransfrom;
+    public ObjectPoolManger poolmanager;
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Weapon")
         {
             Debug.Log("Hit");
-            hitpar.Play();
+            GameObject _particle =  poolmanager.ReturnObject(ObjectType.Effect);
+            _particle.SetActive(true);
+            _particle.transform.position = particleTransfrom.position;
+            _particle.GetComponent<ParticleSystem>().Play();
             //StartCoroutine(Hit());
         }
     }
