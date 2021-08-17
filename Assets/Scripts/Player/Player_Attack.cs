@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player_Attack : MonoBehaviour, ISkill
 {
     [SerializeField] Transform rightHandTransform = null;
@@ -102,7 +103,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     IEnumerator AttackCombostart() //기본공격 콤보
     {
         PlayAnimation(AttackNum++);
-
+        
         while (AttackTimeCheck <= weapon.AttackCoolTime + 0.15f || AttackNum < 2)
         {
             if (AttackTimeCheck > weapon.AttackCoolTime + 0.2f)
@@ -126,7 +127,6 @@ public class Player_Attack : MonoBehaviour, ISkill
 
             yield return null;
         }
-
         AttackReset();
     }
 

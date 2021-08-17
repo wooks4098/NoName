@@ -11,16 +11,25 @@ public enum ObjectType
 public class ObjectPool
 {
     public ObjectType objectType;
-    public GameObject[] Object;
+    public List<GameObject> Objects = new List<GameObject>();
     public GameObject Object_Prefab;
 }
 public class ObjectPoolManger : MonoBehaviour
 {
+    private static ObjectPoolManger instance;
     public ObjectPool[] objectPool;
 
+    public static ObjectPoolManger Instance { get { return instance; } }
 
     private void Awake()
     {
+        if (null == instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else Destroy(gameObject);
+
         Setobject();
     }
 
@@ -28,16 +37,15 @@ public class ObjectPoolManger : MonoBehaviour
     {
         for (int i = 0; i < objectPool.Length; i++)
         {
-            for(int j = 0; j< objectPool[i].Object.Length; j++)
+            for (int j = 0; j < objectPool[i].Objects.Count; j++)
             {
-                objectPool[i].Object[j] = Instantiate(objectPool[i].Object_Prefab);
-                objectPool[i].Object[j].SetActive(false);
+                objectPool[i].Objects[j] = Instantiate(objectPool[i].Object_Prefab, transform);
+                objectPool[i].Objects[j].SetActive(false);
             }
-            
+
         }
 
     }
-
 
     //사용할 오브젝트 리턴
     public GameObject ReturnObject(ObjectType _object)
@@ -45,20 +53,20 @@ public class ObjectPoolManger : MonoBehaviour
         switch (_object)
         {
             case ObjectType.Effect:
-                return findObject(objectPool[(int)_object].Object);
-
+                {
+                    var objects = objectPool[(int)_object].Objects;
+                    var findobject = objects.Find(obj => !obj.activeSelf);
+                    if (null == findobject)
+                    {//모두 사용중이라면 생성
+                        objects.Add(Instantiate(objectPool[(int)_object].Object_Prefab, transform));
+                        findobject = objects[objects.Count-1];
+                        findobject.SetActive(false);
+                    }
+                    return findobject;
+                }
         }
         return null; //사용가능한 오브젝트가 없음
     }
 
-    //사용가능한 오브젝트 탐색
-    GameObject findObject(GameObject[] _obj)
-    {
-        for (int i = 0; i < _obj.Length; i++)
-        {
-            if (_obj[i].activeSelf == false)
-                return _obj[i];
-        }
-        return null;
-    }
+    
 }

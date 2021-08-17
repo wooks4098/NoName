@@ -5,9 +5,26 @@ using UnityEngine;
 public class ParticleShow : MonoBehaviour
 {
     [SerializeField] ParticleSystem particle;
-    private void Update()
+   
+    public void ChangeTransfrom(Transform _transform)
     {
-        if (particle.isPlaying == false)
-            gameObject.SetActive(false);
+        transform.position = _transform.position;   
     }
+
+
+    public void ParticlePlay()
+    {
+        gameObject.SetActive(true);
+        StartCoroutine("Run");
+    }
+    IEnumerator Run()
+    {
+        particle.Play();
+        while (particle.isPlaying)
+        {
+            yield return null;
+        }
+        gameObject.SetActive(false);
+    }
+
 }

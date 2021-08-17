@@ -14,6 +14,7 @@ public class Weapon : ScriptableObject
     [SerializeField] AnimatorOverrideController animatorOverride = null;
     [SerializeField] GameObject weaponPrefab = null;
     [SerializeField] BoxCollider Hitbox = null;
+    
 
     [Space(10f)]
     public WeaponType weaponType;
