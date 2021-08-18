@@ -26,5 +26,4 @@ public class ParticleShow : MonoBehaviour
         }
         gameObject.SetActive(false);
     }
-
 }

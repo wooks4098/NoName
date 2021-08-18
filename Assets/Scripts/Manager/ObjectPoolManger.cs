@@ -67,6 +67,4 @@ public class ObjectPoolManger : MonoBehaviour
         }
         return null; //사용가능한 오브젝트가 없음
     }
-
-    
 }

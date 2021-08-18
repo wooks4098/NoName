@@ -16,9 +16,6 @@ public class MonsterController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-
-
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Weapon")
@@ -45,6 +42,5 @@ public class MonsterController : MonoBehaviour
         skinnedMeshRenderer.material = DamageMateriel;
         yield return new WaitForSeconds(0.1f);
         skinnedMeshRenderer.material = IdleMateriel;
-
     }
 }
