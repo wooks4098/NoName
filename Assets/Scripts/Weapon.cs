@@ -7,6 +7,7 @@ public enum WeaponType
     Sword = 0,
     Hammer,
 }
+
 [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
 public class Weapon : ScriptableObject
 {
@@ -14,9 +15,10 @@ public class Weapon : ScriptableObject
     [SerializeField] AnimatorOverrideController animatorOverride = null;
     [SerializeField] GameObject weaponPrefab = null;
     [SerializeField] BoxCollider Hitbox = null;
-    
 
-    [Space(10f)]
+    [SerializeField] UseSkill PlayerSkill;
+
+    [Space(10f)] //무기 수치
     public WeaponType weaponType;
     public bool isRightHanded;
 
@@ -41,6 +43,7 @@ public class Weapon : ScriptableObject
             GameObject weapon = Instantiate(weaponPrefab, handTransform);
             Hitbox = weapon.GetComponent<BoxCollider>();
             weapon.name = weaponName;
+            PlayerSkill = UseSkill.None;
         }
 
         var ovverideController = animator.runtimeAnimatorController as AnimatorOverrideController;
@@ -79,6 +82,16 @@ public class Weapon : ScriptableObject
     private Transform GetTransform(Transform righthandTransform, Transform lefthandTransform)
     {
         return isRightHanded ? righthandTransform : lefthandTransform;
+    }
+
+    public void ChangePlayerSkill(UseSkill _skill)
+    {
+        PlayerSkill = _skill;
+    }
+
+    UseSkill GetPlayerSkill()
+    {
+        return PlayerSkill;
     }
 
     public BoxCollider GetHitbox()

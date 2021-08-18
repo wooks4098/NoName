@@ -36,11 +36,6 @@ public class Player_Attack : MonoBehaviour, ISkill
         ChangeWeapon();
     }
 
-    void Update()
-    {
-
-    }
-
     void ChangeWeapon()
     {
         weapon.ChangeWeapon(rightHandTransform, leftHandTransform, animator, weapon);
@@ -56,6 +51,11 @@ public class Player_Attack : MonoBehaviour, ISkill
     public void HitboxOff()
     {
         Hitbox.enabled = false;
+    }
+
+    void StopAllSkill()
+    {
+        StopAllCoroutines();
     }
 
     public void Attack() //기본공격
@@ -79,6 +79,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     }
     public void DashAtaack() //대쉬 어택
     {
+        weapon.ChangePlayerSkill(UseSkill.DashAttack);
         isDashAttack = true;
         CanDashAttack = false;
         animator.SetTrigger("DashAttack");
@@ -95,6 +96,7 @@ public class Player_Attack : MonoBehaviour, ISkill
 
     public void AttackCombo() //기본공격
     {
+        weapon.ChangePlayerSkill(UseSkill.AttackCombo);
         isAttack = true;
         AttackTimeCheck = 0;
         StartCoroutine(AttackCombostart());
@@ -147,6 +149,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     {
         if (!isDashAttack && Candodge && !Isdodge)
         {
+            weapon.ChangePlayerSkill(UseSkill.Dodge);
             Isdodge = true;
             Candodge = false;
             animator.SetTrigger("Dodge");
@@ -170,6 +173,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     {
         if (CanQSkill && !isQSkill && !isDashAttack && !Isdodge)
         {
+            weapon.ChangePlayerSkill(UseSkill.QSkill);
             isQSkill = true;
             CanQSkill = false;
             animator.SetTrigger("QSkill");
