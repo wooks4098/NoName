@@ -12,6 +12,7 @@ public class Player_Attack : MonoBehaviour, ISkill
 
     Animator animator;
 
+    private IEnumerator AttackTimecoroutine;
 
     [Header("공격상태")]
     [SerializeField] float AttackTimeCheck = 0; //기본공격 시간 측정용
@@ -19,7 +20,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     //[SerializeField] float DashTime = 0; //대쉬 공격 가능한시간 (Runtime)
     //[SerializeField] float DodgeCoolTime = 0; //회피 쿨타임
     //[SerializeField] float QSkillCoolTime = 0; //Qskill 쿨타임
-    int AttackNum = 0;
+    [SerializeField] int AttackNum = 0;
     [SerializeField] bool isAttack = false;
     [SerializeField] bool isDashAttack = false;
     [SerializeField] bool CanDashAttack = true;
@@ -34,6 +35,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     {
         animator = GetComponent<Animator>();
         ChangeWeapon();
+        
     }
 
     void ChangeWeapon()
@@ -60,7 +62,7 @@ public class Player_Attack : MonoBehaviour, ISkill
 
     public void Attack() //기본공격
     {
-        if (isAttack||Isdodge||isQSkill)
+        if (Isdodge||isQSkill)
             return;
         if (GetComponent<Player_Movement>().RunTime > weapon.DashTime)
         {
@@ -96,10 +98,38 @@ public class Player_Attack : MonoBehaviour, ISkill
 
     public void AttackCombo() //기본공격
     {
-        weapon.ChangePlayerSkill(UseSkill.AttackCombo);
-        isAttack = true;
-        AttackTimeCheck = 0;
-        StartCoroutine(AttackCombostart());
+        if (AttackNum < 3)
+        {
+            if (!isAttack)
+            {
+                AttackTimecoroutine = AttackComboTimeCheck();
+                //AttackReset();
+                isAttack = true;
+            }
+            else
+            {
+                if (AttackTimeCheck <weapon.AttackCoolTime * 0.7f || AttackTimeCheck > weapon.AttackCoolTime * 1.3f)
+                    return;
+                else
+                    StopCoroutine(AttackTimecoroutine);
+            }
+            PlayAnimation(AttackNum++);
+            weapon.ChangePlayerSkill(UseSkill.AttackCombo);
+            AttackTimeCheck = 0;
+            StartCoroutine(AttackTimecoroutine);
+        }
+       
+    }
+    IEnumerator AttackComboTimeCheck()
+    {
+        while(AttackTimeCheck <= weapon.AttackCoolTime * 1.3f)
+        {
+            AttackTimeCheck += Time.deltaTime;
+            
+            yield return null;
+
+        }
+        AttackReset();
     }
 
     IEnumerator AttackCombostart() //기본공격 콤보
@@ -134,6 +164,7 @@ public class Player_Attack : MonoBehaviour, ISkill
 
     void PlayAnimation(int ani) //기본공격 콤보 애니메이션
     {
+        Debug.Log(AttackTimeCheck+"   ||  " +AttackNum);
         animator.SetFloat("Attack_Count", ani);
         animator.SetTrigger("Attack");
     }

@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 4821287523263164888, guid: b783714ec3bd01445a2e91cba11b9e25, type: 3}
+  Hitbox: {fileID: 0}
+  PlayerSkill: 1
   weaponType: 0
   isRightHanded: 1
-  AttackCoolTime: 0.45
+  AttackCoolTime: 0.48
   DashTime: 0.9
   DodgeCoolTime: 1.5
   QSkillCoolTime: 1.5
