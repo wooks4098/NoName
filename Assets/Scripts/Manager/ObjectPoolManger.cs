@@ -42,9 +42,7 @@ public class ObjectPoolManger : MonoBehaviour
                 objectPool[i].Objects[j] = Instantiate(objectPool[i].Object_Prefab, transform);
                 objectPool[i].Objects[j].SetActive(false);
             }
-
         }
-
     }
 
     //사용할 오브젝트 리턴

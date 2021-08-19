@@ -15,10 +15,31 @@ MonoBehaviour:
   animatorOverride: {fileID: 0}
   weaponPrefab: {fileID: 4821287523263164888, guid: b783714ec3bd01445a2e91cba11b9e25, type: 3}
   Hitbox: {fileID: 0}
-  PlayerSkill: 1
+  PlayerSkill: 4
   weaponType: 0
   isRightHanded: 1
-  AttackCoolTime: 0.48
+  AttackAniTime:
+  - 0.48
+  - 0.48
+  - 0.51
+  AttackMinTime: 0.65
+  AttackMaxTime: 1.1
   DashTime: 0.9
   DodgeCoolTime: 1.5
   QSkillCoolTime: 1.5
+  attackData:
+  - KnockBack: 0
+    Stuntime: 0
+    IsStun: 0
+  - KnockBack: 0
+    Stuntime: 0
+    IsStun: 0
+  - KnockBack: 1.5
+    Stuntime: 0.8
+    IsStun: 1
+  - KnockBack: 0
+    Stuntime: 0
+    IsStun: 0
+  - KnockBack: 1
+    Stuntime: 0.5
+    IsStun: 1

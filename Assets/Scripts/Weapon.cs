@@ -7,6 +7,13 @@ public enum WeaponType
     Sword = 0,
     Hammer,
 }
+[System.Serializable]
+public struct AttackData
+{
+    public float KnockBack;
+    public float Stuntime;
+    public bool IsStun;
+}
 
 [CreateAssetMenu(fileName = "Weapon", menuName = "Weapons/Make New Weapon", order = 0)]
 public class Weapon : ScriptableObject
@@ -22,10 +29,16 @@ public class Weapon : ScriptableObject
     public WeaponType weaponType;
     public bool isRightHanded;
 
-    public float AttackCoolTime = 0; //기본공격이 다음공격으로 갈수 있는 시간(-0.2 ~ 0.2)
+    //공격 쿨타임
+    public float[] AttackAniTime; //기본공격 모션 시간
+    public float AttackMinTime = 0; //다음 기본공격 갈수있는 시간수치(최소)
+    public float AttackMaxTime = 0; //다음 기본공격 갈수있는 시간수치(최대)
     public float DashTime = 0; //대쉬 공격 가능한시간 (Runtime)
     public float DodgeCoolTime = 0; //회피 쿨타임
     public float QSkillCoolTime = 0; //Qskill 쿨타임
+
+    //공격별 상태 (넉백, 기절)
+    public AttackData[] attackData;
 
 
     const string weaponName = "Weapon";
@@ -89,7 +102,7 @@ public class Weapon : ScriptableObject
         PlayerSkill = _skill;
     }
 
-    UseSkill GetPlayerSkill()
+    public UseSkill GetPlayerSkill()
     {
         return PlayerSkill;
     }

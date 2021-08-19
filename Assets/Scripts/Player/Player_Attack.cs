@@ -108,7 +108,8 @@ public class Player_Attack : MonoBehaviour, ISkill
             }
             else
             {
-                if (AttackTimeCheck <weapon.AttackCoolTime * 0.7f || AttackTimeCheck > weapon.AttackCoolTime * 1.3f)
+                if (AttackTimeCheck <weapon.AttackAniTime[AttackNum] * weapon.AttackMinTime
+                    || AttackTimeCheck > weapon.AttackAniTime[AttackNum] * weapon.AttackMaxTime)
                     return;
                 else
                     StopCoroutine(AttackTimecoroutine);
@@ -122,7 +123,7 @@ public class Player_Attack : MonoBehaviour, ISkill
     }
     IEnumerator AttackComboTimeCheck()
     {
-        while(AttackTimeCheck <= weapon.AttackCoolTime * 1.3f)
+        while(AttackTimeCheck <= weapon.AttackAniTime[AttackNum-1] * weapon.AttackMaxTime)
         {
             AttackTimeCheck += Time.deltaTime;
             
@@ -132,7 +133,7 @@ public class Player_Attack : MonoBehaviour, ISkill
         AttackReset();
     }
 
-    IEnumerator AttackCombostart() //기본공격 콤보
+    /*IEnumerator AttackCombostart() //기본공격 콤보
     {
         PlayAnimation(AttackNum++);
         
@@ -160,11 +161,10 @@ public class Player_Attack : MonoBehaviour, ISkill
             yield return null;
         }
         AttackReset();
-    }
+    }*/
 
     void PlayAnimation(int ani) //기본공격 콤보 애니메이션
     {
-        Debug.Log(AttackTimeCheck+"   ||  " +AttackNum);
         animator.SetFloat("Attack_Count", ani);
         animator.SetTrigger("Attack");
     }
@@ -192,11 +192,11 @@ public class Player_Attack : MonoBehaviour, ISkill
 
     IEnumerator DodgeCooltime()
     {
-        yield return new WaitForSeconds(0.225f);
+        yield return new WaitForSeconds(0.19f);
         Isdodge = false;
         isQSkill = false;
         isDashAttack = false;
-        yield return new WaitForSeconds(weapon.DodgeCoolTime - 0.225f);
+        yield return new WaitForSeconds(weapon.DodgeCoolTime - 0.19f);
         Candodge = true;
     }
 
@@ -230,6 +230,10 @@ public class Player_Attack : MonoBehaviour, ISkill
         return isDashAttack;
     }
 
+    public Weapon GetWeapon()
+    {
+        return weapon;
+    }
     public UseSkill isSkill()
     {
         if (isDashAttack)
