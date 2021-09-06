@@ -41,8 +41,6 @@ public class MonsterController : MonoBehaviour
     void DamageCrowdControl(Weapon weapon)
     {
         DamageAni(weapon.attackData[(int)weapon.GetPlayerSkill()].IsStun);
-
-
         DamageKnockBack(weapon.attackData[(int)weapon.GetPlayerSkill()].KnockBack);
 
     }

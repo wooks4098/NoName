@@ -21,10 +21,11 @@ public class BSPNode  //惑加眉农
 
 
 
-    public BSPNode(Vector2Int bottomLeft, Vector2Int topRight)
+    public BSPNode(Vector2Int bottomLeft, Vector2Int topRight, int _depth)
     {//积己磊
         this.bottomLeft = bottomLeft;
         this.topRight = topRight;
+        depth = _depth;
     }
 
     
@@ -61,8 +62,9 @@ public class BSPNode  //惑加眉农
         float temp;
         int dividedRatio = Random.Range(40, 70);
         Vector2Int divideLine1, divideLine2;
-
-
+        if (depth >= 3)
+            return false;
+        SetDireciton();
         if (direction == Direction.VERTICAL)
         {
             temp = (GetWidth()); //topRight.x - bottomLeft.x 
@@ -89,8 +91,8 @@ public class BSPNode  //惑加眉农
             divideLine2 = new Vector2Int(bottomLeft.x, bottomLeft.y + height);
         }
 
-        leftNode = new BSPNode(bottomLeft, divideLine1);
-        rightNode = new BSPNode(divideLine2, topRight);
+        leftNode = new BSPNode(bottomLeft, divideLine1,depth +1);
+        rightNode = new BSPNode(divideLine2, topRight, depth + 1);
         leftNode.parentNode = rightNode.parentNode = this;
         isDivided = true;
 

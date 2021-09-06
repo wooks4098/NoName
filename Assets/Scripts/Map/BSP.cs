@@ -5,16 +5,25 @@ using UnityEngine;
 
 public class BSP : MonoBehaviour
 {
-    BSPNode root;
+    public BSPNode root;
     [SerializeField] GameObject Plane;
     [SerializeField] Vector2Int PlaneCount;
     Vector2Int MapSize;
     private void Start()
     {
         SetMapSize();
-        root = new BSPNode(Vector2Int.zero, MapSize);
+        root = new BSPNode(Vector2Int.zero, MapSize,0);
+        DivideNodde(root);
     }
-
+    void DivideNodde(BSPNode ptr)
+    {
+        if (ptr.DivideNode(ptr.parentNode == null ? root.GetWidth(): ptr.parentNode.GetWidth()) == true)
+        {
+            DivideNodde(ptr.leftNode);
+            DivideNodde(ptr.rightNode);
+        }
+        
+    }
     void SetMapSize()
     {
         MapSize.x = (int)Plane.GetComponent<BoxCollider>().size.x * PlaneCount.x;
@@ -30,12 +39,12 @@ public class BSP : MonoBehaviour
 
     void inorder(BSPNode ptr)
     {
-        if (ptr!= null)
+        if (ptr != null)
         {
             inorder(ptr.leftNode);
             Gizmos.color = Color.red;
             Gizmos.DrawWireCube(new Vector3(ptr.bottomLeft.x + ptr.GetWidth() / 2, 0, ptr.bottomLeft.y + ptr.GetHeight() / 2), new Vector3(ptr.GetWidth(), 0, ptr.GetHeight()));
-            inorder( ptr.rightNode);
+            inorder(ptr.rightNode);
         }
     }
 }
