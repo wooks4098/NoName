@@ -8,27 +8,28 @@ public class BSP : MonoBehaviour
     public BSPNode root;
     [SerializeField] GameObject Plane;
     [SerializeField] Vector2Int PlaneCount;
-    Vector2Int MapSize;
     private void Start()
     {
-        SetMapSize();
-        root = new BSPNode(Vector2Int.zero, MapSize,0);
-        DivideNodde(root);
+        DivideNodde();
+        /*Vector2Int MapSize = SetMapSize();
+        root = new BSPNode(Vector2Int.zero, MapSize);*/
+        //DivideNodde(root);
     }
-    void DivideNodde(BSPNode ptr)
+    public void DivideNodde()
     {
-        if (ptr.DivideNode(ptr.parentNode == null ? root.GetWidth(): ptr.parentNode.GetWidth()) == true)
-        {
-            DivideNodde(ptr.leftNode);
-            DivideNodde(ptr.rightNode);
-        }
-        
+        Vector2Int MapSize = SetMapSize();
+        root = new BSPNode(Vector2Int.zero, MapSize);
+        root.DivideNode();
+        MapManager.Instance.GetRoot(root);
     }
-    void SetMapSize()
+    Vector2Int SetMapSize()
     {
-        MapSize.x = (int)Plane.GetComponent<BoxCollider>().size.x * PlaneCount.x;
-        MapSize.y = (int)Plane.GetComponent<BoxCollider>().size.z * PlaneCount.y;
-
+        var boxCollider = Plane.GetComponent<BoxCollider>();
+        var size = boxCollider.size;
+        Vector2Int mapSize = Vector2Int.zero;
+        mapSize.x = (int)size.x * PlaneCount.x;
+        mapSize.y = (int)size.z * PlaneCount.y;
+        return mapSize;
     }
 
     private void OnDrawGizmos()
@@ -43,7 +44,7 @@ public class BSP : MonoBehaviour
         {
             inorder(ptr.leftNode);
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(new Vector3(ptr.bottomLeft.x + ptr.GetWidth() / 2, 0, ptr.bottomLeft.y + ptr.GetHeight() / 2), new Vector3(ptr.GetWidth(), 0, ptr.GetHeight()));
+            Gizmos.DrawWireCube(new Vector3(ptr.bottomLeft.x + ptr.GetWidth() *0.5f, 0, ptr.bottomLeft.y + ptr.GetHeight() * 0.5f), new Vector3(ptr.GetWidth(), 0, ptr.GetHeight()));
             inorder(ptr.rightNode);
         }
     }
