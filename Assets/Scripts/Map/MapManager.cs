@@ -56,8 +56,7 @@ public class MapManager : MonoBehaviour
             }
 
         }
-       
+      
         CreatPlane(Node.rightNode);
-
     }
 }

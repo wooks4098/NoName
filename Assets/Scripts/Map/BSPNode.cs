@@ -15,17 +15,14 @@ public class BSPNode  //상속체크
 
     public bool isDivided; //방을 나누었는지 확인
 
-    public int depth; //노드의 깊이
-
     private Direction direction;
 
 
 
-    public BSPNode(Vector2Int bottomLeft, Vector2Int topRight, int _depth = 0)
+    public BSPNode(Vector2Int bottomLeft, Vector2Int topRight)
     {//생성자
         this.bottomLeft = bottomLeft;
         this.topRight = topRight;
-        depth = _depth;
     }
 
     
@@ -61,7 +58,7 @@ public class BSPNode  //상속체크
 
     public void DivideNode(int _depth = 0)//int ParentminSize
     {
-        if (depth >= 3)
+        if (_depth >= 3)
             return;
 
         float temp;
@@ -96,8 +93,8 @@ public class BSPNode  //상속체크
             divideLine2 = new Vector2Int(bottomLeft.x, bottomLeft.y + height);
         }
 
-        leftNode = new BSPNode(bottomLeft, divideLine1, depth + 1);
-        rightNode = new BSPNode(divideLine2, topRight, depth + 1);
+        leftNode = new BSPNode(bottomLeft, divideLine1);
+        rightNode = new BSPNode(divideLine2, topRight);
         leftNode.parentNode = rightNode.parentNode = this;
         isDivided = true;
 

@@ -34,7 +34,6 @@ public class BSP : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-
         inorder(root);
     }
 
