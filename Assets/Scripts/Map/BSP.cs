@@ -17,10 +17,12 @@ public class BSP : MonoBehaviour
     }
     public void DivideNodde()
     {
+
         Vector2Int MapSize = SetMapSize();
         root = new BSPNode(Vector2Int.zero, MapSize);
         root.DivideNode();
         MapManager.Instance.GetRoot(root);
+        MapManager.Instance.ConnetRoom(root);
     }
     Vector2Int SetMapSize()
     {

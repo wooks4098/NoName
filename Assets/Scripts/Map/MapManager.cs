@@ -26,8 +26,11 @@ public class MapManager : MonoBehaviour
     {
         root = _root;
         CreatPlane(root);
+
     }
 
+
+    //官蹿积己
     void CreatPlane(BSPNode Node)
     {
         if (Node == null)
@@ -47,7 +50,7 @@ public class MapManager : MonoBehaviour
             {
                 for (int j = 0; j < (topRight.y - bottomLeft.y) / 10 + 1; j++)
                 {
-                    Instantiate(PlanePrefab, Position, Quaternion.identity);
+                    GameObject plane = Instantiate(PlanePrefab, Position, Quaternion.identity,this.gameObject.transform);
                     Position.z += 10;
 
                 }
@@ -58,5 +61,67 @@ public class MapManager : MonoBehaviour
         }
       
         CreatPlane(Node.rightNode);
+    }
+
+    //辨 官蹿 积己
+    public void ConnetRoom(BSPNode Node)
+    {
+        if (Node == null)
+            return;
+        ConnetRoom(Node.leftNode);
+        if (Node.leftNode == null && Node == Node.parentNode.leftNode)
+        {
+            Vector3Int Position = Vector3Int.zero;
+            int middle;
+            switch (Node.parentNode.GetDirection())
+            {
+                case Direction.VERTICAL:
+                    middle = Node.parentNode.rightNode.GetHeight() / 2;
+                    middle -= middle % 10;
+                    if (Node.parentNode.bottomLeft.x < Node.bottomLeft.x)
+                    {
+                        Position.x = Node.parentNode.topRight.x - 5;
+                        Position.z = Node.parentNode.topRight.y - middle + 5;
+                    }
+                    else
+                    {
+                        Position.x = Node.topRight.x - 5;
+                        Position.z = Node.topRight.y - middle + 5;
+                    }
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Instantiate(PlanePrefab, Position, Quaternion.identity, this.gameObject.transform);
+                        Position.x += 10;
+                    }
+                    break;
+                case Direction.HORIZONTAL:
+                    middle = Node.parentNode.rightNode.GetWidth() / 2;
+                    middle -= middle % 10;
+                    if (Node.parentNode.rightNode.topRight.y > Node.topRight.y)
+                    {
+                        Position.x = Node.parentNode.rightNode.bottomLeft.x+ middle + 5;
+                        Position.z = Node.parentNode.rightNode.bottomLeft.y - 5;
+                    }
+                    else
+                    {
+                        Position.x = Node.bottomLeft.x + middle+ 5;
+                        Position.z = Node.bottomLeft.y-5;
+                    }
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Instantiate(PlanePrefab, Position, Quaternion.identity);
+                        Position.z += 10;
+                    }
+
+                    
+                    break;
+                default:
+                    break;
+            }
+            
+
+        }
+        ConnetRoom(Node.rightNode);
     }
 }

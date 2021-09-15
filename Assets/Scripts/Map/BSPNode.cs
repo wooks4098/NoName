@@ -9,6 +9,9 @@ public enum Direction
 public class BSPNode  //惑加眉农
 {
     public Vector2Int bottomLeft, topRight;
+    public List<Vector2Int> roadbottonLeft;
+    public List<Vector2Int> roadbottonRight;
+
 
     public BSPNode parentNode; 
     public BSPNode leftNode, rightNode;
@@ -48,12 +51,16 @@ public class BSPNode  //惑加眉农
 
 
 
-    public bool GetDirection()
+    public bool GetIsDirection()
     {
         return (direction.Equals(Direction.VERTICAL));
         
     }
 
+    public Direction GetDirection()
+    {
+        return direction;
+    }
 
 
     public void DivideNode(int _depth = 0)//int ParentminSize
