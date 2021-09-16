@@ -6,11 +6,11 @@ using UnityEngine;
 public class BSP : MonoBehaviour
 {
     public BSPNode root;
-    [SerializeField] GameObject Plane;
-    [SerializeField] Vector2Int PlaneCount;
+    //[SerializeField] GameObject Plane;
+    //[SerializeField] Vector2Int PlaneCount;
     private void Start()
     {
-        DivideNodde();
+        //DivideNodde();
         /*Vector2Int MapSize = SetMapSize();
         root = new BSPNode(Vector2Int.zero, MapSize);*/
         //DivideNodde(root);
@@ -18,21 +18,14 @@ public class BSP : MonoBehaviour
     public void DivideNodde()
     {
 
-        Vector2Int MapSize = SetMapSize();
+        Vector2Int MapSize = MapManager.Instance.GetMapsize();
         root = new BSPNode(Vector2Int.zero, MapSize);
         root.DivideNode();
         MapManager.Instance.GetRoot(root);
         MapManager.Instance.ConnetRoom(root);
+        MapManager.Instance.ConnetRoom2(root);
     }
-    Vector2Int SetMapSize()
-    {
-        var boxCollider = Plane.GetComponent<BoxCollider>();
-        var size = boxCollider.size;
-        Vector2Int mapSize = Vector2Int.zero;
-        mapSize.x = (int)size.x * PlaneCount.x;
-        mapSize.y = (int)size.z * PlaneCount.y;
-        return mapSize;
-    }
+
 
     private void OnDrawGizmos()
     {

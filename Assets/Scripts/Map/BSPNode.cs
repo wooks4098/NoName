@@ -11,7 +11,7 @@ public class BSPNode  //상속체크
     public Vector2Int bottomLeft, topRight;
     public List<Vector2Int> roadbottonLeft;
     public List<Vector2Int> roadbottonRight;
-
+    public bool isRoad = false;
 
     public BSPNode parentNode; 
     public BSPNode leftNode, rightNode;
