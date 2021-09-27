@@ -168,42 +168,48 @@ public class MapManager : MonoBehaviour
         if (Node == null)
             return;
         ConnetRoom2(Node.leftNode);
-        if(Node != root && Node.isRoad != false&& Node == Node.parentNode.leftNode&&Node.leftNode != null)
-        //if (Node != root && Node.leftNode.isRoad == true && Node == Node.parentNode.leftNode)
+        if(Node.leftNode != null && Node != root && Node.isRoad == false)
         {
             Vector3Int Position = Vector3Int.zero;
+
             switch (Node.parentNode.GetDirection())
             {
                 case Direction.VERTICAL:
-                    if (Node.bottomLeft.x > Node.parentNode.rightNode.bottomLeft.x)
+
+                    if (Node.parentNode.leftNode.topRight.x < Node.parentNode.rightNode.topRight.x)
                     {
-                        if (Node.parentNode.rightNode.rightNode.topRight.y > Node.parentNode.rightNode.leftNode.topRight.y)
-                        {
-                            Position.x = Node.parentNode.rightNode.rightNode.topRight.x - 5;
-                            Position.z = Node.parentNode.rightNode.rightNode.topRight.y - 5;
-                        }
-                        else
-                        {
-                            Position.x = Node.parentNode.rightNode.leftNode.topRight.x - 5;
-                            Position.z = Node.parentNode.rightNode.leftNode.topRight.y - 5;
-                        }
+                        Position.x = Node.parentNode.leftNode.topRight.x - PlaneSize.x +5;
+                        Position.z = Node.parentNode.leftNode.bottomLeft.y + PlaneSize.z + 5;
 
                     }
                     else
                     {
-                        if (Node.rightNode.topRight.y > Node.leftNode.topRight.y)
-                        {
-                            Position.x = Node.rightNode.topRight.x - 5;
-                            Position.z = Node.rightNode.topRight.y - 5;
-                        }
-                        else
-                        {
-                            Position.x = Node.leftNode.topRight.x - 5;
-                            Position.z = Node.leftNode.topRight.y - 5;
-                        }
+                        Position.x = Node.parentNode.rightNode.topRight.x - PlaneSize.x + 5;
+                        Position.z = Node.parentNode.rightNode.bottomLeft.y + PlaneSize.z + 5;
 
-                        //Position.x = Node.topRight.x - 5;
-                        //Position.z = Node.topRight.y - 5;
+
+                    }
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Instantiate(PlanePrefab, Position, Quaternion.identity);
+                        Position.x += PlaneSize.x;
+                    }
+                    Node.isRoad = true;
+                    Node.parentNode.rightNode.isRoad = true;
+                    break;
+                case Direction.HORIZONTAL:
+                    if (Node.parentNode.leftNode.bottomLeft.y > Node.parentNode.rightNode.bottomLeft.y)
+                    {
+
+                        Position.x = Node.parentNode.rightNode.bottomLeft.x + PlaneSize.x + 5;
+                        Position.z = Node.parentNode.rightNode.topRight.y - PlaneSize.z + 5;
+                    }
+                    else
+                    {
+
+                        Position.x = Node.parentNode.leftNode.bottomLeft.x + PlaneSize.x + 5;
+                        Position.z = Node.parentNode.leftNode.topRight.y - PlaneSize.z + 5;
+
                     }
                     for (int i = 0; i < 2; i++)
                     {
@@ -212,24 +218,6 @@ public class MapManager : MonoBehaviour
                     }
                     Node.isRoad = true;
                     Node.parentNode.rightNode.isRoad = true;
-                    break;
-                case Direction.HORIZONTAL:
-                    //if (Node.bottomLeft.y > Node.parentNode.rightNode.bottomLeft.y)
-                    //{
-                    //    Position.x = Node.bottomLeft.x + 5;
-                    //    Position.z = Node.bottomLeft.y + 5;
-
-                    //}
-                    //else
-                    //{
-                    //    Position.x = Node.parentNode.rightNode.bottomLeft.x + 5;
-                    //    Position.z = Node.parentNode.rightNode.bottomLeft.y + 5;
-                    //}
-                    //for (int i = 0; i < 2; i++)
-                    //{
-                    //    Instantiate(PlanePrefab, Position, Quaternion.identity);
-                    //    Position.z += PlaneSize.z;
-                    //}
 
 
 
@@ -240,6 +228,13 @@ public class MapManager : MonoBehaviour
 
             return;
         }
+
+
+/*        if(Node != root && Node.isRoad != false&& Node == Node.parentNode.leftNode&&Node.leftNode != null)
+        //if (Node != root && Node.leftNode.isRoad == true && Node == Node.parentNode.leftNode)
+        {
+           
+        }*/
         ConnetRoom2(Node.rightNode);
     }
 
