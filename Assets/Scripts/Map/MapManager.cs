@@ -7,6 +7,10 @@ public class MapManager : MonoBehaviour
     private static MapManager instance;
     public static MapManager Instance { get { return instance; } }
 
+    [SerializeField] GameObject Planes;
+    [SerializeField] GameObject Road;
+    [SerializeField] GameObject Walls;
+    [SerializeField] GameObject Doors;
 
     [SerializeField] GameObject PlanePrefab;
     Vector3Int PlaneSize;
@@ -22,7 +26,7 @@ public class MapManager : MonoBehaviour
         if (null == instance)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else Destroy(gameObject);
 
@@ -33,8 +37,6 @@ public class MapManager : MonoBehaviour
     public void GetRoot(BSPNode _root)
     {
         root = _root;
-        CreatPlane(root);
-
     }
     void SetSize()
     {//에셋에 수정시 확인
@@ -61,7 +63,7 @@ public class MapManager : MonoBehaviour
     }
 
     //바닥생성
-    void CreatPlane(BSPNode Node)
+    public void CreatPlane(BSPNode Node)
     {
         if (Node == null)
             return;
@@ -80,7 +82,7 @@ public class MapManager : MonoBehaviour
             {
                 for (int j = 0; j < (topRight.y - bottomLeft.y) / PlaneSize.z + 1; j++)
                 {
-                    GameObject plane = Instantiate(PlanePrefab, Position, Quaternion.identity,this.gameObject.transform);
+                    GameObject plane = Instantiate(PlanePrefab, Position, Quaternion.identity, Planes.transform);
                     Position.z += PlaneSize.z;
 
                 }
@@ -93,9 +95,8 @@ public class MapManager : MonoBehaviour
         CreatPlane(Node.rightNode);
     }
 
-    //길 바닥 생성
 
-    //깊이 3 자식끼리 연결
+    //깊이4 자식끼리 연결
     public void ConnetRoom(BSPNode Node)
     {
         if (Node == null)
@@ -124,7 +125,8 @@ public class MapManager : MonoBehaviour
                     }
                     for (int i = 0; i < 2; i++)
                     {
-                        Instantiate(PlanePrefab, Position, Quaternion.identity, this.gameObject.transform);
+                        Instantiate(PlanePrefab, Position, Quaternion.identity, Road.transform);
+                        DeleteWall(Position);
                         Position.x += PlaneSize.x;
                     }
                     break;
@@ -146,7 +148,8 @@ public class MapManager : MonoBehaviour
 
                     for (int i = 0; i < 2; i++)
                     {
-                        Instantiate(PlanePrefab, Position, Quaternion.identity, this.gameObject.transform);
+                        Instantiate(PlanePrefab, Position, Quaternion.identity, Planes.transform);
+                        DeleteWall(Position);
                         Position.z += PlaneSize.z;
                     }
 
@@ -163,6 +166,8 @@ public class MapManager : MonoBehaviour
         ConnetRoom(Node.rightNode);
     }
 
+
+    //깊이 2,3 자식끼리 연결
     public void ConnetRoom2(BSPNode Node)
     {
         if (Node == null)
@@ -191,8 +196,10 @@ public class MapManager : MonoBehaviour
                     }
                     for (int i = 0; i < 2; i++)
                     {
-                        Instantiate(PlanePrefab, Position, Quaternion.identity);
+                        Instantiate(PlanePrefab, Position, Quaternion.identity, Road.transform);
+                        DeleteWall(Position);
                         Position.x += PlaneSize.x;
+
                     }
                     Node.isRoad = true;
                     Node.parentNode.rightNode.isRoad = true;
@@ -213,7 +220,9 @@ public class MapManager : MonoBehaviour
                     }
                     for (int i = 0; i < 2; i++)
                     {
-                        Instantiate(PlanePrefab, Position, Quaternion.identity);
+                        Instantiate(PlanePrefab, Position, Quaternion.identity, Road.transform);
+                        DeleteWall(Position);
+
                         Position.z += PlaneSize.z;
                     }
                     Node.isRoad = true;
@@ -228,16 +237,76 @@ public class MapManager : MonoBehaviour
 
             return;
         }
-
-
-/*        if(Node != root && Node.isRoad != false&& Node == Node.parentNode.leftNode&&Node.leftNode != null)
-        //if (Node != root && Node.leftNode.isRoad == true && Node == Node.parentNode.leftNode)
-        {
-           
-        }*/
         ConnetRoom2(Node.rightNode);
     }
 
-    //깊이2 자식끼리 연결
+    //Wall 생성
+    public void CreateWall(BSPNode Node)
+    {
+        if (Node == null)
+            return;
+
+        CreateWall(Node.leftNode);
+        if(Node.rightNode == null)
+        {
+            Vector3Int Position1 = Vector3Int.zero;
+            Vector3Int Position2 = Vector3Int.zero;
+
+            //Horizental 생성
+            Position1.x = Node.bottomLeft.x + 5;
+            Position1.y = 5;
+            Position1.z = Node.topRight.y + 5 - WallSize.z;
+
+            Position2.x = Node.bottomLeft.x + 5;
+            Position2.y = 5;
+            Position2.z = Node.bottomLeft.y + 5;// - WallSize.z;
+
+            for(int i = 0; i<Node.GetWidth() / WallSize.x; i++)
+            {
+                Instantiate(WallPrefab, Position1, Quaternion.identity, Walls.transform);
+                Instantiate(WallPrefab, Position2, Quaternion.identity, Walls.transform);
+
+                Position1.x += WallSize.x;
+                Position2.x += WallSize.x;
+
+            }
+
+            //Vertical 생성
+            Position1.x = Node.bottomLeft.x + 5;
+            Position1.y = 5;
+            Position1.z = Node.bottomLeft.y + 5 + WallSize.z;
+
+            Position2.x = Node.topRight.x + 5 - WallSize.x;
+            Position2.y = 5;
+            Position2.z = Node.bottomLeft.y + 5 + WallSize.z;
+
+            for(int i = 0; i<Node.GetHeight() / WallSize.z -1; i++)
+            {
+                Instantiate(WallPrefab, Position1, Quaternion.identity, Walls.transform);
+                Instantiate(WallPrefab, Position2, Quaternion.identity, Walls.transform);
+
+                Position1.z += WallSize.z;
+                Position2.z += WallSize.z;
+            }
+        }
+
+        CreateWall(Node.rightNode);
+    }
+
+    //길과 겹쳐진 벽 제거
+    void DeleteWall(Vector3Int Position)
+    {
+        Position.y += (int)(WallSize.y * 0.5f);
+
+        //Position 주변에 있는 콜라이더 검색
+        Collider[] colls = Physics.OverlapSphere(Position, 1f);
+
+        for(int i = 0; i<colls.Length; i++)
+        {
+            colls[i].transform.parent = Doors.transform;
+            colls[i].isTrigger = true;
+            colls[i].GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
 
 }
