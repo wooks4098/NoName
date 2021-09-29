@@ -14,12 +14,14 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] GameObject PlanePrefab;
     Vector3Int PlaneSize;
+    Vector3Int PlaneHalfSize;
     public Vector2Int PlaneCount;
 
     [SerializeField] GameObject WallPrefab;
     Vector3Int WallSize;
     BSPNode root;
 
+     AStar astar;
 
     private void Awake()
     {
@@ -31,7 +33,15 @@ public class MapManager : MonoBehaviour
         else Destroy(gameObject);
 
         SetSize();
+        SetAstar();
         GetComponent<BSP>().DivideNodde();
+    }
+
+    void SetAstar()
+    {
+        astar = new AStar();
+        astar.SetGridSize(PlaneCount);
+        astar.CreateGrid();
     }
 
     public void GetRoot(BSPNode _root)
@@ -45,6 +55,10 @@ public class MapManager : MonoBehaviour
         PlaneSize.x = (int)size.x;
         PlaneSize.y =0;
         PlaneSize.z = (int)size.z;
+
+        PlaneHalfSize.x = (int)(PlaneSize.x * 0.5f);
+        PlaneHalfSize.y = 0;
+        PlaneHalfSize.z = (int)(PlaneSize.z * 0.5f);
 
         //boxCollider = WallPrefab.GetComponent<BoxCollider>();
         //size = boxCollider.size;
@@ -113,20 +127,21 @@ public class MapManager : MonoBehaviour
                     middle -= middle % PlaneSize.z;
                     if (Node.parentNode.bottomLeft.x < Node.bottomLeft.x)
                     {
-                        Position.x = Node.parentNode.topRight.x - 5;
-                        Position.z = Node.parentNode.topRight.y - middle + 5;
+                        Position.x = Node.parentNode.topRight.x - PlaneHalfSize.x;
+                        Position.z = Node.parentNode.topRight.y - middle + PlaneHalfSize.z;
 
 
                     }
                     else
                     {
-                        Position.x = Node.topRight.x - 5;
-                        Position.z = Node.topRight.y - middle + 5;
+                        Position.x = Node.topRight.x - PlaneHalfSize.x;
+                        Position.z = Node.topRight.y - middle + PlaneHalfSize.z;
                     }
                     for (int i = 0; i < 2; i++)
                     {
                         Instantiate(PlanePrefab, Position, Quaternion.identity, Road.transform);
                         DeleteWall(Position);
+                        astar.ChangeNode(false, (int)(Position.x - PlaneHalfSize.z) / PlaneSize.x, (int)(Position.z - PlaneHalfSize.z) / PlaneSize.z);
                         Position.x += PlaneSize.x;
                     }
                     break;
@@ -135,21 +150,22 @@ public class MapManager : MonoBehaviour
                     middle -= middle % PlaneSize.z;
                     if (Node.parentNode.rightNode.topRight.y > Node.topRight.y)
                     {
-                        Position.x = Node.parentNode.rightNode.bottomLeft.x+ middle + 5;
-                        Position.z = Node.parentNode.rightNode.bottomLeft.y - 5;
+                        Position.x = Node.parentNode.rightNode.bottomLeft.x+ middle + PlaneHalfSize.x;
+                        Position.z = Node.parentNode.rightNode.bottomLeft.y - PlaneHalfSize.z;
 
 
                     }
                     else
                     {
-                        Position.x = Node.bottomLeft.x + middle+ 5;
-                        Position.z = Node.bottomLeft.y-5;
+                        Position.x = Node.bottomLeft.x + middle+ PlaneHalfSize.x;
+                        Position.z = Node.bottomLeft.y- PlaneHalfSize.z;
                     }
 
                     for (int i = 0; i < 2; i++)
                     {
                         Instantiate(PlanePrefab, Position, Quaternion.identity, Planes.transform);
                         DeleteWall(Position);
+                        astar.ChangeNode(false, (int)(Position.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position.z - PlaneHalfSize.z) / PlaneSize.z);
                         Position.z += PlaneSize.z;
                     }
 
@@ -183,14 +199,14 @@ public class MapManager : MonoBehaviour
 
                     if (Node.parentNode.leftNode.topRight.x < Node.parentNode.rightNode.topRight.x)
                     {
-                        Position.x = Node.parentNode.leftNode.topRight.x - PlaneSize.x +5;
-                        Position.z = Node.parentNode.leftNode.bottomLeft.y + PlaneSize.z + 5;
+                        Position.x = Node.parentNode.leftNode.topRight.x - PlaneSize.x + PlaneHalfSize.x;
+                        Position.z = Node.parentNode.leftNode.bottomLeft.y + PlaneSize.z + PlaneHalfSize.z;
 
                     }
                     else
                     {
-                        Position.x = Node.parentNode.rightNode.topRight.x - PlaneSize.x + 5;
-                        Position.z = Node.parentNode.rightNode.bottomLeft.y + PlaneSize.z + 5;
+                        Position.x = Node.parentNode.rightNode.topRight.x - PlaneSize.x + PlaneHalfSize.x;
+                        Position.z = Node.parentNode.rightNode.bottomLeft.y + PlaneSize.z + PlaneHalfSize.z;
 
 
                     }
@@ -198,6 +214,7 @@ public class MapManager : MonoBehaviour
                     {
                         Instantiate(PlanePrefab, Position, Quaternion.identity, Road.transform);
                         DeleteWall(Position);
+                        astar.ChangeNode(false, (int)(Position.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position.z - PlaneHalfSize.z) / PlaneSize.z);
                         Position.x += PlaneSize.x;
 
                     }
@@ -208,21 +225,21 @@ public class MapManager : MonoBehaviour
                     if (Node.parentNode.leftNode.bottomLeft.y > Node.parentNode.rightNode.bottomLeft.y)
                     {
 
-                        Position.x = Node.parentNode.rightNode.bottomLeft.x + PlaneSize.x + 5;
-                        Position.z = Node.parentNode.rightNode.topRight.y - PlaneSize.z + 5;
+                        Position.x = Node.parentNode.rightNode.bottomLeft.x + PlaneSize.x + PlaneHalfSize.x;
+                        Position.z = Node.parentNode.rightNode.topRight.y - PlaneSize.z + PlaneHalfSize.z;
                     }
                     else
                     {
 
-                        Position.x = Node.parentNode.leftNode.bottomLeft.x + PlaneSize.x + 5;
-                        Position.z = Node.parentNode.leftNode.topRight.y - PlaneSize.z + 5;
+                        Position.x = Node.parentNode.leftNode.bottomLeft.x + PlaneSize.x + PlaneHalfSize.x;
+                        Position.z = Node.parentNode.leftNode.topRight.y - PlaneSize.z + PlaneHalfSize.z;
 
                     }
                     for (int i = 0; i < 2; i++)
                     {
                         Instantiate(PlanePrefab, Position, Quaternion.identity, Road.transform);
                         DeleteWall(Position);
-
+                        astar.ChangeNode(false, (int)(Position.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position.z - PlaneHalfSize.z) / PlaneSize.z);
                         Position.z += PlaneSize.z;
                     }
                     Node.isRoad = true;
@@ -253,18 +270,21 @@ public class MapManager : MonoBehaviour
             Vector3Int Position2 = Vector3Int.zero;
 
             //Horizental 持失
-            Position1.x = Node.bottomLeft.x + 5;
-            Position1.y = 5;
-            Position1.z = Node.topRight.y + 5 - WallSize.z;
+            Position1.x = Node.bottomLeft.x + PlaneHalfSize.x;
+            Position1.y = (int)(WallSize.y * 0.5f);
+            Position1.z = Node.topRight.y + PlaneHalfSize.z - WallSize.z;
 
-            Position2.x = Node.bottomLeft.x + 5;
-            Position2.y = 5;
-            Position2.z = Node.bottomLeft.y + 5;// - WallSize.z;
+            Position2.x = Node.bottomLeft.x + PlaneHalfSize.x;
+            Position2.y = (int)(WallSize.y * 0.5f);
+            Position2.z = Node.bottomLeft.y + PlaneHalfSize.z;// - WallSize.z;
 
             for(int i = 0; i<Node.GetWidth() / WallSize.x; i++)
             {
                 Instantiate(WallPrefab, Position1, Quaternion.identity, Walls.transform);
                 Instantiate(WallPrefab, Position2, Quaternion.identity, Walls.transform);
+
+                astar.ChangeNode(true, (int)(Position1.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position1.z - PlaneHalfSize.z) / PlaneSize.z);
+                astar.ChangeNode(true, (int)(Position2.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position2.z - PlaneHalfSize.z) / PlaneSize.z);
 
                 Position1.x += WallSize.x;
                 Position2.x += WallSize.x;
@@ -272,18 +292,21 @@ public class MapManager : MonoBehaviour
             }
 
             //Vertical 持失
-            Position1.x = Node.bottomLeft.x + 5;
-            Position1.y = 5;
-            Position1.z = Node.bottomLeft.y + 5 + WallSize.z;
+            Position1.x = Node.bottomLeft.x + PlaneHalfSize.x;
+            Position1.y = (int)(WallSize.y * 0.5f);
+            Position1.z = Node.bottomLeft.y + PlaneHalfSize.z + WallSize.z;
 
-            Position2.x = Node.topRight.x + 5 - WallSize.x;
-            Position2.y = 5;
-            Position2.z = Node.bottomLeft.y + 5 + WallSize.z;
+            Position2.x = Node.topRight.x + PlaneHalfSize.x - WallSize.x;
+            Position2.y = (int)(WallSize.y * 0.5f);
+            Position2.z = Node.bottomLeft.y + PlaneHalfSize.z + WallSize.z;
 
             for(int i = 0; i<Node.GetHeight() / WallSize.z -1; i++)
             {
                 Instantiate(WallPrefab, Position1, Quaternion.identity, Walls.transform);
                 Instantiate(WallPrefab, Position2, Quaternion.identity, Walls.transform);
+
+                astar.ChangeNode(true, (int)(Position1.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position1.z - PlaneHalfSize.z) / PlaneSize.z);
+                astar.ChangeNode(true, (int)(Position2.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position2.z - PlaneHalfSize.z) / PlaneSize.z);
 
                 Position1.z += WallSize.z;
                 Position2.z += WallSize.z;
@@ -309,4 +332,27 @@ public class MapManager : MonoBehaviour
         }
     }
 
+
+    private void OnDrawGizmosSelected()
+    {
+        DrawGizmos_Astar();
+    }
+
+    void DrawGizmos_Astar()
+    {
+        if (astar == null)
+            return;
+        for (int x = 0; x < PlaneCount.x; x++)
+        {
+            for (int y = 0; y < PlaneCount.y; y++)
+            {
+                if (astar.Isobstacle(x, y))
+                    Gizmos.color = Color.black;
+                else
+                    Gizmos.color = Color.blue;
+
+                Gizmos.DrawWireCube(new Vector3(x * 10 + PlaneHalfSize.x, -1, y * 10 + PlaneHalfSize.z), new Vector3(10, 0, 10));
+            }
+        }
+    }
 }
