@@ -129,8 +129,6 @@ public class MapManager : MonoBehaviour
                     {
                         Position.x = Node.parentNode.topRight.x - PlaneHalfSize.x;
                         Position.z = Node.parentNode.topRight.y - middle + PlaneHalfSize.z;
-
-
                     }
                     else
                     {
@@ -196,19 +194,15 @@ public class MapManager : MonoBehaviour
             switch (Node.parentNode.GetDirection())
             {
                 case Direction.VERTICAL:
-
                     if (Node.parentNode.leftNode.topRight.x < Node.parentNode.rightNode.topRight.x)
                     {
                         Position.x = Node.parentNode.leftNode.topRight.x - PlaneSize.x + PlaneHalfSize.x;
                         Position.z = Node.parentNode.leftNode.bottomLeft.y + PlaneSize.z + PlaneHalfSize.z;
-
                     }
                     else
                     {
                         Position.x = Node.parentNode.rightNode.topRight.x - PlaneSize.x + PlaneHalfSize.x;
                         Position.z = Node.parentNode.rightNode.bottomLeft.y + PlaneSize.z + PlaneHalfSize.z;
-
-
                     }
                     for (int i = 0; i < 2; i++)
                     {
@@ -216,7 +210,6 @@ public class MapManager : MonoBehaviour
                         DeleteWall(Position);
                         astar.ChangeNode(false, (int)(Position.x - PlaneHalfSize.x) / PlaneSize.x, (int)(Position.z - PlaneHalfSize.z) / PlaneSize.z);
                         Position.x += PlaneSize.x;
-
                     }
                     Node.isRoad = true;
                     Node.parentNode.rightNode.isRoad = true;
@@ -224,16 +217,13 @@ public class MapManager : MonoBehaviour
                 case Direction.HORIZONTAL:
                     if (Node.parentNode.leftNode.bottomLeft.y > Node.parentNode.rightNode.bottomLeft.y)
                     {
-
                         Position.x = Node.parentNode.rightNode.bottomLeft.x + PlaneSize.x + PlaneHalfSize.x;
                         Position.z = Node.parentNode.rightNode.topRight.y - PlaneSize.z + PlaneHalfSize.z;
                     }
                     else
                     {
-
                         Position.x = Node.parentNode.leftNode.bottomLeft.x + PlaneSize.x + PlaneHalfSize.x;
                         Position.z = Node.parentNode.leftNode.topRight.y - PlaneSize.z + PlaneHalfSize.z;
-
                     }
                     for (int i = 0; i < 2; i++)
                     {
@@ -244,14 +234,10 @@ public class MapManager : MonoBehaviour
                     }
                     Node.isRoad = true;
                     Node.parentNode.rightNode.isRoad = true;
-
-
-
                     break;
                 default:
                     break;
             }
-
             return;
         }
         ConnetRoom2(Node.rightNode);
