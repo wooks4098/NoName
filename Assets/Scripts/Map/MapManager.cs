@@ -337,7 +337,7 @@ public class MapManager : MonoBehaviour
                 else
                     Gizmos.color = Color.blue;
 
-                Gizmos.DrawWireCube(new Vector3(x * 10 + PlaneHalfSize.x, -1, y * 10 + PlaneHalfSize.z), new Vector3(10, 0, 10));
+                Gizmos.DrawCube(new Vector3(x * 10 + PlaneHalfSize.x, -1, y * 10 + PlaneHalfSize.z), new Vector3(10, 0, 10));
             }
         }
     }
