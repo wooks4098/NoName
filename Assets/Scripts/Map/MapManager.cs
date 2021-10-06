@@ -21,7 +21,7 @@ public class MapManager : MonoBehaviour
     Vector3Int WallSize;
     BSPNode root;
 
-     AStar astar;
+    AStar astar;
 
     private void Awake()
     {
@@ -53,7 +53,7 @@ public class MapManager : MonoBehaviour
         var boxCollider = PlanePrefab.GetComponent<BoxCollider>();
         var size = boxCollider.size;
         PlaneSize.x = (int)size.x;
-        PlaneSize.y =0;
+        PlaneSize.y = 0;
         PlaneSize.z = (int)size.z;
 
         PlaneHalfSize.x = (int)(PlaneSize.x * 0.5f);
@@ -75,6 +75,8 @@ public class MapManager : MonoBehaviour
         Mapsize.y = PlaneSize.z * PlaneCount.y;
         return Mapsize;
     }
+
+    #region 맵 생성
 
     //바닥생성
     public void CreatPlane(BSPNode Node)
@@ -105,7 +107,7 @@ public class MapManager : MonoBehaviour
             }
 
         }
-      
+
         CreatPlane(Node.rightNode);
     }
 
@@ -148,15 +150,15 @@ public class MapManager : MonoBehaviour
                     middle -= middle % PlaneSize.z;
                     if (Node.parentNode.rightNode.topRight.y > Node.topRight.y)
                     {
-                        Position.x = Node.parentNode.rightNode.bottomLeft.x+ middle + PlaneHalfSize.x;
+                        Position.x = Node.parentNode.rightNode.bottomLeft.x + middle + PlaneHalfSize.x;
                         Position.z = Node.parentNode.rightNode.bottomLeft.y - PlaneHalfSize.z;
 
 
                     }
                     else
                     {
-                        Position.x = Node.bottomLeft.x + middle+ PlaneHalfSize.x;
-                        Position.z = Node.bottomLeft.y- PlaneHalfSize.z;
+                        Position.x = Node.bottomLeft.x + middle + PlaneHalfSize.x;
+                        Position.z = Node.bottomLeft.y - PlaneHalfSize.z;
                     }
 
                     for (int i = 0; i < 2; i++)
@@ -167,7 +169,7 @@ public class MapManager : MonoBehaviour
                         Position.z += PlaneSize.z;
                     }
 
-                    
+
                     break;
                 default:
                     break;
@@ -175,7 +177,7 @@ public class MapManager : MonoBehaviour
             Vector2Int test = Vector2Int.zero;
             Node.isRoad = true;
             Node.parentNode.rightNode.isRoad = true;
-            
+
         }
         ConnetRoom(Node.rightNode);
     }
@@ -187,7 +189,7 @@ public class MapManager : MonoBehaviour
         if (Node == null)
             return;
         ConnetRoom2(Node.leftNode);
-        if(Node.leftNode != null && Node != root && Node.isRoad == false)
+        if (Node.leftNode != null && Node != root && Node.isRoad == false)
         {
             Vector3Int Position = Vector3Int.zero;
 
@@ -250,7 +252,7 @@ public class MapManager : MonoBehaviour
             return;
 
         CreateWall(Node.leftNode);
-        if(Node.rightNode == null)
+        if (Node.rightNode == null)
         {
             Vector3Int Position1 = Vector3Int.zero;
             Vector3Int Position2 = Vector3Int.zero;
@@ -264,7 +266,7 @@ public class MapManager : MonoBehaviour
             Position2.y = (int)(WallSize.y * 0.5f);
             Position2.z = Node.bottomLeft.y + PlaneHalfSize.z;// - WallSize.z;
 
-            for(int i = 0; i<Node.GetWidth() / WallSize.x; i++)
+            for (int i = 0; i < Node.GetWidth() / WallSize.x; i++)
             {
                 Instantiate(WallPrefab, Position1, Quaternion.identity, Walls.transform);
                 Instantiate(WallPrefab, Position2, Quaternion.identity, Walls.transform);
@@ -286,7 +288,7 @@ public class MapManager : MonoBehaviour
             Position2.y = (int)(WallSize.y * 0.5f);
             Position2.z = Node.bottomLeft.y + PlaneHalfSize.z + WallSize.z;
 
-            for(int i = 0; i<Node.GetHeight() / WallSize.z -1; i++)
+            for (int i = 0; i < Node.GetHeight() / WallSize.z - 1; i++)
             {
                 Instantiate(WallPrefab, Position1, Quaternion.identity, Walls.transform);
                 Instantiate(WallPrefab, Position2, Quaternion.identity, Walls.transform);
@@ -310,18 +312,31 @@ public class MapManager : MonoBehaviour
         //Position 주변에 있는 콜라이더 검색
         Collider[] colls = Physics.OverlapSphere(Position, 1f);
 
-        for(int i = 0; i<colls.Length; i++)
+        for (int i = 0; i < colls.Length; i++)
         {
             colls[i].transform.parent = Doors.transform;
             colls[i].isTrigger = true;
             colls[i].GetComponent<MeshRenderer>().enabled = false;
         }
     }
+    #endregion
+
+    #region A*
+    public List<Astar_Node> GetAstarPath(Transform _Start, Transform _End)
+    {
+        return astar.FindPath(_Start, _End);
+    }
+
+
+    #endregion
+
+    #region Gizmos
 
 
     private void OnDrawGizmosSelected()
     {
         DrawGizmos_Astar();
+        //DrawGizoms_AstarPaht();
     }
 
     void DrawGizmos_Astar()
@@ -337,8 +352,17 @@ public class MapManager : MonoBehaviour
                 else
                     Gizmos.color = Color.blue;
 
-                Gizmos.DrawCube(new Vector3(x * 10 + PlaneHalfSize.x, -1, y * 10 + PlaneHalfSize.z), new Vector3(10, 0, 10));
+                Gizmos.DrawWireCube(new Vector3(x * 10 + PlaneHalfSize.x, -1, y * 10 + PlaneHalfSize.z), new Vector3(10, 0, 10));
             }
         }
     }
+
+    void DrawGizoms_AstarPaht()
+    {
+        //List<Astar_Node> FinalNodeList = astar.FindPath(new Vector2(10, 10), new Vector2(230, 230));
+        Gizmos.color = Color.white;
+        /*if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
+                Gizmos.DrawLine(new Vector3(FinalNodeList[i].X * 10 +5f , 0.5f, FinalNodeList[i].Y * 10 + 5f), new Vector3(FinalNodeList[i + 1].X * 10 +5f, 0.5f, FinalNodeList[i + 1].Y * 10 +5f));*/
+    }
+    #endregion
 }

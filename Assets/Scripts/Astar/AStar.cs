@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //https://itmining.tistory.com/66
+
+[System.Serializable]
 public class Astar_Node
 {
     public bool Isobstacle;
@@ -32,11 +34,8 @@ public class AStar
 {
     Astar_Node[,] grid;
     Vector2Int gridSize;
-    public bool allowDiagonal, dontCrossCorner;
+    public bool allowDiagonal = true, dontCrossCorner = true;
 
-    List<Astar_Node> OpenList;
-    List<Astar_Node> ClosedList;
-    List<Astar_Node> FinalNodeList;
 
     private void Start()
     {
@@ -66,12 +65,17 @@ public class AStar
 
 
 
-    void FindPath(Vector2 _Start, Vector2 _End)
+    public List<Astar_Node> FindPath(Transform _Start, Transform _End)
     {
         Vector2Int Start = ChangePostoGrid(_Start);
         Vector2Int End = ChangePostoGrid(_End);
 
         Astar_Node StartNode, EndNode, CurNode;
+
+        List<Astar_Node> OpenList;
+        List<Astar_Node> ClosedList;
+        List<Astar_Node> FinalNodeList;
+
         StartNode = grid[Start.x, Start.y];
         EndNode = grid[End.x, End.y];
 
@@ -103,43 +107,50 @@ public class AStar
                 FinalNodeList.Add(StartNode);
                 FinalNodeList.Reverse();
 
-                for (int i = 0; i < FinalNodeList.Count; i++)
-                    Debug.Log(i + "번째는 " + FinalNodeList[i].X + ", " + FinalNodeList[i].Y);
-                return;
+                //for (int i = 0; i < FinalNodeList.Count; i++)
+                //    Debug.Log(i + "번째는 " + FinalNodeList[i].X + ", " + FinalNodeList[i].Y);
+                return FinalNodeList;
             }
 
 
             // ↗↖↙↘
             if (allowDiagonal)
             {
-                OpenListAdd(CurNode.X + 1, CurNode.Y + 1, CurNode);
-                OpenListAdd(CurNode.X - 1, CurNode.Y + 1, CurNode);
-                OpenListAdd(CurNode.X - 1, CurNode.Y - 1, CurNode);
-                OpenListAdd(CurNode.X + 1, CurNode.Y - 1, CurNode);
+                OpenListAdd(CurNode.X + 1, CurNode.Y + 1, CurNode, EndNode, OpenList, ClosedList);
+                OpenListAdd(CurNode.X - 1, CurNode.Y + 1, CurNode, EndNode, OpenList, ClosedList);
+                OpenListAdd(CurNode.X - 1, CurNode.Y - 1, CurNode, EndNode, OpenList, ClosedList);
+                OpenListAdd(CurNode.X + 1, CurNode.Y - 1, CurNode, EndNode, OpenList, ClosedList);
             }
 
             // ↑ → ↓ ←
-            OpenListAdd(CurNode.X, CurNode.Y + 1, CurNode);
-            OpenListAdd(CurNode.X + 1, CurNode.Y, CurNode);
-            OpenListAdd(CurNode.X, CurNode.Y - 1, CurNode);
-            OpenListAdd(CurNode.X - 1, CurNode.Y, CurNode);
+            OpenListAdd(CurNode.X, CurNode.Y + 1, CurNode, EndNode, OpenList, ClosedList);
+            OpenListAdd(CurNode.X + 1, CurNode.Y, CurNode, EndNode, OpenList, ClosedList);
+            OpenListAdd(CurNode.X, CurNode.Y - 1, CurNode, EndNode, OpenList, ClosedList);
+            OpenListAdd(CurNode.X - 1, CurNode.Y, CurNode, EndNode, OpenList, ClosedList);
         }
+
+        return FinalNodeList;
     }
 
-    void OpenListAdd(int checkX, int checkY, Astar_Node CurNode)
+    void OpenListAdd(int checkX, int checkY, Astar_Node CurNode, Astar_Node EndNode, List<Astar_Node> OpenList, List<Astar_Node> ClosedList)
     {
         // 상하좌우 범위를 벗어나지 않고, 벽이 아니면서, 닫힌리스트에 없다면
-        if (checkX >= 0 && checkX < gridSize.x + 1 && checkY >= 0 && checkY < gridSize.y + 1 && !NodeArray[checkX - 0, checkY - 0].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
+        if (checkX >= 0 && checkX < gridSize.x  && checkY >= 0 && checkY < gridSize.y  && !grid[checkX , checkY ].Isobstacle 
+            && !ClosedList.Contains(grid[checkX , checkY]))
         {
             // 대각선 허용시, 벽 사이로 통과 안됨
-            if (allowDiagonal) if (NodeArray[CurNode.X - 0, checkY - 0].isWall && NodeArray[checkX - 0, CurNode.Y - 0].isWall) return;
+            if (allowDiagonal) 
+                if (grid[CurNode.X , checkY ].Isobstacle && grid[checkX, CurNode.Y ].Isobstacle) 
+                    return;
 
             // 코너를 가로질러 가지 않을시, 이동 중에 수직수평 장애물이 있으면 안됨
-            if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - 0, CurNode.Y -0].isWall) return;
+            if (dontCrossCorner) 
+                if (grid[CurNode.X , checkY ].Isobstacle || grid[checkX , CurNode.Y ].Isobstacle) 
+                    return;
 
 
             // 이웃노드에 넣고, 직선은 10, 대각선은 14비용
-            Astar_Node NeighborNode = NodeArray[checkX - 0, checkY - bottomLeft.y];
+            Astar_Node NeighborNode = grid[checkX , checkY ];
             int MoveCost = CurNode.G + (CurNode.X - checkX == 0 || CurNode.Y - checkY == 0 ? 10 : 14);
 
 
@@ -147,7 +158,7 @@ public class AStar
             if (MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
             {
                 NeighborNode.G = MoveCost;
-                NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
+                NeighborNode.H = (Mathf.Abs(NeighborNode.X - EndNode.X) + Mathf.Abs(NeighborNode.Y - EndNode.Y)) * 10;
                 NeighborNode.ParentNode = CurNode;
 
                 OpenList.Add(NeighborNode);
@@ -156,9 +167,11 @@ public class AStar
     }
 
 
-    Vector2Int ChangePostoGrid(Vector2 Pos)
+    Vector2Int ChangePostoGrid(Transform Pos)
     {
-        return new Vector2Int((int)(Pos.x / 10),(int)(Pos.y/10));
+
+
+        return new Vector2Int((int)(Pos.position.x / 10),(int)(Pos.position.z/10));
     }
 
 

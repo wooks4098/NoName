@@ -11,8 +11,13 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] bool isStun = false;//기절했는지
     [SerializeField] bool IsKnockBack = false;//기절했는지
-
+    [SerializeField] bool IsDie = false;
     private IEnumerator KnockBackCoroutine;
+
+    //Test용
+    public GameObject Player;
+
+    [SerializeField] List<Astar_Node> FollowPath;
 
 
     Animator animator;
@@ -20,23 +25,43 @@ public class MonsterController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
 
+        FollowPath = MapManager.Instance.GetAstarPath(Player.transform, this.transform);
+        FollowPath.RemoveAt(FollowPath.Count - 1);
+    }
+
+    private void Update()
+    {
+        if (FollowPath.Count > 0)
+        {
+            var path = FollowPath[FollowPath.Count - 1];
+            Vector3 target = new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f);
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f), 0.2f);
+            if (2f >= Vector3.Distance(transform.position, target))
+            {
+                FollowPath.RemoveAt(FollowPath.Count - 1);
+            }
+        }
+        
     }
 
     private void OnEnable()
     {
         isStun = false;
         skinnedMeshRenderer.material = IdleMateriel;
-    }
+        //StartCoroutine(FollowPlayer());
 
-    private void OnTriggerEnter(Collider other)
+    }
+    IEnumerator FollowPlayer()
     {
-        if (other.tag == "Weapon")
+        while(!IsDie)
         {
-            DamageEffect();
-            Weapon weapon = FindObjectOfType<Player_Attack>().GetWeapon();
-            DamageCrowdControl(weapon);
+            FollowPath = MapManager.Instance.GetAstarPath(Player.transform , this.transform);
+            yield return new WaitForSeconds(0.3f);
         }
     }
+
+
+    #region 데미지 입었을 때
 
     void DamageCrowdControl(Weapon weapon)
     {
@@ -103,5 +128,31 @@ public class MonsterController : MonoBehaviour
         skinnedMeshRenderer.material = DamageMateriel;
         yield return new WaitForSeconds(0.1f);
         skinnedMeshRenderer.material = IdleMateriel;
+    }
+
+    #endregion
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Weapon")
+        {
+            DamageEffect();
+            Weapon weapon = FindObjectOfType<Player_Attack>().GetWeapon();
+            DamageCrowdControl(weapon);
+        }
+    }
+
+
+
+    private void OnDrawGizmosSelected()
+    {
+        DrawGizoms_AstarPaht();
+    }
+
+    void DrawGizoms_AstarPaht()
+    {
+        Gizmos.color = Color.white;
+        if (FollowPath.Count != 0) for (int i = 0; i < FollowPath.Count - 1; i++)
+                Gizmos.DrawLine(new Vector3(FollowPath[i].X * 10 +5f , 0.5f, FollowPath[i].Y * 10 + 5f), new Vector3(FollowPath[i + 1].X * 10 +5f, 0.5f, FollowPath[i + 1].Y * 10 +5f));
     }
 }
