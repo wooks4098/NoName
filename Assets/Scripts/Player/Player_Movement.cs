@@ -35,7 +35,7 @@ public class Player_Movement : MonoBehaviour
         movementVector.y -= gravity;
         if(controller.isGrounded)
         {
-           
+            
             Jump();
             RunCheck();
         }

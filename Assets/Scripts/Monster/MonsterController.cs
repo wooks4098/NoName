@@ -12,7 +12,11 @@ public class MonsterController : MonoBehaviour
     [SerializeField] bool isStun = false;//기절했는지
     [SerializeField] bool IsKnockBack = false;//기절했는지
     [SerializeField] bool IsDie = false;
-    private IEnumerator KnockBackCoroutine;
+
+    [SerializeField] float MoveSpeed;
+
+    private Coroutine KnockBackCoroutine;
+    private Coroutine FindPathCorutine;
 
     //Test용
     public GameObject Player;
@@ -25,37 +29,82 @@ public class MonsterController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
 
-        FollowPath = MapManager.Instance.GetAstarPath(Player.transform, this.transform);
-        FollowPath.RemoveAt(FollowPath.Count - 1);
+        //이동 테스트 코드
+        //FollowPath = MapManager.Instance.GetAstarPath(this.transform,Player.transform);
+        //FollowPath.RemoveAt(0);
     }
 
-    private void Update()
-    {
-        if (FollowPath.Count > 0)
-        {
-            var path = FollowPath[FollowPath.Count - 1];
-            Vector3 target = new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f);
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f), 0.2f);
-            if (2f >= Vector3.Distance(transform.position, target))
-            {
-                FollowPath.RemoveAt(FollowPath.Count - 1);
-            }
-        }
-        
-    }
+    //private void Start()
+    //{
+    //}
 
     private void OnEnable()
     {
         isStun = false;
         skinnedMeshRenderer.material = IdleMateriel;
-        //StartCoroutine(FollowPlayer());
+        //FindPathCorutine = FindingPlayerPath();
+
+        FindPathCorutine = StartCoroutine(FindingPlayerPath());
 
     }
-    IEnumerator FollowPlayer()
+    private void Update()
+    {
+
+        //이동 테스트 코드
+        //if (FollowPath.Count > 0)
+        //{
+        //    var path = FollowPath[0];
+        //    Vector3 target = new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f);
+        //    transform.position = Vector3.MoveTowards(transform.position, new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f), 0.2f);
+        //    if (2f >= Vector3.Distance(transform.position, target))
+        //    {
+        //        FollowPath.RemoveAt(0);
+        //    }
+        //}
+
+        if (FollowPath.Count < 2 && Vector3.Distance(transform.position, Player.transform.position) < 10)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
+            Monster_Rotation(Player.transform.position);
+            Debug.Log("가까운 추격");
+        }
+        else 
+        {
+            if (FollowPath.Count <= 0)
+                return;
+            var Path = FollowPath[0];
+            Vector3 target = new Vector3(Path.X * 10 + 5f, transform.position.y, Path.Y * 10 + 5f);  //10은 Plane길이 나중에 변수로 수정해야함
+            transform.position = Vector3.MoveTowards(transform.position, target, MoveSpeed * Time.deltaTime);
+            Monster_Rotation(target);
+            Debug.Log("A*  Count > 2");
+            if (transform.position.x >= FollowPath[0].X * 10 + 3 && transform.position.x <= FollowPath[0].X * 10 + 7
+                && transform.position.z >= FollowPath[0].Y * 10 + 3 && transform.position.z <= FollowPath[0].Y * 10 + 7)
+            {
+                FollowPath.RemoveAt(0);
+            }
+        }
+
+
+
+    }
+
+    void Monster_Rotation(Vector3 target)
+    {
+        Vector3 direction =  (target - transform.position).normalized;
+        //회전각도(쿼터니언)산출
+        Quaternion targetangle = Quaternion.LookRotation(direction);
+        //선형보간 함수를 이용해 부드러운 회전
+        animator.transform.rotation = Quaternion.Slerp(animator.transform.rotation, targetangle, Time.deltaTime * 8.0f); //Time.deltaTime * 8.0f);
+
+        //animator.transform.rotation = Quaternion.LookRotation(direction);
+    }
+    IEnumerator FindingPlayerPath()
     {
         while(!IsDie)
         {
-            FollowPath = MapManager.Instance.GetAstarPath(Player.transform , this.transform);
+            FollowPath = MapManager.Instance.GetAstarPath(this.transform, Player.transform);
+            if(FollowPath.Count > 0)
+                 FollowPath.RemoveAt(0);
             yield return new WaitForSeconds(0.3f);
         }
     }
@@ -84,8 +133,7 @@ public class MonsterController : MonoBehaviour
 
         if(KnockBackCoroutine != null)
             StopCoroutine(KnockBackCoroutine);
-        KnockBackCoroutine = KnockBackMove(KnockBackPosition);
-        StartCoroutine(KnockBackCoroutine);
+        KnockBackCoroutine = StartCoroutine(KnockBackMove(KnockBackPosition));
     }
 
     IEnumerator KnockBackMove(Vector3 KnockBackPosition)
@@ -142,7 +190,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-
+    #region 기즈모
 
     private void OnDrawGizmosSelected()
     {
@@ -155,4 +203,6 @@ public class MonsterController : MonoBehaviour
         if (FollowPath.Count != 0) for (int i = 0; i < FollowPath.Count - 1; i++)
                 Gizmos.DrawLine(new Vector3(FollowPath[i].X * 10 +5f , 0.5f, FollowPath[i].Y * 10 + 5f), new Vector3(FollowPath[i + 1].X * 10 +5f, 0.5f, FollowPath[i + 1].Y * 10 +5f));
     }
+
+    #endregion
 }

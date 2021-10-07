@@ -84,11 +84,11 @@ public class AStar
         FinalNodeList = new List<Astar_Node>();
         OpenList.Add(grid[Start.x, Start.y]);
 
-        while(OpenList.Count>0)
+        while (OpenList.Count > 0)
         {
             // OpenList중 가장 F가 작고 F가 같다면 H가 작은 것을 현재 노드로 하고 열린 리스트 -> 닫힌 리스트로 이동
             CurNode = OpenList[0];
-            for(int i = 1; i< OpenList.Count; i++)
+            for (int i = 1; i < OpenList.Count; i++)
                 if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
                     CurNode = OpenList[i];
 
