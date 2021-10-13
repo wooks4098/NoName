@@ -18,7 +18,7 @@ public class MonsterManager : MonoBehaviour
         }
         else Destroy(gameObject);
 
-        PlayerTransfrom = FindObjectOfType<Player_Controller>().transform;
+        //PlayerTransfrom = FindObjectOfType<Player_Controller>().transform;
     }
 
     public Transform GetPlayerTransfrom()

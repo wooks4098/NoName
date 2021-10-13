@@ -2,11 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+enum MonsterState
+{ 
+    Idle = 0,
+    FindPlayer,
+    FollowPlayer,
+    Attack,
+    //데미지는 언제든 입을 수 있음
+    //데미지를 입고 기절 -> Idle상태로 전환하는것은 후에 작업
+}
+
+
 public class MonsterController : MonoBehaviour
 {
-    [SerializeField] Transform DamageEffectTransfrom;
-    [SerializeField] Material IdleMateriel;
-    [SerializeField] Material DamageMateriel;
+    [SerializeField] MonsterData monsterData;
+
+    [SerializeField] Transform DamageEffectTransfrom; //피격효과 위치
+    [SerializeField] Material IdleMateriel;  //기본 Materiel
+    [SerializeField] Material DamageMateriel; //피격 Materiel
     [SerializeField] SkinnedMeshRenderer skinnedMeshRenderer;
 
     [SerializeField] bool isStun = false;//기절했는지
@@ -15,8 +28,15 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] float MoveSpeed;
 
+    [SerializeField] MonsterState monsterState;
+    [SerializeField] bool isAttacking = false;
+    [SerializeField] bool CanAttack = true;
+
+
     private Coroutine KnockBackCoroutine;
     private Coroutine FindPathCorutine;
+
+
 
     //Test용
     public GameObject Player;
@@ -28,7 +48,7 @@ public class MonsterController : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-
+        monsterState = MonsterState.Idle;
         //이동 테스트 코드
         //FollowPath = MapManager.Instance.GetAstarPath(this.transform,Player.transform);
         //FollowPath.RemoveAt(0);
@@ -42,51 +62,51 @@ public class MonsterController : MonoBehaviour
     {
         isStun = false;
         skinnedMeshRenderer.material = IdleMateriel;
-        //FindPathCorutine = FindingPlayerPath();
 
+        
+
+        //플레이어 탐색시작( 생성후 X -> 캐릭터가 방에 들어왔을 경우로 수정)
         FindPathCorutine = StartCoroutine(FindingPlayerPath());
 
     }
     private void Update()
     {
 
-        //이동 테스트 코드
-        //if (FollowPath.Count > 0)
-        //{
-        //    var path = FollowPath[0];
-        //    Vector3 target = new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f);
-        //    transform.position = Vector3.MoveTowards(transform.position, new Vector3(path.X * 10 + 5f, 0, path.Y * 10 + 5f), 0.2f);
-        //    if (2f >= Vector3.Distance(transform.position, target))
-        //    {
-        //        FollowPath.RemoveAt(0);
-        //    }
-        //}
+        switch (monsterState)
+        {
+            case MonsterState.Idle:
+                break;
+            case MonsterState.FindPlayer:
+                break;
+            case MonsterState.FollowPlayer:
+                FollowPlayer();
+                break;
+            case MonsterState.Attack:
+                Attack();
+                break;
+        }
 
-        if (FollowPath.Count < 2 && Vector3.Distance(transform.position, Player.transform.position) < 10)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
-            Monster_Rotation(Player.transform.position);
-            Debug.Log("가까운 추격");
-        }
-        else 
-        {
-            if (FollowPath.Count <= 0)
-                return;
-            var Path = FollowPath[0];
-            Vector3 target = new Vector3(Path.X * 10 + 5f, transform.position.y, Path.Y * 10 + 5f);  //10은 Plane길이 나중에 변수로 수정해야함
-            transform.position = Vector3.MoveTowards(transform.position, target, MoveSpeed * Time.deltaTime);
-            Monster_Rotation(target);
-            Debug.Log("A*  Count > 2");
-            if (transform.position.x >= FollowPath[0].X * 10 + 3 && transform.position.x <= FollowPath[0].X * 10 + 7
-                && transform.position.z >= FollowPath[0].Y * 10 + 3 && transform.position.z <= FollowPath[0].Y * 10 + 7)
-            {
-                FollowPath.RemoveAt(0);
-            }
-        }
 
 
 
     }
+
+    //private void LateUpdate()
+    //{
+    //    FollowPlayer();
+    //}
+
+    void ChangeMonsterState(MonsterState Changestate)
+    {
+        monsterState = Changestate;
+    }
+
+    public void ChangeMonsterStateFollow()
+    {
+        monsterState = MonsterState.FollowPlayer;
+        isAttacking = false;
+    }
+
 
     void Monster_Rotation(Vector3 target)
     {
@@ -98,8 +118,69 @@ public class MonsterController : MonoBehaviour
 
         //animator.transform.rotation = Quaternion.LookRotation(direction);
     }
+
+
+    void Attack()
+    {
+        if(CanAttack == true && isAttacking == false)
+        {
+            animator.SetTrigger("Attack");
+            Monster_Rotation(MonsterManager.Instance.GetPlayerTransfrom().position);
+            isAttacking = true;
+            CanAttack = false;
+            StartCoroutine(AttackCoolTime());
+        }
+    }
+
+    IEnumerator AttackCoolTime()
+    {
+        yield return new WaitForSeconds(1.5f);
+        CanAttack = true;
+    }
+
+    void FollowPlayer()
+    {
+        float Distance = 100;
+        if (FollowPath.Count < 2)
+            Distance = Vector3.Distance(transform.position, Player.transform.position);
+
+        if(Distance <= monsterData.AttackRange)
+        {
+            ChangeMonsterState(MonsterState.Attack);
+            animator.SetBool("Walk", false);
+            return;
+        }
+
+
+        if (FollowPath.Count < 2 && Distance < 10)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
+            Monster_Rotation(Player.transform.position);
+            animator.SetBool("Walk", true);
+            Debug.Log("가까운 추격");
+        }
+        else
+        {
+            if (FollowPath.Count <= 0)
+                return;
+            var Path = FollowPath[0];
+            Vector3 target = new Vector3(Path.X * 10 + 5f, transform.position.y, Path.Y * 10 + 5f);  //10은 Plane길이 나중에 변수로 수정해야함
+            transform.position = Vector3.MoveTowards(transform.position, target, MoveSpeed * Time.deltaTime);
+            animator.SetBool("Walk", true);
+            Monster_Rotation(target);
+            Debug.Log("A*  Count > 2");
+            if (transform.position.x >= FollowPath[0].X * 10 + 3 && transform.position.x <= FollowPath[0].X * 10 + 7
+                && transform.position.z >= FollowPath[0].Y * 10 + 3 && transform.position.z <= FollowPath[0].Y * 10 + 7)
+            {
+                FollowPath.RemoveAt(0);
+            }
+        }
+    }
+
+
     IEnumerator FindingPlayerPath()
     {
+        monsterState = MonsterState.FollowPlayer;
         while(!IsDie)
         {
             FollowPath = MapManager.Instance.GetAstarPath(this.transform, Player.transform);
@@ -153,7 +234,10 @@ public class MonsterController : MonoBehaviour
     }
     void DamageAni(bool isStun)
     {
-        if (isStun)
+        if (isAttacking == true)
+            return;
+
+        if ( isStun)
             animator.SetTrigger("StunHit");
         else
             animator.SetTrigger("Hit");

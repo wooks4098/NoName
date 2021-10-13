@@ -1,219 +1,598 @@
 fileFormatVersion: 2
 guid: f3c83a0d20583f9418b08db95833b7e1
-timeCreated: 1502974372
-licenseType: Store
 ModelImporter:
-  serializedVersion: 18
-  fileIDToRecycleName:
-    100000: armature
-    100002: Bottom_arm.L
-    100004: Bottom_arm.R
-    100006: Bottom_leg.L
-    100008: Bottom_leg.R
-    100010: Bottom_low_leg.L
-    100012: Bottom_low_leg.R
-    100014: Clavicle.L
-    100016: Clavicle.R
-    100018: Elbow_IK.L
-    100020: Elbow_IK.L_end
-    100022: Elbow_IK.R
-    100024: Elbow_IK.R_end
-    100026: finger1_1.L
-    100028: finger1_1.R
-    100030: finger1_2.L
-    100032: finger1_2.L_end
-    100034: finger1_2.R
-    100036: finger1_2.R_end
-    100038: finger2_1.L
-    100040: finger2_1.R
-    100042: finger2_2.L
-    100044: finger2_2.L_end
-    100046: finger2_2.R
-    100048: finger2_2.R_end
-    100050: Foot.L
-    100052: Foot.R
-    100054: Foot_ctrl.L
-    100056: Foot_ctrl.R
-    100058: Foot_IK.L
-    100060: Foot_IK.L_end
-    100062: Foot_IK.R
-    100064: Foot_IK.R_end
-    100066: FootRoll_crtl.L
-    100068: FootRoll_crtl.L_end
-    100070: FootRoll_crtl.R
-    100072: FootRoll_crtl.R_end
-    100074: Frogman_BEAST
-    100076: //RootNode
-    100078: greb_1
-    100080: greb_1_end
-    100082: greb_2
-    100084: greb_2_end
-    100086: greb_3
-    100088: greb_3_end
-    100090: Hand.L
-    100092: Hand.R
-    100094: Hand_IK.L
-    100096: Hand_IK.R
-    100098: Head
-    100100: Heel_roll.L
-    100102: Heel_roll.R
-    100104: Hips_ctrl
-    100106: jaw
-    100108: jaw_end
-    100110: Knee_IK.L
-    100112: Knee_IK.L_end
-    100114: Knee_IK.R
-    100116: Knee_IK.R_end
-    100118: Neck
-    100120: spine_1
-    100122: spine_2
-    100124: spine_3
-    100126: Thumb_1.L
-    100128: Thumb_1.R
-    100130: Thumb_2.L
-    100132: Thumb_2.L_end
-    100134: Thumb_2.R
-    100136: Thumb_2.R_end
-    100138: Toe.L
-    100140: Toe.L_end
-    100142: Toe.R
-    100144: Toe.R_end
-    100146: Toe_roll.L
-    100148: Toe_roll.R
-    100150: Upper_arm.L
-    100152: Upper_arm.R
-    100154: Upper_leg.L
-    100156: Upper_leg.R
-    100158: Weapon_bone
-    100160: Weapon_bone_end
-    100162: Hand.L_end
-    100164: Hand.R_end
-    400000: armature
-    400002: Bottom_arm.L
-    400004: Bottom_arm.R
-    400006: Bottom_leg.L
-    400008: Bottom_leg.R
-    400010: Bottom_low_leg.L
-    400012: Bottom_low_leg.R
-    400014: Clavicle.L
-    400016: Clavicle.R
-    400018: Elbow_IK.L
-    400020: Elbow_IK.L_end
-    400022: Elbow_IK.R
-    400024: Elbow_IK.R_end
-    400026: finger1_1.L
-    400028: finger1_1.R
-    400030: finger1_2.L
-    400032: finger1_2.L_end
-    400034: finger1_2.R
-    400036: finger1_2.R_end
-    400038: finger2_1.L
-    400040: finger2_1.R
-    400042: finger2_2.L
-    400044: finger2_2.L_end
-    400046: finger2_2.R
-    400048: finger2_2.R_end
-    400050: Foot.L
-    400052: Foot.R
-    400054: Foot_ctrl.L
-    400056: Foot_ctrl.R
-    400058: Foot_IK.L
-    400060: Foot_IK.L_end
-    400062: Foot_IK.R
-    400064: Foot_IK.R_end
-    400066: FootRoll_crtl.L
-    400068: FootRoll_crtl.L_end
-    400070: FootRoll_crtl.R
-    400072: FootRoll_crtl.R_end
-    400074: Frogman_BEAST
-    400076: //RootNode
-    400078: greb_1
-    400080: greb_1_end
-    400082: greb_2
-    400084: greb_2_end
-    400086: greb_3
-    400088: greb_3_end
-    400090: Hand.L
-    400092: Hand.R
-    400094: Hand_IK.L
-    400096: Hand_IK.R
-    400098: Head
-    400100: Heel_roll.L
-    400102: Heel_roll.R
-    400104: Hips_ctrl
-    400106: jaw
-    400108: jaw_end
-    400110: Knee_IK.L
-    400112: Knee_IK.L_end
-    400114: Knee_IK.R
-    400116: Knee_IK.R_end
-    400118: Neck
-    400120: spine_1
-    400122: spine_2
-    400124: spine_3
-    400126: Thumb_1.L
-    400128: Thumb_1.R
-    400130: Thumb_2.L
-    400132: Thumb_2.L_end
-    400134: Thumb_2.R
-    400136: Thumb_2.R_end
-    400138: Toe.L
-    400140: Toe.L_end
-    400142: Toe.R
-    400144: Toe.R_end
-    400146: Toe_roll.L
-    400148: Toe_roll.R
-    400150: Upper_arm.L
-    400152: Upper_arm.R
-    400154: Upper_leg.L
-    400156: Upper_leg.R
-    400158: Weapon_bone
-    400160: Weapon_bone_end
-    400162: Hand.L_end
-    400164: Hand.R_end
-    4300000: Frogman_BEAST
-    7400000: armature|Murloc_wm_armaAction
-    7400002: armature|Murloc_wm_armaAction.001
-    7400004: walk
-    7400006: run
-    7400008: idle
-    7400010: idle_battle
-    7400012: jump
-    7400014: def_start
-    7400016: def_end
-    7400018: cast_roar
-    7400020: hit1
-    7400022: hit2
-    7400024: die1
-    7400026: die2
-    7400028: bite1
-    7400030: bite2
-    7400032: torment
-    9500000: //RootNode
-    13700000: Frogman_BEAST
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: armature
+  - first:
+      1: 100002
+    second: Bottom_arm.L
+  - first:
+      1: 100004
+    second: Bottom_arm.R
+  - first:
+      1: 100006
+    second: Bottom_leg.L
+  - first:
+      1: 100008
+    second: Bottom_leg.R
+  - first:
+      1: 100010
+    second: Bottom_low_leg.L
+  - first:
+      1: 100012
+    second: Bottom_low_leg.R
+  - first:
+      1: 100014
+    second: Clavicle.L
+  - first:
+      1: 100016
+    second: Clavicle.R
+  - first:
+      1: 100018
+    second: Elbow_IK.L
+  - first:
+      1: 100020
+    second: Elbow_IK.L_end
+  - first:
+      1: 100022
+    second: Elbow_IK.R
+  - first:
+      1: 100024
+    second: Elbow_IK.R_end
+  - first:
+      1: 100026
+    second: finger1_1.L
+  - first:
+      1: 100028
+    second: finger1_1.R
+  - first:
+      1: 100030
+    second: finger1_2.L
+  - first:
+      1: 100032
+    second: finger1_2.L_end
+  - first:
+      1: 100034
+    second: finger1_2.R
+  - first:
+      1: 100036
+    second: finger1_2.R_end
+  - first:
+      1: 100038
+    second: finger2_1.L
+  - first:
+      1: 100040
+    second: finger2_1.R
+  - first:
+      1: 100042
+    second: finger2_2.L
+  - first:
+      1: 100044
+    second: finger2_2.L_end
+  - first:
+      1: 100046
+    second: finger2_2.R
+  - first:
+      1: 100048
+    second: finger2_2.R_end
+  - first:
+      1: 100050
+    second: Foot.L
+  - first:
+      1: 100052
+    second: Foot.R
+  - first:
+      1: 100054
+    second: Foot_ctrl.L
+  - first:
+      1: 100056
+    second: Foot_ctrl.R
+  - first:
+      1: 100058
+    second: Foot_IK.L
+  - first:
+      1: 100060
+    second: Foot_IK.L_end
+  - first:
+      1: 100062
+    second: Foot_IK.R
+  - first:
+      1: 100064
+    second: Foot_IK.R_end
+  - first:
+      1: 100066
+    second: FootRoll_crtl.L
+  - first:
+      1: 100068
+    second: FootRoll_crtl.L_end
+  - first:
+      1: 100070
+    second: FootRoll_crtl.R
+  - first:
+      1: 100072
+    second: FootRoll_crtl.R_end
+  - first:
+      1: 100074
+    second: Frogman_BEAST
+  - first:
+      1: 100076
+    second: //RootNode
+  - first:
+      1: 100078
+    second: greb_1
+  - first:
+      1: 100080
+    second: greb_1_end
+  - first:
+      1: 100082
+    second: greb_2
+  - first:
+      1: 100084
+    second: greb_2_end
+  - first:
+      1: 100086
+    second: greb_3
+  - first:
+      1: 100088
+    second: greb_3_end
+  - first:
+      1: 100090
+    second: Hand.L
+  - first:
+      1: 100092
+    second: Hand.R
+  - first:
+      1: 100094
+    second: Hand_IK.L
+  - first:
+      1: 100096
+    second: Hand_IK.R
+  - first:
+      1: 100098
+    second: Head
+  - first:
+      1: 100100
+    second: Heel_roll.L
+  - first:
+      1: 100102
+    second: Heel_roll.R
+  - first:
+      1: 100104
+    second: Hips_ctrl
+  - first:
+      1: 100106
+    second: jaw
+  - first:
+      1: 100108
+    second: jaw_end
+  - first:
+      1: 100110
+    second: Knee_IK.L
+  - first:
+      1: 100112
+    second: Knee_IK.L_end
+  - first:
+      1: 100114
+    second: Knee_IK.R
+  - first:
+      1: 100116
+    second: Knee_IK.R_end
+  - first:
+      1: 100118
+    second: Neck
+  - first:
+      1: 100120
+    second: spine_1
+  - first:
+      1: 100122
+    second: spine_2
+  - first:
+      1: 100124
+    second: spine_3
+  - first:
+      1: 100126
+    second: Thumb_1.L
+  - first:
+      1: 100128
+    second: Thumb_1.R
+  - first:
+      1: 100130
+    second: Thumb_2.L
+  - first:
+      1: 100132
+    second: Thumb_2.L_end
+  - first:
+      1: 100134
+    second: Thumb_2.R
+  - first:
+      1: 100136
+    second: Thumb_2.R_end
+  - first:
+      1: 100138
+    second: Toe.L
+  - first:
+      1: 100140
+    second: Toe.L_end
+  - first:
+      1: 100142
+    second: Toe.R
+  - first:
+      1: 100144
+    second: Toe.R_end
+  - first:
+      1: 100146
+    second: Toe_roll.L
+  - first:
+      1: 100148
+    second: Toe_roll.R
+  - first:
+      1: 100150
+    second: Upper_arm.L
+  - first:
+      1: 100152
+    second: Upper_arm.R
+  - first:
+      1: 100154
+    second: Upper_leg.L
+  - first:
+      1: 100156
+    second: Upper_leg.R
+  - first:
+      1: 100158
+    second: Weapon_bone
+  - first:
+      1: 100160
+    second: Weapon_bone_end
+  - first:
+      1: 100162
+    second: Hand.L_end
+  - first:
+      1: 100164
+    second: Hand.R_end
+  - first:
+      4: 400000
+    second: armature
+  - first:
+      4: 400002
+    second: Bottom_arm.L
+  - first:
+      4: 400004
+    second: Bottom_arm.R
+  - first:
+      4: 400006
+    second: Bottom_leg.L
+  - first:
+      4: 400008
+    second: Bottom_leg.R
+  - first:
+      4: 400010
+    second: Bottom_low_leg.L
+  - first:
+      4: 400012
+    second: Bottom_low_leg.R
+  - first:
+      4: 400014
+    second: Clavicle.L
+  - first:
+      4: 400016
+    second: Clavicle.R
+  - first:
+      4: 400018
+    second: Elbow_IK.L
+  - first:
+      4: 400020
+    second: Elbow_IK.L_end
+  - first:
+      4: 400022
+    second: Elbow_IK.R
+  - first:
+      4: 400024
+    second: Elbow_IK.R_end
+  - first:
+      4: 400026
+    second: finger1_1.L
+  - first:
+      4: 400028
+    second: finger1_1.R
+  - first:
+      4: 400030
+    second: finger1_2.L
+  - first:
+      4: 400032
+    second: finger1_2.L_end
+  - first:
+      4: 400034
+    second: finger1_2.R
+  - first:
+      4: 400036
+    second: finger1_2.R_end
+  - first:
+      4: 400038
+    second: finger2_1.L
+  - first:
+      4: 400040
+    second: finger2_1.R
+  - first:
+      4: 400042
+    second: finger2_2.L
+  - first:
+      4: 400044
+    second: finger2_2.L_end
+  - first:
+      4: 400046
+    second: finger2_2.R
+  - first:
+      4: 400048
+    second: finger2_2.R_end
+  - first:
+      4: 400050
+    second: Foot.L
+  - first:
+      4: 400052
+    second: Foot.R
+  - first:
+      4: 400054
+    second: Foot_ctrl.L
+  - first:
+      4: 400056
+    second: Foot_ctrl.R
+  - first:
+      4: 400058
+    second: Foot_IK.L
+  - first:
+      4: 400060
+    second: Foot_IK.L_end
+  - first:
+      4: 400062
+    second: Foot_IK.R
+  - first:
+      4: 400064
+    second: Foot_IK.R_end
+  - first:
+      4: 400066
+    second: FootRoll_crtl.L
+  - first:
+      4: 400068
+    second: FootRoll_crtl.L_end
+  - first:
+      4: 400070
+    second: FootRoll_crtl.R
+  - first:
+      4: 400072
+    second: FootRoll_crtl.R_end
+  - first:
+      4: 400074
+    second: Frogman_BEAST
+  - first:
+      4: 400076
+    second: //RootNode
+  - first:
+      4: 400078
+    second: greb_1
+  - first:
+      4: 400080
+    second: greb_1_end
+  - first:
+      4: 400082
+    second: greb_2
+  - first:
+      4: 400084
+    second: greb_2_end
+  - first:
+      4: 400086
+    second: greb_3
+  - first:
+      4: 400088
+    second: greb_3_end
+  - first:
+      4: 400090
+    second: Hand.L
+  - first:
+      4: 400092
+    second: Hand.R
+  - first:
+      4: 400094
+    second: Hand_IK.L
+  - first:
+      4: 400096
+    second: Hand_IK.R
+  - first:
+      4: 400098
+    second: Head
+  - first:
+      4: 400100
+    second: Heel_roll.L
+  - first:
+      4: 400102
+    second: Heel_roll.R
+  - first:
+      4: 400104
+    second: Hips_ctrl
+  - first:
+      4: 400106
+    second: jaw
+  - first:
+      4: 400108
+    second: jaw_end
+  - first:
+      4: 400110
+    second: Knee_IK.L
+  - first:
+      4: 400112
+    second: Knee_IK.L_end
+  - first:
+      4: 400114
+    second: Knee_IK.R
+  - first:
+      4: 400116
+    second: Knee_IK.R_end
+  - first:
+      4: 400118
+    second: Neck
+  - first:
+      4: 400120
+    second: spine_1
+  - first:
+      4: 400122
+    second: spine_2
+  - first:
+      4: 400124
+    second: spine_3
+  - first:
+      4: 400126
+    second: Thumb_1.L
+  - first:
+      4: 400128
+    second: Thumb_1.R
+  - first:
+      4: 400130
+    second: Thumb_2.L
+  - first:
+      4: 400132
+    second: Thumb_2.L_end
+  - first:
+      4: 400134
+    second: Thumb_2.R
+  - first:
+      4: 400136
+    second: Thumb_2.R_end
+  - first:
+      4: 400138
+    second: Toe.L
+  - first:
+      4: 400140
+    second: Toe.L_end
+  - first:
+      4: 400142
+    second: Toe.R
+  - first:
+      4: 400144
+    second: Toe.R_end
+  - first:
+      4: 400146
+    second: Toe_roll.L
+  - first:
+      4: 400148
+    second: Toe_roll.R
+  - first:
+      4: 400150
+    second: Upper_arm.L
+  - first:
+      4: 400152
+    second: Upper_arm.R
+  - first:
+      4: 400154
+    second: Upper_leg.L
+  - first:
+      4: 400156
+    second: Upper_leg.R
+  - first:
+      4: 400158
+    second: Weapon_bone
+  - first:
+      4: 400160
+    second: Weapon_bone_end
+  - first:
+      4: 400162
+    second: Hand.L_end
+  - first:
+      4: 400164
+    second: Hand.R_end
+  - first:
+      43: 4300000
+    second: Frogman_BEAST
+  - first:
+      74: 7400000
+    second: armature|Murloc_wm_armaAction
+  - first:
+      74: 7400002
+    second: armature|Murloc_wm_armaAction.001
+  - first:
+      74: 7400004
+    second: walk
+  - first:
+      74: 7400006
+    second: run
+  - first:
+      74: 7400008
+    second: idle
+  - first:
+      74: 7400010
+    second: idle_battle
+  - first:
+      74: 7400012
+    second: jump
+  - first:
+      74: 7400014
+    second: def_start
+  - first:
+      74: 7400016
+    second: def_end
+  - first:
+      74: 7400018
+    second: cast_roar
+  - first:
+      74: 7400020
+    second: hit1
+  - first:
+      74: 7400022
+    second: hit2
+  - first:
+      74: 7400024
+    second: die1
+  - first:
+      74: 7400026
+    second: die2
+  - first:
+      74: 7400028
+    second: bite1
+  - first:
+      74: 7400030
+    second: bite2
+  - first:
+      74: 7400032
+    second: torment
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Frogman_BEAST
+  externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
-    animationRotationError: .5
-    animationPositionError: .5
-    animationScaleError: .5
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
+    extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
       name: armature|Murloc_wm_armaAction
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 0
       lastFrame: 473
       wrapMode: 0
@@ -221,6 +600,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -399,9 +779,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: armature|Murloc_wm_armaAction.001
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 0
       lastFrame: 480
       wrapMode: 0
@@ -409,6 +791,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -587,9 +970,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 2
       lastFrame: 29
       wrapMode: 0
@@ -597,6 +982,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 1
       loopBlendOrientation: 0
@@ -775,9 +1161,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: run
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 35
       lastFrame: 54
       wrapMode: 0
@@ -785,6 +1173,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 1
       loopBlendOrientation: 0
@@ -963,9 +1352,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: idle
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 60
       lastFrame: 120
       wrapMode: 0
@@ -973,6 +1364,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 1
       loopBlendOrientation: 0
@@ -1151,9 +1543,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: idle_battle
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 130
       lastFrame: 160
       wrapMode: 0
@@ -1161,6 +1555,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 1
       loopBlendOrientation: 0
@@ -1339,9 +1734,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: jump
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 170
       lastFrame: 205
       wrapMode: 0
@@ -1349,6 +1746,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -1527,9 +1925,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: def_start
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 210
       lastFrame: 219
       wrapMode: 0
@@ -1537,6 +1937,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -1715,9 +2116,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: def_end
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 220
       lastFrame: 235
       wrapMode: 0
@@ -1725,6 +2128,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -1903,9 +2307,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: cast_roar
       takeName: armature|Murloc_wm_armaAction
+      internalID: 0
       firstFrame: 235
       lastFrame: 280
       wrapMode: 0
@@ -1913,6 +2319,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2091,9 +2498,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: hit1
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 285
       lastFrame: 300
       wrapMode: 0
@@ -2101,6 +2510,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2243,9 +2653,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: hit2
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 300
       lastFrame: 310
       wrapMode: 0
@@ -2253,6 +2665,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2395,9 +2808,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: die1
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 310
       lastFrame: 338
       wrapMode: 0
@@ -2405,6 +2820,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2547,9 +2963,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: die2
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 344
       lastFrame: 368
       wrapMode: 0
@@ -2557,6 +2975,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2699,9 +3118,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: bite1
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 380
       lastFrame: 410
       wrapMode: 0
@@ -2709,6 +3130,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2851,9 +3273,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: bite2
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 410
       lastFrame: 440
       wrapMode: 0
@@ -2861,6 +3285,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -2873,7 +3298,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9669967
+        functionName: ChangeMonsterStateFollow
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
@@ -3003,9 +3435,11 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: torment
       takeName: armature|Murloc_wm_armaAction.001
+      internalID: 0
       firstFrame: 440
       lastFrame: 480
       wrapMode: 0
@@ -3013,6 +3447,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
+      hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -3155,44 +3590,72 @@ ModelImporter:
         weight: 1
       maskType: 0
       maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 0
     importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 4
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
+    serializedVersion: 3
     human: []
     skeleton: []
-    armTwist: .5
-    foreArmTwist: .5
-    upperLegTwist: .5
-    legTwist: .5
-    armStretch: .0500000007
-    legStretch: .0500000007
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
