@@ -31,7 +31,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] MonsterState monsterState;
     [SerializeField] bool isAttacking = false;
     [SerializeField] bool CanAttack = true;
-
+    [SerializeField] bool AttackLookAtEnd = false;
 
     private Coroutine KnockBackCoroutine;
     private Coroutine FindPathCorutine;
@@ -63,7 +63,7 @@ public class MonsterController : MonoBehaviour
         isStun = false;
         skinnedMeshRenderer.material = IdleMateriel;
 
-        
+
 
         //플레이어 탐색시작( 생성후 X -> 캐릭터가 방에 들어왔을 경우로 수정)
         FindPathCorutine = StartCoroutine(FindingPlayerPath());
@@ -91,16 +91,13 @@ public class MonsterController : MonoBehaviour
 
     }
 
-    //private void LateUpdate()
-    //{
-    //    FollowPlayer();
-    //}
 
     void ChangeMonsterState(MonsterState Changestate)
     {
         monsterState = Changestate;
     }
 
+    //Monster State 상태 FollowPlayer로 변경
     public void ChangeMonsterStateFollow()
     {
         monsterState = MonsterState.FollowPlayer;
@@ -110,41 +107,71 @@ public class MonsterController : MonoBehaviour
 
     void Monster_Rotation(Vector3 target)
     {
-        Vector3 direction =  (target - transform.position).normalized;
+        Vector3 direction = (target - transform.position).normalized;
         //회전각도(쿼터니언)산출
         Quaternion targetangle = Quaternion.LookRotation(direction);
         //선형보간 함수를 이용해 부드러운 회전
         animator.transform.rotation = Quaternion.Slerp(animator.transform.rotation, targetangle, Time.deltaTime * 8.0f); //Time.deltaTime * 8.0f);
-
+        //Debug.Log("바라보기");
         //animator.transform.rotation = Quaternion.LookRotation(direction);
     }
 
 
     void Attack()
     {
-        if(CanAttack == true && isAttacking == false)
+        if (CanAttack == true && isAttacking == false)
         {
             animator.SetTrigger("Attack");
-            Monster_Rotation(MonsterManager.Instance.GetPlayerTransfrom().position);
             isAttacking = true;
             CanAttack = false;
+            AttackLookAtEnd = false;
             StartCoroutine(AttackCoolTime());
+            StartCoroutine(AttackLookat());
+        }
+    }
+    //공격시 일정시간 타겟 바라보기
+    IEnumerator AttackLookat()
+    {
+        float LookatTime = 0.35f;
+
+        while (0 < LookatTime)
+        {
+            if (AttackLookAtEnd)
+            {
+                AttackLookAtEnd = false;
+                break;
+            }
+
+            //Monster_Rotation(MonsterManager.Instance.GetPlayerTransfrom().position);
+            Monster_Rotation(Player.transform.position);
+            //Debug.Log("attackLook");
+            //LookatTime -= Time.deltaTime;
+
+            yield return null;
         }
     }
 
+    //공격중 타겟 바라보기 끝내기
+    public void AttackLookAt_End()
+    {
+        AttackLookAtEnd = true;
+    }
+
+    //공격 쿨타임
     IEnumerator AttackCoolTime()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.3f);
         CanAttack = true;
     }
 
     void FollowPlayer()
     {
         float Distance = 100;
-        if (FollowPath.Count < 2)
+        if (FollowPath.Count < 3)
             Distance = Vector3.Distance(transform.position, Player.transform.position);
 
-        if(Distance <= monsterData.AttackRange)
+        //공격 가능거리면 State Attack로 변경
+        if (Distance <= monsterData.AttackRange)
         {
             ChangeMonsterState(MonsterState.Attack);
             animator.SetBool("Walk", false);
@@ -152,15 +179,28 @@ public class MonsterController : MonoBehaviour
         }
 
 
-        if (FollowPath.Count < 2 && Distance < 10)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
+        if (FollowPath.Count < 3 && Distance < 15)
+        {//타겟과 가까운 경우
+            Debug.Log(Distance);
+            Vector3 vec3dir = (Player.transform.position - transform.position).normalized;
+            //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
+
+            transform.position += vec3dir * Time.deltaTime * MoveSpeed;
+
+
             Monster_Rotation(Player.transform.position);
             animator.SetBool("Walk", true);
+
+            // Path의 마지막 칸에 들어올 경우 제거
+            if (FollowPath.Count > 0 && transform.position.x >= FollowPath[0].X * 10 + 3 && transform.position.x <= FollowPath[0].X * 10 + 7
+                && transform.position.z >= FollowPath[0].Y * 10 + 3 && transform.position.z <= FollowPath[0].Y * 10 + 7)
+            {
+                FollowPath.RemoveAt(0);
+            }
             Debug.Log("가까운 추격");
         }
         else
-        {
+        {//타겟과 멀리 있는 경우 A* Path사용하여 이동
             if (FollowPath.Count <= 0)
                 return;
             var Path = FollowPath[0];
@@ -169,6 +209,8 @@ public class MonsterController : MonoBehaviour
             animator.SetBool("Walk", true);
             Monster_Rotation(target);
             Debug.Log("A*  Count > 2");
+
+            // Path의 마지막 칸에 들어올 경우 제거
             if (transform.position.x >= FollowPath[0].X * 10 + 3 && transform.position.x <= FollowPath[0].X * 10 + 7
                 && transform.position.z >= FollowPath[0].Y * 10 + 3 && transform.position.z <= FollowPath[0].Y * 10 + 7)
             {
@@ -177,15 +219,15 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-
+    //목표지점 길 찾기
     IEnumerator FindingPlayerPath()
     {
         monsterState = MonsterState.FollowPlayer;
-        while(!IsDie)
+        while (!IsDie)
         {
             FollowPath = MapManager.Instance.GetAstarPath(this.transform, Player.transform);
-            if(FollowPath.Count > 0)
-                 FollowPath.RemoveAt(0);
+            if (FollowPath.Count > 0)
+                FollowPath.RemoveAt(0);
             yield return new WaitForSeconds(0.3f);
         }
     }
@@ -200,38 +242,42 @@ public class MonsterController : MonoBehaviour
 
     }
 
-
+    //넉백 
     void DamageKnockBack(float KnockBackRange)
     {
         if (KnockBackRange == 0)
             return;
         Transform PlayerTransfrom = MonsterManager.Instance.GetPlayerTransfrom();
-        Vector3 KnockBackPosition = (transform.position-PlayerTransfrom.position ).normalized;
+        Vector3 KnockBackPosition = (transform.position - PlayerTransfrom.position).normalized;
         KnockBackPosition *= KnockBackRange;
         KnockBackPosition.y = 0;
 
         KnockBackPosition += transform.position;
 
-        if(KnockBackCoroutine != null)
+        if (KnockBackCoroutine != null)
             StopCoroutine(KnockBackCoroutine);
         KnockBackCoroutine = StartCoroutine(KnockBackMove(KnockBackPosition));
     }
 
+    //넉백 이동
     IEnumerator KnockBackMove(Vector3 KnockBackPosition)
     {
         float time = 0f;
         float timeCheck = 1f;
         IsKnockBack = true;
-        while (transform.position != KnockBackPosition)
+        var currPos = transform.position;
+        while (currPos != KnockBackPosition && timeCheck > time)//목표 위치에 도착 or 시간이 지나면 반복문 탈출
         {
-            time += Time.deltaTime / timeCheck;
-            transform.position = Vector3.Lerp(transform.position, KnockBackPosition, time);
-           
+            time += Time.deltaTime;
+            currPos = Vector3.Lerp(currPos, KnockBackPosition, time);
+            transform.position = currPos;
 
             yield return null;
         }
         IsKnockBack = false;
     }
+
+    //데미지 애니메이션
     void DamageAni(bool isStun)
     {
         if (isAttacking == true)
@@ -242,6 +288,9 @@ public class MonsterController : MonoBehaviour
         else
             animator.SetTrigger("Hit");
     }
+
+
+    //데미지 효과
     void DamageEffect()
     {
         var particleobject = ObjectPoolManger.Instance.ReturnObject(ObjectType.Effect);
@@ -266,14 +315,20 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        GetComponent<Rigidbody>().isKinematic = true;
         if (other.tag == "Weapon")
         {
             DamageEffect();
+            //게임 메니저로 무기 종류 가져오기
             Weapon weapon = FindObjectOfType<Player_Attack>().GetWeapon();
             DamageCrowdControl(weapon);
         }
     }
+    private void OnTriggerExit(Collider other)
+    {
+        GetComponent<Rigidbody>().isKinematic = false;
 
+    }
     #region 기즈모
 
     private void OnDrawGizmosSelected()
