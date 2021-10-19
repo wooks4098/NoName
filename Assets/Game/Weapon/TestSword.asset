@@ -35,11 +35,11 @@ MonoBehaviour:
     Stuntime: 0
     IsStun: 0
   - KnockBack: 1.5
-    Stuntime: 0.8
+    Stuntime: 1.5
     IsStun: 1
   - KnockBack: 0
     Stuntime: 0
     IsStun: 0
   - KnockBack: 1
-    Stuntime: 0.5
+    Stuntime: 1
     IsStun: 1

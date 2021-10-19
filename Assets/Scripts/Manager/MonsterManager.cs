@@ -23,6 +23,11 @@ public class MonsterManager : MonoBehaviour
 
     public Transform GetPlayerTransfrom()
     {
-        return PlayerTransfrom;
+        return GameManager.Instance.GetPlayerTrans();
+    }
+
+    public Vector3 GetPlayerPos()
+    {
+        return GameManager.Instance.GetPlayerPos();
     }
 }

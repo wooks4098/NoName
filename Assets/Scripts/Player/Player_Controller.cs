@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
 {
-    IInput input;
-    Player_Movement movement;
+   // [SerializeField] IInput input;
+    [SerializeField] Player_Movement movement;
+    [SerializeField] Player_Attack player_Attack;
+    [SerializeField] Player_Input player_input;
+    public Player_Attack GetPlayer_Attack { get { return player_Attack; } }
 
     private void Start()
     {
-        input = GetComponent<IInput>();
-        movement = GetComponent<Player_Movement>();
+
+       // input = player_input.GetComponent<IInput>();
+        //movement = GetComponent<Player_Movement>();
 
         //Input ¿¬°á
-        input.OnMovementDirectionInput += movement.HandleMovementDirection;
-        input.OnMovementInput += movement.HandleMovement;
+        player_input.OnMovementDirectionInput += movement.HandleMovementDirection;
+        player_input.OnMovementInput += movement.HandleMovement;
 
-        var skill = GetComponent<ISkill>();
-        input.OnAttackInput += skill.Attack;
-        input.OnDodge += skill.Dodge;
-        input.QSkill += skill.Qskill;
+        //var skill = player_Attack.GetComponent<ISkill>();
+        player_input.OnAttackInput += player_Attack.Attack;
+        player_input.OnDodge += player_Attack.Dodge;
+        player_input.QSkill += player_Attack.Qskill;
 
 
     }
