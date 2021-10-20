@@ -8,7 +8,6 @@ public class MonsterManager : MonoBehaviour
     public static MonsterManager Instance { get { return instance; } }
 
     [SerializeField] Transform PlayerTransfrom;
-
     private void Awake()
     {
         if (null == instance)

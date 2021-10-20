@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
 
     Player_Attack player_Attack;
-
+    Player_StatuController player_StatuController;
 
     bool test = false;
     private void Awake()
@@ -45,8 +45,17 @@ public class GameManager : MonoBehaviour
         PlayerRoot = Instantiate(PlayerRootPrefab, Vector3.zero, Quaternion.identity);
         Player = PlayerRoot.transform.GetChild(0).gameObject;
         Camera = PlayerRoot.transform.GetChild(1).gameObject;
+        player_Attack = Player.GetComponent<Player_Attack>();
+        player_StatuController = Player.GetComponent<Player_StatuController>();
+
+
         PlayerRoot.SetActive(true);
         Monster.SetActive(true);
+    }
+
+    public void PlayerDamage(float _Damage, bool isStrun)
+    {
+        player_StatuController.Damage(_Damage, isStrun);
     }
 
     #region return
@@ -61,10 +70,7 @@ public class GameManager : MonoBehaviour
         return Player.transform;
     }
 
-    //public Weapon GetPlayerWeapon()
-    //{
-        
-    //}
+
     #endregion
 
 

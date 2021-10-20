@@ -7,15 +7,9 @@ public class Player_Movement : MonoBehaviour
 
     CharacterController controller;
     Animator animator;
+    Player_StatuController statuController;
 
-    public float moverotationSpeed;
-    public float attackrotationSpeed;
-    public float movementSpeed;
-    public float dodgeSpeed;
-    public float RunSpeed;
-    public float AttackSpeed;
-    public float JumpPower;
-    public float gravity = 20;
+
     Vector3 movementVector = Vector3.zero;
     private float desiredRotationAngle = 0;
 
@@ -28,11 +22,12 @@ public class Player_Movement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        statuController = GetComponent<Player_StatuController>();
     }
 
     private void Update()
     {
-        movementVector.y -= gravity;
+        movementVector.y -= statuController.gravity;
         if(controller.isGrounded)
         {
             
@@ -47,7 +42,7 @@ public class Player_Movement : MonoBehaviour
     {
         if (controller.isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
-            movementVector.y = JumpPower;
+            movementVector.y = statuController.JumpPower;
         }
     }
 
@@ -66,7 +61,7 @@ public class Player_Movement : MonoBehaviour
             {//공격중일 때
                 RotatePlayer_Rotation(IsSkill);
                 if(IsSkill == UseSkill.Dodge)
-                    movementVector = transform.forward * dodgeSpeed;
+                    movementVector = transform.forward * statuController.dodgeSpeed;
             }
             animator.SetBool("IsRun", false);
 
@@ -79,20 +74,20 @@ public class Player_Movement : MonoBehaviour
             if (IsSkill == UseSkill.AttackCombo || IsSkill == UseSkill.DashAttack || IsSkill == UseSkill.QSkill)
             {
                 RotatePlayer_Rotation(IsSkill);
-                movementVector = transform.forward * AttackSpeed;
+                movementVector = transform.forward * statuController.AttackSpeed;
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
                 RunTime = 0;
             }
             else if(IsSkill == UseSkill.Dodge)
             {
                 RotatePlayer_Rotation(IsSkill);
-                movementVector = transform.forward * dodgeSpeed;
+                movementVector = transform.forward * statuController.dodgeSpeed;
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
                 RunTime = 0;
             }
             else if (isRun)
             {//Run
-                movementVector = transform.forward * RunSpeed;
+                movementVector = transform.forward * statuController.RunSpeed;
                 animator.SetBool("IsRun", true);
                 RunTime += Time.deltaTime;
 
@@ -100,7 +95,7 @@ public class Player_Movement : MonoBehaviour
             else
             {//Walk
                 RunTime = 0;
-                movementVector = transform.forward * movementSpeed;
+                movementVector = transform.forward * statuController.movementSpeed;
                 
                 animator.SetFloat("Battle_Walk", Mathf.Max(Mathf.Abs(input.x), Mathf.Abs(input.y)));
             }
@@ -131,17 +126,17 @@ public class Player_Movement : MonoBehaviour
     {
         float FadeOut_Time = 0f;
         float FadeOut_TimeCheck = 0.5f;
-        float ChangeMovementSpeed = movementSpeed;
+        float ChangeMovementSpeed = statuController.movementSpeed;
         RunTime = 0;
-        movementSpeed = RunSpeed;
+        statuController.movementSpeed = statuController.RunSpeed;
         animator.SetBool("IsRun", false);
-        while (movementSpeed > ChangeMovementSpeed)
+        while (statuController.movementSpeed > ChangeMovementSpeed)
         {
             FadeOut_Time += Time.deltaTime / FadeOut_TimeCheck;
-            movementSpeed = Mathf.Lerp(RunSpeed, ChangeMovementSpeed, FadeOut_Time);
+            statuController.movementSpeed = Mathf.Lerp(statuController.RunSpeed, ChangeMovementSpeed, FadeOut_Time);
             yield return null;
         }
-        movementSpeed = ChangeMovementSpeed;
+        statuController.movementSpeed = ChangeMovementSpeed;
 
         yield return null;
     }
@@ -163,7 +158,7 @@ public class Player_Movement : MonoBehaviour
     {
         //if (desiredRotationAngle_Front > 10 || desiredRotationAngle_Front < -10)
         {
-            transform.Rotate(Vector3.up * desiredRotationAngle * (IsSkill == UseSkill.None ?  attackrotationSpeed: moverotationSpeed) * Time.deltaTime);
+            transform.Rotate(Vector3.up * desiredRotationAngle * (IsSkill == UseSkill.None ? statuController.attackrotationSpeed : statuController.moverotationSpeed) * Time.deltaTime);
         }
     }
 

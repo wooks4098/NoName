@@ -15,4 +15,4 @@ MonoBehaviour:
   HP: 100
   AttackRange: 1.5
   Damage: 5
-  MoveSpeed: 0
+  MoveSpeed: 6

@@ -9,6 +9,7 @@ enum MonsterState
     FollowPlayer,
     Attack,
     Strun,
+    Die
     //데미지는 언제든 입을 수 있음
     //데미지를 입고 기절 -> Idle상태로 전환하는것은 후에 작업
 }
@@ -18,24 +19,28 @@ public class MonsterController : MonoBehaviour
 {
     [SerializeField] MonsterData monsterData;
 
-    [SerializeField] Transform DamageEffectTransfrom; //피격효과 위치
-    [SerializeField] Material IdleMateriel;  //기본 Materiel
-    [SerializeField] Material DamageMateriel; //피격 Materiel
-    [SerializeField] SkinnedMeshRenderer skinnedMeshRenderer;
+    [SerializeField] MonsterState monsterState;
 
+
+    //상태 변경시 조건 확인 변수
     [SerializeField] bool isStun = false;//기절했는지
     [SerializeField] bool IsKnockBack = false;//기절했는지
     [SerializeField] bool IsDie = false;
-
-    [SerializeField] float MoveSpeed;
-
-    [SerializeField] MonsterState monsterState;
     [SerializeField] bool isAttacking = false;
     [SerializeField] bool CanAttack = true;
     [SerializeField] bool AttackLookAtEnd = false;
     [SerializeField] bool isStrunning = false;
 
+    //공격 콜라이더
+    [SerializeField] BoxCollider DamageCollider;
 
+
+    //몬스터 피격효과
+    [SerializeField] Transform DamageEffectTransfrom; //피격효과 위치
+    [SerializeField] Material IdleMateriel;  //기본 Materiel
+    [SerializeField] Material DamageMateriel; //피격 Materiel
+    [SerializeField] SkinnedMeshRenderer skinnedMeshRenderer;
+    //코루틴
     private Coroutine CoKnockBackCoroutine;
     private Coroutine CoFindPathCorutine;
     private Coroutine CoAttackCoolTime;
@@ -44,11 +49,13 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] List<Astar_Node> FollowPath; //탐색 루트
 
-
+    MosnterStatusController mosnterStatusController;
+    [SerializeField] MonsterDamage monsterDamage;
     Animator animator;
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        mosnterStatusController = GetComponent<MosnterStatusController>();
         monsterState = MonsterState.Idle;
     }
 
@@ -91,6 +98,8 @@ public class MonsterController : MonoBehaviour
     void ChangeMonsterState(MonsterState Changestate)
     {
         monsterState = Changestate;
+        DamageColliderOff();
+
     }
 
     //Monster State 상태 FollowPlayer로 변경
@@ -162,6 +171,16 @@ public class MonsterController : MonoBehaviour
         yield return new WaitForSeconds(1.3f);
         CanAttack = true;
     }
+    //공격 콜라이더 켜기
+    public void DamageColliderOn()
+    {
+        DamageCollider.enabled = true;
+    }
+    //공격 콜라이더 끄기
+    public void DamageColliderOff()
+    {
+        DamageCollider.enabled = false;
+    }
 
     void FollowPlayer()
     {
@@ -180,11 +199,11 @@ public class MonsterController : MonoBehaviour
 
         if (FollowPath.Count < 3 && Distance < 15)
         {//타겟과 가까운 경우
-            Debug.Log(Distance);
+            //Debug.Log(Distance);
             Vector3 vec3dir = (MonsterManager.Instance.GetPlayerPos() - transform.position).normalized;
             //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
 
-            transform.position += vec3dir * Time.deltaTime * MoveSpeed;
+            transform.position += vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed;
 
 
             Monster_Rotation(MonsterManager.Instance.GetPlayerPos());
@@ -196,7 +215,7 @@ public class MonsterController : MonoBehaviour
             {
                 FollowPath.RemoveAt(0);
             }
-            Debug.Log("가까운 추격");
+            //Debug.Log("가까운 추격");
         }
         else
         {//타겟과 멀리 있는 경우 A* Path사용하여 이동
@@ -204,10 +223,10 @@ public class MonsterController : MonoBehaviour
                 return;
             var Path = FollowPath[0];
             Vector3 target = new Vector3(Path.X * 10 + 5f, transform.position.y, Path.Y * 10 + 5f);  //10은 Plane길이 나중에 변수로 수정해야함
-            transform.position = Vector3.MoveTowards(transform.position, target, MoveSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, target, mosnterStatusController.monsterData.MoveSpeed * Time.deltaTime);
             animator.SetBool("Walk", true);
             Monster_Rotation(target);
-            Debug.Log("A*  Count > 2");
+            //Debug.Log("A*  Count > 2");
 
             // Path의 마지막 칸에 들어올 경우 제거
             if (transform.position.x >= FollowPath[0].X * 10 + 3 && transform.position.x <= FollowPath[0].X * 10 + 7
@@ -249,8 +268,8 @@ public class MonsterController : MonoBehaviour
      
         if (KnockBackRange == 0)
             return;
-
-        ChangeMonsterState(MonsterState.Strun);
+        if(isStrun)
+            ChangeMonsterState(MonsterState.Strun);
 
         Vector3 KnockBackPosition = (transform.position - MonsterManager.Instance.GetPlayerPos()).normalized;
         KnockBackPosition *= KnockBackRange;
@@ -298,12 +317,13 @@ public class MonsterController : MonoBehaviour
     //데미지 애니메이션
     void DamageAni(bool isStun)
     {
-        //if (isAttacking == true)
-        //    return;
+        //StunHit은 어떠한 경우여도 애니메이션 발생
+        //Hit은 Attacking중에는 발생 X
+
 
         if ( isStun)
             animator.SetTrigger("StunHit");
-        else
+        else if(!isAttacking)
             animator.SetTrigger("Hit");
     }
 
