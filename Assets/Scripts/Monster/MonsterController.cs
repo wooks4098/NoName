@@ -14,13 +14,20 @@ enum MonsterState
     //데미지를 입고 기절 -> Idle상태로 전환하는것은 후에 작업
 }
 
+enum MonsterFollow
+{
+    None = 0, //움직이지 않음
+    OnlyMove, //무작위로 움직임
+    OnlyFollow, //플레이어를 따라다님
+    FindAndFollow, // 탐색 후 따라다님
+}
 
 public class MonsterController : MonoBehaviour
 {
     [SerializeField] MonsterData monsterData;
 
     [SerializeField] MonsterState monsterState;
-
+    [SerializeField] MonsterFollow monsterFollow;
 
     //상태 변경시 조건 확인 변수
     [SerializeField] bool isStun = false;//기절했는지
@@ -57,6 +64,7 @@ public class MonsterController : MonoBehaviour
         animator = GetComponent<Animator>();
         mosnterStatusController = GetComponent<MosnterStatusController>();
         monsterState = MonsterState.Idle;
+        //monsterData.ChangeAnimator(animator);
     }
 
 
@@ -67,9 +75,8 @@ public class MonsterController : MonoBehaviour
         skinnedMeshRenderer.material = IdleMateriel;
 
 
-
+        SetMonsterStartState();
         //플레이어 탐색시작( 생성후 X -> 캐릭터가 방에 들어왔을 경우로 수정)
-        CoFindPathCorutine = StartCoroutine(FindingPlayerPath());
 
     }
     private void Update()
@@ -94,11 +101,35 @@ public class MonsterController : MonoBehaviour
 
     }
 
+    void SetMonsterStartState()
+    {
+        switch(monsterFollow)
+        {
+            case MonsterFollow.None:
+                ChangeMonsterState(MonsterState.Idle);
+                break;
+            case MonsterFollow.OnlyMove:
+                ChangeMonsterState(MonsterState.Idle);
+                break;
+            case MonsterFollow.FindAndFollow:
+                ChangeMonsterState(MonsterState.FindPlayer);
+                break;
+            case MonsterFollow.OnlyFollow:
+                ChangeMonsterState(MonsterState.FollowPlayer);
+                break;
+            default:
+                ChangeMonsterState(MonsterState.FollowPlayer);
+                break;
+        }
+    }
 
     void ChangeMonsterState(MonsterState Changestate)
     {
         monsterState = Changestate;
         DamageColliderOff();
+        if(Changestate == MonsterState.FollowPlayer)
+            CoFindPathCorutine = StartCoroutine(FindingPlayerPath());
+
 
     }
 
@@ -109,6 +140,9 @@ public class MonsterController : MonoBehaviour
             monsterState = MonsterState.FollowPlayer;
         isAttacking = false;
         AttackLookAt_End();
+        DamageColliderOff();
+        CoFindPathCorutine = StartCoroutine(FindingPlayerPath());
+
     }
 
 
@@ -240,7 +274,7 @@ public class MonsterController : MonoBehaviour
     //목표지점 길 찾기
     IEnumerator FindingPlayerPath()
     {
-        monsterState = MonsterState.FollowPlayer;
+
         while (!IsDie)
         {
             FollowPath = MapManager.Instance.GetAstarPath(this.transform, MonsterManager.Instance.GetPlayerTransfrom());

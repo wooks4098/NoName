@@ -8,13 +8,15 @@ public class MonsterDamage : MonoBehaviour
 {
 
     MosnterStatusController monsterStatusController;
+    BoxCollider attackCollider;
 
     private void Awake()
     {
         monsterStatusController = GetComponentInParent<MosnterStatusController>();
+        attackCollider = GetComponent<BoxCollider>();
     }
 
-
+    
     
 
     private void OnTriggerEnter(Collider other)
@@ -22,7 +24,8 @@ public class MonsterDamage : MonoBehaviour
         if(other.tag == "Player")
         {
             Debug.Log(other.name);
-            gameObject.SetActive(false);
+            attackCollider.enabled = false;
+            //gameObject.SetActive(false);
             GameManager.Instance.PlayerDamage(monsterStatusController.monsterData.Damage, false);   
         }
     }

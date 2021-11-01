@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject Player;
     [SerializeField] GameObject Camera;
     [SerializeField] GameObject Monster;
+    [SerializeField] GameObject Monster1;
 
 
     Player_Attack player_Attack;
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
 
         PlayerRoot.SetActive(true);
         Monster.SetActive(true);
+        Monster1.SetActive(true);
     }
 
     public void PlayerDamage(float _Damage, bool isStrun)
