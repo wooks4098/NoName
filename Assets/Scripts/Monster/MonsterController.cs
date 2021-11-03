@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum MonsterState
+public enum MonsterState
 { 
     Idle = 0,
     FindPlayer,
@@ -28,6 +28,10 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] MonsterState monsterState;
     [SerializeField] MonsterFollow monsterFollow;
+
+    Vector3 movementVector = Vector3.zero; //이동 벡터
+
+
 
     //상태 변경시 조건 확인 변수
     [SerializeField] bool isStun = false;//기절했는지
@@ -75,20 +79,33 @@ public class MonsterController : MonoBehaviour
 
     private void OnEnable()
     {
+        MonsterSpawn();
+
+    }
+
+    //몬스터 생성시 값 초기화
+    void MonsterSpawn()
+    {
+        animator.SetBool("IsDie", false);
+
+        mosnterStatusController.SetHp();
         isStun = false;
         skinnedMeshRenderer.material = IdleMateriel;
 
 
         SetMonsterStartState();
         //플레이어 탐색시작( 생성후 X -> 캐릭터가 방에 들어왔을 경우로 수정)
-
     }
+
     private void Update()
     {
+        movementVector.y -= monsterData.gravity;
+
 
         switch (monsterState)
         {
             case MonsterState.Idle:
+                movementVector = Vector3.zero;
                 break;
             case MonsterState.FindPlayer:
                 break;
@@ -96,10 +113,15 @@ public class MonsterController : MonoBehaviour
                 FollowPlayer();
                 break;
             case MonsterState.Attack:
+                movementVector = Vector3.zero;
                 Attack();
+                break;
+            case MonsterState.Die:
+                animator.SetBool("IsDie", true);
                 break;
         }
 
+        characterController.Move(movementVector * Time.deltaTime);
 
 
 
@@ -127,7 +149,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    void ChangeMonsterState(MonsterState Changestate)
+    public void ChangeMonsterState(MonsterState Changestate)
     {
         monsterState = Changestate;
         DamageColliderOff();
@@ -170,13 +192,6 @@ public class MonsterController : MonoBehaviour
             AttackLookAtEnd = false;
             StartCoroutine(AttackCoolTime());
             StartCoroutine(AttackLookat());
-
-            //if (CoAttackCoolTime != null)
-            //    StopCoroutine(CoAttackCoolTime);
-            //CoAttackCoolTime = StartCoroutine(AttackCoolTime());
-            //if (CoAttackLookat != null)
-            //    StopCoroutine(CoAttackCoolTime);
-            //CoAttackLookat = StartCoroutine(AttackLookat());
 
         }
     }
@@ -241,8 +256,8 @@ public class MonsterController : MonoBehaviour
             Vector3 vec3dir = (MonsterManager.Instance.GetPlayerPos() - transform.position).normalized;
             //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
 
-            characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
-
+            //characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
+            movementVector = vec3dir * mosnterStatusController.monsterData.MoveSpeed;
             //transform.position += vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed;
 
 
@@ -266,7 +281,8 @@ public class MonsterController : MonoBehaviour
             //transform.position = Vector3.MoveTowards(transform.position, target, mosnterStatusController.monsterData.MoveSpeed * Time.deltaTime);
 
             Vector3 vec3dir = (target - transform.position).normalized;
-            characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
+            //characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
+            movementVector = vec3dir * mosnterStatusController.monsterData.MoveSpeed;
 
             animator.SetBool("Walk", true);
             Monster_Rotation(target);
@@ -334,11 +350,16 @@ public class MonsterController : MonoBehaviour
         float timeCheck = 1f;
         IsKnockBack = true;
         var currPos = transform.position;
+        Vector3 vec3dir;
         while (currPos != KnockBackPosition && timeCheck > time)//목표 위치에 도착 or 시간이 지나면 반복문 탈출
         {
             time += Time.deltaTime;
             currPos = Vector3.Lerp(currPos, KnockBackPosition, time);
-            transform.position = currPos;
+            //transform.position = currPos;
+
+            vec3dir = (KnockBackPosition - transform.position);
+
+            movementVector = vec3dir * mosnterStatusController.monsterData.MoveSpeed;
 
             yield return null;
         }
@@ -404,6 +425,7 @@ public class MonsterController : MonoBehaviour
             //게임 메니저로 무기 종류 가져오기
             Weapon weapon = FindObjectOfType<Player_Attack>().GetWeapon();
             DamageCrowdControl(weapon);
+            ChangeMonsterState(MonsterState.Die);
         }
     }
     private void OnTriggerExit(Collider other)

@@ -29,7 +29,7 @@ public class Player_StatuController : MonoBehaviour
 
     public void Damage(float _Damage, bool isStrun)
     {
-        Hp -= _Damage;
+        Hp = Mathf.Max(Hp - _Damage,0);
         //Debug.Log("플레이어" + _Damage + "만큼의 피해입음");
     }
 }

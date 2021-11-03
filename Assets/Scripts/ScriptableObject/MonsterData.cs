@@ -18,7 +18,7 @@ public class MonsterData : ScriptableObject
 
     //이동관련
     public float MoveSpeed;
-
+    public float gravity;
 
     //public void ChangeAnimator(Animator animator)
     //{
