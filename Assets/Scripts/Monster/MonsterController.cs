@@ -58,9 +58,13 @@ public class MonsterController : MonoBehaviour
 
     MosnterStatusController mosnterStatusController;
     [SerializeField] MonsterDamage monsterDamage;
+    [SerializeField] CharacterController characterController;
+
+
     Animator animator;
     private void Awake()
     {
+        characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         mosnterStatusController = GetComponent<MosnterStatusController>();
         monsterState = MonsterState.Idle;
@@ -237,7 +241,9 @@ public class MonsterController : MonoBehaviour
             Vector3 vec3dir = (MonsterManager.Instance.GetPlayerPos() - transform.position).normalized;
             //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
 
-            transform.position += vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed;
+            characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
+
+            //transform.position += vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed;
 
 
             Monster_Rotation(MonsterManager.Instance.GetPlayerPos());
@@ -257,7 +263,11 @@ public class MonsterController : MonoBehaviour
                 return;
             var Path = FollowPath[0];
             Vector3 target = new Vector3(Path.X * 10 + 5f, transform.position.y, Path.Y * 10 + 5f);  //10은 Plane길이 나중에 변수로 수정해야함
-            transform.position = Vector3.MoveTowards(transform.position, target, mosnterStatusController.monsterData.MoveSpeed * Time.deltaTime);
+            //transform.position = Vector3.MoveTowards(transform.position, target, mosnterStatusController.monsterData.MoveSpeed * Time.deltaTime);
+
+            Vector3 vec3dir = (target - transform.position).normalized;
+            characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
+
             animator.SetBool("Walk", true);
             Monster_Rotation(target);
             //Debug.Log("A*  Count > 2");
@@ -387,7 +397,7 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GetComponent<Rigidbody>().isKinematic = true;
+        //GetComponent<Rigidbody>().isKinematic = true;
         if (other.tag == "Weapon")
         {
             DamageEffect();
@@ -398,7 +408,7 @@ public class MonsterController : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        GetComponent<Rigidbody>().isKinematic = false;
+        //GetComponent<Rigidbody>().isKinematic = false;
 
     }
     #region 기즈모
