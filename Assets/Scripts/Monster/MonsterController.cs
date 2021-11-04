@@ -86,12 +86,13 @@ public class MonsterController : MonoBehaviour
     //몬스터 생성시 값 초기화
     void MonsterSpawn()
     {
-        animator.SetBool("IsDie", false);
+        //animator.play() 초기 애니메이션 셜정
 
         mosnterStatusController.SetHp();
         isStun = false;
         skinnedMeshRenderer.material = IdleMateriel;
 
+        characterController.enabled = true;
 
         SetMonsterStartState();
         //플레이어 탐색시작( 생성후 X -> 캐릭터가 방에 들어왔을 경우로 수정)
@@ -117,7 +118,7 @@ public class MonsterController : MonoBehaviour
                 Attack();
                 break;
             case MonsterState.Die:
-                animator.SetBool("IsDie", true);
+                movementVector = Vector3.zero;
                 break;
         }
 
@@ -151,26 +152,73 @@ public class MonsterController : MonoBehaviour
 
     public void ChangeMonsterState(MonsterState Changestate)
     {
+        Debug.Log(mosnterStatusController.GetHp());
+        if (mosnterStatusController.GetHp() <= 0 && Changestate == MonsterState.Die)
+        {
+            StopAllCoroutines();
+            Debug.Log(monsterState);
+            if (monsterState != MonsterState.Die)
+            {
+                animator.SetTrigger("DieTrigger");
+                Debug.Log("trigger");
+            }
+            //characterController.enabled = false;
+            monsterState = MonsterState.Die;
+            return;
+        }
+
+        //if (Changestate == MonsterState.Die)
+        //{
+        //    StopAllCoroutines();
+        //}
+
         monsterState = Changestate;
         DamageColliderOff();
-        if(Changestate == MonsterState.FollowPlayer)
+        if (Changestate == MonsterState.FollowPlayer)
+        {
+            if (CoFindPathCorutine != null)
+                StopCoroutine(CoFindPathCorutine);
             CoFindPathCorutine = StartCoroutine(FindingPlayerPath());
+        }
 
 
-    }
+        }
 
     //Monster State 상태 FollowPlayer로 변경
     public void ChangeMonsterStateFollow()
     {
-        if(!isStrunning)
+        Debug.Log(mosnterStatusController.GetHp());
+
+        if (mosnterStatusController.GetHp() <= 0)
+        {
+            StopAllCoroutines();
+
+            if (monsterState != MonsterState.Die)
+            {
+                animator.SetTrigger("DieTrigger");
+                Debug.Log("trigger");
+            }
+            characterController.enabled = false;
+            monsterState = MonsterState.Die;
+            return;
+        }
+        if (!isStrunning)
             monsterState = MonsterState.FollowPlayer;
         isAttacking = false;
         AttackLookAt_End();
         DamageColliderOff();
+
+        if (CoFindPathCorutine != null)
+            StopCoroutine(CoFindPathCorutine);
         CoFindPathCorutine = StartCoroutine(FindingPlayerPath());
 
     }
 
+    public void CharacterControllerOff()
+    {
+        characterController.enabled = false;
+
+    }
 
     void Monster_Rotation(Vector3 target)
     {
@@ -193,7 +241,15 @@ public class MonsterController : MonoBehaviour
             StartCoroutine(AttackCoolTime());
             StartCoroutine(AttackLookat());
 
-        }
+            if (CoAttackCoolTime != null)
+                StopCoroutine(CoAttackCoolTime);
+            CoAttackCoolTime = StartCoroutine(AttackCoolTime());
+
+            if (CoAttackLookat != null)
+                StopCoroutine(CoAttackLookat);
+            CoAttackLookat = StartCoroutine(AttackLookat());
+
+}
     }
     //공격시 일정시간 타겟 바라보기
     IEnumerator AttackLookat()
@@ -421,11 +477,13 @@ public class MonsterController : MonoBehaviour
         //GetComponent<Rigidbody>().isKinematic = true;
         if (other.tag == "Weapon")
         {
+            if (monsterState == MonsterState.Die)
+                return;
             DamageEffect();
             //게임 메니저로 무기 종류 가져오기
             Weapon weapon = FindObjectOfType<Player_Attack>().GetWeapon();
             DamageCrowdControl(weapon);
-            ChangeMonsterState(MonsterState.Die);
+            mosnterStatusController.Die();
         }
     }
     private void OnTriggerExit(Collider other)
