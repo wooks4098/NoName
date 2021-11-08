@@ -542,6 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterData: {fileID: 11400000, guid: 2f929156e65f1df47a2c5fdeed1bce24, type: 2}
+  Hp: 0
 --- !u!95 &255616700
 Animator:
   serializedVersion: 3
@@ -739,12 +740,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b94a752ffeaa7854cb253fc1c2b2e704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerRootPrefab: {fileID: 6971669009939462341, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
+  PlayerRootPrefab: {fileID: 6971669009939462339, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
   PlayerRoot: {fileID: 0}
   Player: {fileID: 0}
   Camera: {fileID: 0}
   Monster: {fileID: 255616697}
   Monster1: {fileID: 904459598}
+  playerController: {fileID: 0}
 --- !u!4 &311008500
 Transform:
   m_ObjectHideFlags: 0
@@ -3839,7 +3841,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2193222fff3526943922d8731fe29ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerTransfrom: {fileID: 0}
 --- !u!4 &1888926550
 Transform:
   m_ObjectHideFlags: 0

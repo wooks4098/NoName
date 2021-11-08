@@ -30,6 +30,8 @@ public class Player_Input : MonoBehaviour, IInput
 
     private void Update()
     {
+        if (GameManager.Instance.GetIsPlayerDie())
+            return;
         Vector2 input = GetMovementInput();
         GetMovementDirection(input);
         GetAttackInput();

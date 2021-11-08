@@ -263,7 +263,7 @@ public class MonsterController : MonoBehaviour
                 AttackLookAtEnd = false;
                 break;
             }
-            Monster_Rotation(MonsterManager.Instance.GetPlayerPos());
+            Monster_Rotation(GameManager.Instance.GetPlayerPos());
             yield return null;
         }
     }
@@ -295,7 +295,7 @@ public class MonsterController : MonoBehaviour
     {
         float Distance = 100;
         if (FollowPath.Count < 3)
-            Distance = Vector3.Distance(transform.position, MonsterManager.Instance.GetPlayerPos());
+            Distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerPos());
 
         //공격 가능거리면 State Attack로 변경
         if (Distance <= monsterData.AttackRange)
@@ -309,7 +309,7 @@ public class MonsterController : MonoBehaviour
         if (FollowPath.Count < 3 && Distance < 15)
         {//타겟과 가까운 경우
             //Debug.Log(Distance);
-            Vector3 vec3dir = (MonsterManager.Instance.GetPlayerPos() - transform.position).normalized;
+            Vector3 vec3dir = (GameManager.Instance.GetPlayerPos() - transform.position).normalized;
             //transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, MoveSpeed * Time.deltaTime);
 
             //characterController.Move(vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed);
@@ -317,7 +317,7 @@ public class MonsterController : MonoBehaviour
             //transform.position += vec3dir * Time.deltaTime * mosnterStatusController.monsterData.MoveSpeed;
 
 
-            Monster_Rotation(MonsterManager.Instance.GetPlayerPos());
+            Monster_Rotation(GameManager.Instance.GetPlayerPos());
             animator.SetBool("Walk", true);
 
             // Path의 마지막 칸에 들어올 경우 제거
@@ -359,7 +359,7 @@ public class MonsterController : MonoBehaviour
 
         while (!IsDie)
         {
-            FollowPath = MapManager.Instance.GetAstarPath(this.transform, MonsterManager.Instance.GetPlayerTransfrom());
+            FollowPath = MapManager.Instance.GetAstarPath(this.transform, GameManager.Instance.GetPlayerTrans());
             if (FollowPath.Count > 0)
                 FollowPath.RemoveAt(0);
             yield return new WaitForSeconds(0.3f);
@@ -387,7 +387,7 @@ public class MonsterController : MonoBehaviour
         if(isStrun)
             ChangeMonsterState(MonsterState.Strun);
 
-        Vector3 KnockBackPosition = (transform.position - MonsterManager.Instance.GetPlayerPos()).normalized;
+        Vector3 KnockBackPosition = (transform.position - GameManager.Instance.GetPlayerPos()).normalized;
         KnockBackPosition *= KnockBackRange;
         KnockBackPosition.y = 0;
 

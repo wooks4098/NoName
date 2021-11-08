@@ -30,6 +30,11 @@ public class Player_StatuController : MonoBehaviour
     public void Damage(float _Damage, bool isStrun)
     {
         Hp = Mathf.Max(Hp - _Damage,0);
+        Hp = 0;
+        if(Hp <=0)
+        {
+            GameManager.Instance.PlayerDie();
+        }
         //Debug.Log("플레이어" + _Damage + "만큼의 피해입음");
     }
 }

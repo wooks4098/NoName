@@ -7,17 +7,16 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get { return instance; } }
 
-    [SerializeField] GameObject PlayerRootPrefab;
+    [SerializeField] Player_Controller PlayerRootPrefab;
     [SerializeField] GameObject PlayerRoot;
-    [SerializeField] GameObject Player;
+    [SerializeField] Transform Player;
     [SerializeField] GameObject Camera;
     [SerializeField] GameObject Monster;
     [SerializeField] GameObject Monster1;
 
 
-    Player_Attack player_Attack;
-    Player_StatuController player_StatuController;
-
+    [SerializeField] Player_Controller playerController;
+    bool IsplayerDie = false;
     bool test = false;
     private void Awake()
     {
@@ -43,35 +42,49 @@ public class GameManager : MonoBehaviour
 
     void CreatePlayer()
     {
-        PlayerRoot = Instantiate(PlayerRootPrefab, Vector3.zero, Quaternion.identity);
-        Player = PlayerRoot.transform.GetChild(0).gameObject;
-        Camera = PlayerRoot.transform.GetChild(1).gameObject;
-        player_Attack = Player.GetComponent<Player_Attack>();
-        player_StatuController = Player.GetComponent<Player_StatuController>();
+        playerController = Instantiate(PlayerRootPrefab, Vector3.zero, Quaternion.identity);
+        //PlayerRoot = Instantiate(PlayerRootPrefab, Vector3.zero, Quaternion.identity);
+        Player = playerController.transform.GetChild(0);
+        //Camera = PlayerRoot.transform.GetChild(1).gameObject;
 
+        //playerController = PlayerRoot.GetComponent<Player_Controller>();
 
-        PlayerRoot.SetActive(true);
+        //PlayerRoot.SetActive(true);
+        playerController.gameObject.SetActive(true);    
         Monster.SetActive(true);
         Monster1.SetActive(true);
     }
 
     public void PlayerDamage(float _Damage, bool isStrun)
     {
-        player_StatuController.Damage(_Damage, isStrun);
+        playerController.GetPlayerStatusController().Damage(_Damage, isStrun);
+    }
+
+    public void PlayerDie()
+    {
+        IsplayerDie = true;
+        playerController.Die();
+
     }
 
     #region return
 
     public Vector3 GetPlayerPos()
     {
-        return Player.transform.position;
+        return Player.position;
     }
 
     public Transform GetPlayerTrans()
     {
-        return Player.transform;
+        return Player;
     }
 
+    public bool GetIsPlayerDie()
+    {
+        if (IsplayerDie)
+            return false;
+        return IsplayerDie;
+    }
 
     #endregion
 
