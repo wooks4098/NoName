@@ -4,7 +4,6 @@ using UnityEngine;
 public class Player_Input : MonoBehaviour, IInput
 {
     public Action<Vector2, UseSkill> OnMovementInput { get; set; }
-
     public Action<Vector3> OnMovementDirectionInput { get; set; }
     public Action OnAttackInput { get; set; }
     public Action<Vector3> OnAttackDirection { get; set; }
@@ -15,6 +14,8 @@ public class Player_Input : MonoBehaviour, IInput
     [SerializeField] Vector2 AbsInput = Vector2.zero;
 
     Transform CameraTransform;
+    bool isDie = false;//플레이어 죽음 체크
+
     public bool test = false;
 
     ISkill skill;
@@ -30,7 +31,7 @@ public class Player_Input : MonoBehaviour, IInput
 
     private void Update()
     {
-        if (GameManager.Instance.GetIsPlayerDie())
+        if (isDie)
             return;
         Vector2 input = GetMovementInput();
         GetMovementDirection(input);
@@ -38,6 +39,17 @@ public class Player_Input : MonoBehaviour, IInput
         GetAttackDirection();
         GetQSkill();
     }
+
+
+
+
+    //플레이어 죽음 상태 변경
+    public void PlayerDie(bool _die)
+    {
+        isDie = _die;
+    }
+
+
 
     #region 이동
     Vector2 GetMovementInput()

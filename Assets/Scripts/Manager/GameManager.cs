@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDamage(float _Damage, bool isStrun)
     {
+        if (IsplayerDie)
+            return;
         playerController.GetPlayerStatusController().Damage(_Damage, isStrun);
     }
 
@@ -64,6 +66,12 @@ public class GameManager : MonoBehaviour
     {
         IsplayerDie = true;
         playerController.Die();
+
+    }
+
+    public void PlayerDieChange(bool _Die)
+    {
+        IsplayerDie = _Die;
 
     }
 

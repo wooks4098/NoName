@@ -29,9 +29,20 @@ public class Player_Controller : MonoBehaviour
         ani = GetComponentInChildren<Animator>();
     }
 
+    //플레이어 스폰 생성시 상태 변경
+    public void PlayerSpawn()
+    {
+
+        GameManager.Instance.PlayerDieChange(true);
+        player_input.PlayerDie(false);
+
+    }
+
+
     public void Die()
     {
         ani.SetTrigger("Die");
+        player_input.PlayerDie(true);
         // 애니메이션 Any State도 막기
     }
 

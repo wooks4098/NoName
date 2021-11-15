@@ -22,10 +22,12 @@ public class BSP : MonoBehaviour
         root = new BSPNode(Vector2Int.zero, MapSize);
         root.DivideNode();
         MapManager.Instance.GetRoot(root);
+        MapManager.Instance.RoominfoSet();
         MapManager.Instance.CreatPlane(root);
         MapManager.Instance.CreateWall(root);
         MapManager.Instance.ConnetRoom(root);
         MapManager.Instance.ConnetRoom2(root);
+
 
     }
 

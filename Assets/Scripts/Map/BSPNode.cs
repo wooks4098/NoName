@@ -16,7 +16,7 @@ public class BSPNode  //상속체크
     public BSPNode parentNode; 
     public BSPNode leftNode, rightNode;
 
-    public bool isDivided; //방을 나누었는지 확인
+    public bool isDivided = false; //방을 나누었는지 확인
 
     private Direction direction;
 

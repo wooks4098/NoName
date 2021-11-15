@@ -187,7 +187,6 @@ public class MonsterController : MonoBehaviour
     //Monster State 상태 FollowPlayer로 변경
     public void ChangeMonsterStateFollow()
     {
-        Debug.Log(mosnterStatusController.GetHp());
 
         if (mosnterStatusController.GetHp() <= 0)
         {

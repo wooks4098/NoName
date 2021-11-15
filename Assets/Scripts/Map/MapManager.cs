@@ -1,7 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
+public class Room
+{
+    public Vector2Int bottomLeft;
+    public Vector2Int topRight;
+    public float size;
+}
 public class MapManager : MonoBehaviour
 {
     private static MapManager instance;
@@ -12,14 +18,16 @@ public class MapManager : MonoBehaviour
     [SerializeField] GameObject Walls;
     [SerializeField] GameObject Doors;
 
-    [SerializeField] GameObject PlanePrefab;
-    Vector3Int PlaneSize;
-    Vector3Int PlaneHalfSize;
-    public Vector2Int PlaneCount;
+    [SerializeField] GameObject PlanePrefab; //바닥 프리펨
+    Vector3Int PlaneSize; 
+    Vector3Int PlaneHalfSize; 
+    public Vector2Int PlaneCount; 
 
     [SerializeField] GameObject WallPrefab;
     Vector3Int WallSize;
     BSPNode root;
+
+    [SerializeField] List<Room> rooms;
 
     AStar astar;
 
@@ -86,7 +94,6 @@ public class MapManager : MonoBehaviour
         CreatPlane(Node.leftNode);
         if (Node.leftNode == null)
         {
-
             Vector2Int bottomLeft, topRight;
             Vector3Int Position = Vector3Int.zero;
             Position.x = Node.bottomLeft.x + 15;
@@ -320,9 +327,36 @@ public class MapManager : MonoBehaviour
         }
     }
     #endregion
+    //방 정보 입력(크기 순서)
+    public void RoominfoSet()
+    {
+        RoomSizeSet(root);
+        rooms.Sort((a, b) => (a.size < b.size) ? -1 : 1);
+    }
 
-    #region A*
-    public List<Astar_Node> GetAstarPath(Transform _Start, Transform _End)
+   
+
+    void RoomNumberSet()
+    {
+        
+        Room temp;
+        for(int i = 0; i < rooms.Count; i++)
+        {
+            for(int j = 0; j<rooms.Count-1; j++)
+            {
+                if(rooms[i].size < rooms[j].size)
+                {
+                    temp = rooms[i];
+                    rooms[i] = rooms[j];
+                    rooms[j] = temp;
+                }
+            }
+        }
+    }
+
+
+        #region A*
+        public List<Astar_Node> GetAstarPath(Transform _Start, Transform _End)
     {
         return astar.FindPath(_Start, _End);
     }
