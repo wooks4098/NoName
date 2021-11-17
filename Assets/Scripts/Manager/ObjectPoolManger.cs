@@ -5,6 +5,8 @@ using UnityEngine;
 public enum ObjectType
 {
     Effect = 0,
+    Monster1,
+    Monster2,
 }
 
 [System.Serializable]
@@ -14,9 +16,11 @@ public class ObjectPool
     public List<GameObject> Objects = new List<GameObject>();
     public GameObject Object_Prefab;
 }
+[System.Serializable]
 public class ObjectPoolManger : MonoBehaviour
 {
     private static ObjectPoolManger instance;
+    [ArrayElementTitle("objectType")]
     public ObjectPool[] objectPool;
 
     public static ObjectPoolManger Instance { get { return instance; } }
@@ -48,21 +52,16 @@ public class ObjectPoolManger : MonoBehaviour
     //사용할 오브젝트 리턴
     public GameObject ReturnObject(ObjectType _object)
     {
-        switch (_object)
-        {
-            case ObjectType.Effect:
-                {
-                    var objects = objectPool[(int)_object].Objects;
-                    var findobject = objects.Find(obj => !obj.activeSelf);
-                    if (null == findobject)
-                    {//모두 사용중이라면 생성
-                        objects.Add(Instantiate(objectPool[(int)_object].Object_Prefab, transform));
-                        findobject = objects[objects.Count-1];
-                        findobject.SetActive(false);
-                    }
-                    return findobject;
-                }
+        var objects = objectPool[(int)_object].Objects;
+        var findobject = objects.Find(obj => !obj.activeSelf);
+        if (null == findobject)
+        {//모두 사용중이라면 생성
+            findobject = Instantiate(objectPool[(int)_object].Object_Prefab, transform);
+            objects.Add(findobject);
+            findobject.SetActive(false);
         }
-        return null; //사용가능한 오브젝트가 없음
+        return findobject;
+
+        //return null; //사용가능한 오브젝트가 없음
     }
 }

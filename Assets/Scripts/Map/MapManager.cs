@@ -327,6 +327,9 @@ public class MapManager : MonoBehaviour
         }
     }
     #endregion
+
+
+
     //방 정보 입력(크기 순서)
     public void RoominfoSet()
     {
@@ -334,11 +337,26 @@ public class MapManager : MonoBehaviour
         rooms.Sort((a, b) => (a.size < b.size) ? -1 : 1);
     }
 
-   
+   void RoomSizeSet(BSPNode _node)
+    {
+        if (_node == null)
+            return;
+
+        if(_node.rightNode == null)
+        {
+            Room room = new Room();
+            room.bottomLeft = new Vector2Int(_node.bottomLeft.x + PlaneSize.x, _node.bottomLeft.y + PlaneSize.z) ;
+            room.topRight = new Vector2Int(_node.topRight.x - PlaneSize.x, _node.topRight.y - PlaneSize.z);
+            room.size = _node.GetHeight() * _node.GetWidth();
+            rooms.Add(room);
+        }
+        RoomSizeSet(_node.leftNode);
+        RoomSizeSet(_node.rightNode);
+
+    }
 
     void RoomNumberSet()
-    {
-        
+    {    
         Room temp;
         for(int i = 0; i < rooms.Count; i++)
         {
@@ -352,6 +370,12 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    public List<Room> GetRoominfo()
+    {
+        return rooms;
     }
 
 

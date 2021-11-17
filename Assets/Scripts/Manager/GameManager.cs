@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         {
             test = true;
             CreatePlayer();
+            MonsterManager.Instance.MonsterSpawn();
         }
     }
 
@@ -51,8 +52,8 @@ public class GameManager : MonoBehaviour
 
         //PlayerRoot.SetActive(true);
         playerController.gameObject.SetActive(true);    
-        Monster.SetActive(true);
-        Monster1.SetActive(true);
+        //Monster.SetActive(true);
+        //Monster1.SetActive(true);
     }
 
     public void PlayerDamage(float _Damage, bool isStrun)
