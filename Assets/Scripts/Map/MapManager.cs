@@ -7,6 +7,7 @@ public class Room
     public Vector2Int bottomLeft;
     public Vector2Int topRight;
     public float size;
+    public List<Door> Door = new List<Door>();
 }
 public class MapManager : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class MapManager : MonoBehaviour
     [SerializeField] GameObject WallPrefab;
     Vector3Int WallSize;
     BSPNode root;
+
+    [SerializeField] GameObject DoorPrefab;
 
     [SerializeField] List<Room> rooms;
 
@@ -107,7 +110,6 @@ public class MapManager : MonoBehaviour
                 {
                     GameObject plane = Instantiate(PlanePrefab, Position, Quaternion.identity, Planes.transform);
                     Position.z += PlaneSize.z;
-
                 }
                 Position.x += PlaneSize.x;
                 Position.z = bottomLeft.y;
@@ -321,13 +323,35 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < colls.Length; i++)
         {
-            colls[i].transform.parent = Doors.transform;
-            colls[i].isTrigger = true;
-            colls[i].GetComponent<MeshRenderer>().enabled = false;
+            //생성되었던 벽 제거
+            colls[i].gameObject.SetActive(false);
+            //문 생성
+            GameObject door = Instantiate(DoorPrefab, Position, Quaternion.identity, Doors.transform);
+            //문 정보 입력
+            DoorInfoSet(Position, door.GetComponent<Door>());
         }
     }
     #endregion
 
+    //문 정보 입력
+    void DoorInfoSet(Vector3 _doorPos, Door _door)
+    {
+        for(int i = 0; i<rooms.Count; i++)
+        {
+            if (rooms[i].bottomLeft.x - PlaneSize.x < _doorPos.x && _doorPos.x < rooms[i].topRight.x + PlaneSize.x &&
+                rooms[i].bottomLeft.y - PlaneSize.z < _doorPos.z && _doorPos.z < rooms[i].topRight.y +PlaneSize.z)
+            {
+                rooms[i].Door.Add(_door);
+                _door.SetRoomNumber(i);
+                if (rooms[i].bottomLeft.y < _doorPos.z && _doorPos.z < rooms[i].topRight.y)
+                    _door.gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+                break;
+    //            if ((rooms[i].bottomLeft.y - PlaneSize.z * 0.5f < _doorPos.z && _doorPos.z < rooms[i].bottomLeft.y + PlaneSize.z * 0.5f)
+    //|| (rooms[i].topRight.y - PlaneSize.z * 0.5f < _doorPos.z && _doorPos.z < rooms[i].topRight.y + PlaneSize.z * 0.5f))
+    //                _door.gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+            }
+        }
+    }
 
 
     //방 정보 입력(크기 순서)
