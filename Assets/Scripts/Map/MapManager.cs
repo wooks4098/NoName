@@ -8,16 +8,24 @@ public class Room
     public Vector2Int topRight;
     public float size;
     public List<Door> Door = new List<Door>();
+
 }
 public class MapManager : MonoBehaviour
 {
     private static MapManager instance;
     public static MapManager Instance { get { return instance; } }
 
+    [SerializeField] int playerRoom;
+
+    //플레이어가 이동한 문
+    [SerializeField] int firstOutDoor = -1;
+    [SerializeField] int secondOutDoor = -1;
+
     [SerializeField] GameObject Planes;
     [SerializeField] GameObject Road;
     [SerializeField] GameObject Walls;
     [SerializeField] GameObject Doors;
+    [SerializeField] GameObject DoorColliders;
 
     [SerializeField] GameObject PlanePrefab; //바닥 프리펨
     Vector3Int PlaneSize; 
@@ -33,6 +41,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] List<Room> rooms;
 
     AStar astar;
+
 
     private void Awake()
     {
@@ -323,35 +332,41 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < colls.Length; i++)
         {
+            
+            colls[i].isTrigger = true;
+            colls[i].GetComponent<MeshRenderer>().enabled = false;
+            DoorCollider doorCollider = colls[i].gameObject.AddComponent<DoorCollider>();
+            doorCollider.transform.parent = DoorColliders.transform;
             //생성되었던 벽 제거
-            colls[i].gameObject.SetActive(false);
+            //colls[i].gameObject.SetActive(false);
             //문 생성
             GameObject door = Instantiate(DoorPrefab, Position, Quaternion.identity, Doors.transform);
             //문 정보 입력
-            DoorInfoSet(Position, door.GetComponent<Door>());
+            DoorInfoSet(Position, door.GetComponent<Door>(), doorCollider);
+        }
+    }
+
+    //문 정보 입력
+    void DoorInfoSet(Vector3 _doorPos, Door _door, DoorCollider _doorCollider)
+    {
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (rooms[i].bottomLeft.x - PlaneSize.x < _doorPos.x && _doorPos.x < rooms[i].topRight.x + PlaneSize.x &&
+                rooms[i].bottomLeft.y - PlaneSize.z < _doorPos.z && _doorPos.z < rooms[i].topRight.y + PlaneSize.z)
+            {
+                rooms[i].Door.Add(_door);
+                _door.SetRoomNumber(i);
+                _doorCollider.SetDoorNumber(i);
+                if (rooms[i].bottomLeft.y < _doorPos.z && _doorPos.z < rooms[i].topRight.y)
+                    _door.gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+                break;
+            }
         }
     }
     #endregion
 
-    //문 정보 입력
-    void DoorInfoSet(Vector3 _doorPos, Door _door)
-    {
-        for(int i = 0; i<rooms.Count; i++)
-        {
-            if (rooms[i].bottomLeft.x - PlaneSize.x < _doorPos.x && _doorPos.x < rooms[i].topRight.x + PlaneSize.x &&
-                rooms[i].bottomLeft.y - PlaneSize.z < _doorPos.z && _doorPos.z < rooms[i].topRight.y +PlaneSize.z)
-            {
-                rooms[i].Door.Add(_door);
-                _door.SetRoomNumber(i);
-                if (rooms[i].bottomLeft.y < _doorPos.z && _doorPos.z < rooms[i].topRight.y)
-                    _door.gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
-                break;
-    //            if ((rooms[i].bottomLeft.y - PlaneSize.z * 0.5f < _doorPos.z && _doorPos.z < rooms[i].bottomLeft.y + PlaneSize.z * 0.5f)
-    //|| (rooms[i].topRight.y - PlaneSize.z * 0.5f < _doorPos.z && _doorPos.z < rooms[i].topRight.y + PlaneSize.z * 0.5f))
-    //                _door.gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
-            }
-        }
-    }
+    #region 방 정보 입력
+
 
 
     //방 정보 입력(크기 순서)
@@ -396,10 +411,24 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    #endregion
 
+
+    public void SetPlayerRoomNumber(int _number)
+    {
+        playerRoom = _number;
+    }
+
+
+    //모든 방 정보 리턴
     public List<Room> GetRoominfo()
     {
         return rooms;
+    }
+    //특정 방 정보 리턴
+    public Room GetRoominfo(int _roomNumber)
+    {
+        return rooms[_roomNumber];
     }
 
 
@@ -411,6 +440,39 @@ public class MapManager : MonoBehaviour
 
 
     #endregion
+
+    public void PlayerExitRoom(int _roomNumber)
+    {
+        if (firstOutDoor == -1)
+        {
+            firstOutDoor = _roomNumber;
+        }
+        else if (secondOutDoor == -1)
+        {
+            secondOutDoor = _roomNumber;
+        }
+
+        if (secondOutDoor == -1)
+            return;
+        if(firstOutDoor != secondOutDoor)
+        {
+            playerRoom = secondOutDoor;
+        }
+
+        firstOutDoor = -1;
+        secondOutDoor = firstOutDoor;
+    }
+
+    public void PlayerEnterRoom(int _roomNumber)
+    {
+        if (firstOutDoor == -1)
+            return;
+        if(firstOutDoor == _roomNumber)
+        {
+            secondOutDoor = -1;
+        }
+    }
+
 
     #region Gizmos
 

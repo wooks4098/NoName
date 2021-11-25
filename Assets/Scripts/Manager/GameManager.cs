@@ -38,22 +38,24 @@ public class GameManager : MonoBehaviour
             test = true;
             CreatePlayer();
             MonsterManager.Instance.MonsterSpawn();
+            //MonsterManager.Instance.SetActiveMonster(0);
+
         }
     }
 
     void CreatePlayer()
     {
-        playerController = Instantiate(PlayerRootPrefab, Vector3.zero, Quaternion.identity);
-        //PlayerRoot = Instantiate(PlayerRootPrefab, Vector3.zero, Quaternion.identity);
+        Room spawnRoom = MapManager.Instance.GetRoominfo(0);
+        float minx = spawnRoom.bottomLeft.x + 5;
+        float maxx = spawnRoom.topRight.x - 5;
+        float miny = spawnRoom.bottomLeft.y + 5;
+        float maxy = spawnRoom.topRight.y - 5;
+        Vector3 spawnPos = new Vector3(Random.Range(minx, maxx), 0.3f, Random.Range(miny, maxy));
+        playerController = Instantiate(PlayerRootPrefab, spawnPos, Quaternion.identity);
+        //플레이어가 있는 방 번호 입력
+        MapManager.Instance.SetPlayerRoomNumber(0);
         Player = playerController.transform.GetChild(0);
-        //Camera = PlayerRoot.transform.GetChild(1).gameObject;
-
-        //playerController = PlayerRoot.GetComponent<Player_Controller>();
-
-        //PlayerRoot.SetActive(true);
         playerController.gameObject.SetActive(true);    
-        //Monster.SetActive(true);
-        //Monster1.SetActive(true);
     }
 
     public void PlayerDamage(float _Damage, bool isStrun)

@@ -451,6 +451,7 @@ Transform:
   - {fileID: 328640897}
   - {fileID: 255613845}
   - {fileID: 1300832035}
+  - {fileID: 557252842}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -466,15 +467,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf4d77cbbe1a724b99e22399e8e064f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerRoom: 0
+  firstOutDoor: -1
+  secondOutDoor: -1
   Planes: {fileID: 1854046538}
   Road: {fileID: 328640896}
   Walls: {fileID: 255613844}
   Doors: {fileID: 1300832034}
+  DoorColliders: {fileID: 557252841}
   PlanePrefab: {fileID: 5618465985762422593, guid: 69b94c60feb3e5d44b011ac8b5425b81, type: 3}
   PlaneCount: {x: 25, y: 25}
   WallPrefab: {fileID: 6132701978313542351, guid: 53d5df139342bfd458deb166f8ada6f1, type: 3}
   DoorPrefab: {fileID: 4738570744472350850, guid: 840c34c6759d3c540b42d966d9707989, type: 3}
   rooms: []
+--- !u!1 &557252841
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557252842}
+  m_Layer: 0
+  m_Name: DoorCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &557252842
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557252841}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 506877700}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &643914138
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,6 +899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2193222fff3526943922d8731fe29ba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapMonster: []
 --- !u!4 &1888926550
 Transform:
   m_ObjectHideFlags: 0
