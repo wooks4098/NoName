@@ -11,14 +11,6 @@ public class DoorCollider : MonoBehaviour
         roomNumber = _number;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Player")
-        {
-            MapManager.Instance.PlayerEnterRoom(roomNumber);
-
-        }
-    }
 
     private void OnTriggerExit(Collider other)
     {

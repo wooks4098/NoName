@@ -443,17 +443,25 @@ public class MapManager : MonoBehaviour
 
     public void PlayerExitRoom(int _roomNumber)
     {
+        //나간 문이 같은 방의 문인 경우 리턴
+        if (firstOutDoor == _roomNumber)
+            return;
+
+
         if (firstOutDoor == -1)
-        {
+        {//현재 위치한 방문 나감
             firstOutDoor = _roomNumber;
         }
         else if (secondOutDoor == -1)
-        {
+        {//다른 방문 나감
             secondOutDoor = _roomNumber;
         }
 
+        //현재 있는 방에 있으므로 리턴
         if (secondOutDoor == -1)
             return;
+
+        //다른방으로 이동
         if(firstOutDoor != secondOutDoor)
         {
             playerRoom = secondOutDoor;
@@ -461,19 +469,60 @@ public class MapManager : MonoBehaviour
 
         firstOutDoor = -1;
         secondOutDoor = firstOutDoor;
-    }
 
-    public void PlayerEnterRoom(int _roomNumber)
+        //방문 열리고 다른 방은 닫기
+        //이동한 방이 클리어한 방인지 체크해야함
+        OpenDoor(playerRoom);
+        CloseDoor(playerRoom);
+        MonsterManager.Instance.SetActiveMonster(playerRoom);
+
+    }
+    public void AllDoorOpen()
     {
-        if (firstOutDoor == -1)
-            return;
-        if(firstOutDoor == _roomNumber)
+        for (int i = 0; i < rooms.Count; i++)
         {
-            secondOutDoor = -1;
+            for (int j = 0; j < rooms[i].Door.Count; j++)
+            {
+                rooms[i].Door[j].OpenDoor();
+            }
         }
     }
 
+    public void AllDoorClose()
+    {
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            for (int j = 0; j < rooms[i].Door.Count; j++)
+            {
+                rooms[i].Door[j].CloseDoor();
+            }
+        }
+    }
+    public void OpenDoor(int _roomNumber)
+    {
+        for(int i = 0; i< rooms[_roomNumber].Door.Count;i++)
+        {
+            rooms[_roomNumber].Door[i].OpenDoor();
+        }
+    }
 
+    public void CloseDoor(int _otherRoomNumber)
+    {
+        for(int i = 0; i<rooms.Count; i++)
+        {
+            if (i == _otherRoomNumber)
+                continue;
+            for(int j = 0; j< rooms[i].Door.Count; j++)
+            {
+                rooms[i].Door[j].CloseDoor();
+            }
+        }
+    }
+
+    public int GetPlayerRoomNumber()
+    {
+        return playerRoom;
+    }
     #region Gizmos
 
 

@@ -27,6 +27,7 @@ public class BSP : MonoBehaviour
         MapManager.Instance.CreateWall(root);
         MapManager.Instance.ConnetRoom(root);
         MapManager.Instance.ConnetRoom2(root);
+        MapManager.Instance.AllDoorOpen();
 
 
     }

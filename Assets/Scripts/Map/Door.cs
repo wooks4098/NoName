@@ -18,13 +18,13 @@ public class Door : MonoBehaviour
 
     public void OpenDoor()
     {
-        meshRenderer.enabled = true;
+        meshRenderer.enabled = false;
         boxCollider.isTrigger = true;
     }
 
     public void CloseDoor()
     {
-        meshRenderer.enabled = false;
+        meshRenderer.enabled = true;
         boxCollider.isTrigger = false;
     }
 }

@@ -109,5 +109,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomNumber: 0
-  meshRenderer: {fileID: 0}
-  boxCollider: {fileID: 0}
+  meshRenderer: {fileID: 4984590682217351539}
+  boxCollider: {fileID: 3114602305481622773}

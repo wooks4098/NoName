@@ -152,13 +152,14 @@ public class MonsterController : MonoBehaviour
 
     public void ChangeMonsterState(MonsterState Changestate)
     {
-        Debug.Log(mosnterStatusController.GetHp());
         if (mosnterStatusController.GetHp() <= 0 && Changestate == MonsterState.Die)
         {
             StopAllCoroutines();
             Debug.Log(monsterState);
             if (monsterState != MonsterState.Die)
             {
+                //몬스터 매니저한테 죽었다고 알려주기
+                MonsterManager.Instance.MonsterDieCheck();
                 animator.SetTrigger("DieTrigger");
                 Debug.Log("trigger");
             }

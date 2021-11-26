@@ -6,6 +6,7 @@ using UnityEngine;
 public class MapMonster
 {    
     public List<MonsterController> monsterList = new List<MonsterController>();
+    public bool Clear = false;
 }
 
 public class MonsterManager : MonoBehaviour
@@ -14,6 +15,8 @@ public class MonsterManager : MonoBehaviour
     public static MonsterManager Instance { get { return instance; } }
 
     [SerializeField] List<MapMonster> mapMonster = new List<MapMonster>();
+
+    [SerializeField] int roomMonsterCount;
 
     private void Awake()
     {
@@ -67,11 +70,25 @@ public class MonsterManager : MonoBehaviour
 
     public void SetActiveMonster(int _roomNumber)
     {
+
         MapMonster roomMonster = mapMonster[_roomNumber];
+        if (roomMonster.Clear)
+            return;
+        roomMonsterCount = roomMonster.monsterList.Count;
         for (int i = 0; i< roomMonster.monsterList.Count; i++)
         {
             roomMonster.monsterList[i].gameObject.SetActive(true);
         }
     }
 
+    //방에서 몬스터가 죽은경우 체크 -> 방을 클리어했는지 확인 용도
+    public void MonsterDieCheck()
+    {
+        roomMonsterCount--;
+        if (roomMonsterCount <= 0)
+        {
+            MapManager.Instance.AllDoorOpen();
+            mapMonster[MapManager.Instance.GetPlayerRoomNumber()].Clear = true;
+        }
+    }
 }
