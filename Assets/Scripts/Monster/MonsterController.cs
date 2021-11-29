@@ -158,8 +158,9 @@ public class MonsterController : MonoBehaviour
             Debug.Log(monsterState);
             if (monsterState != MonsterState.Die)
             {
-                //몬스터 매니저한테 죽었다고 알려주기
-                MonsterManager.Instance.MonsterDieCheck();
+                //MapManager 죽었다고 알려주기
+                MapManager.Instance.RemoveRoomMonster(this);
+                //MonsterManager.Instance.MonsterDieCheck();
                 animator.SetTrigger("DieTrigger");
                 Debug.Log("trigger");
             }

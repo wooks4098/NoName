@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     void CreatePlayer()
     {
-        Room spawnRoom = MapManager.Instance.GetRoominfo(0);
+        Room spawnRoom = MapManager.Instance.GetRoom(0);
         float minx = spawnRoom.bottomLeft.x + 5;
         float maxx = spawnRoom.topRight.x - 5;
         float miny = spawnRoom.bottomLeft.y + 5;

@@ -4,11 +4,15 @@ using UnityEngine;
 [System.Serializable]
 public class Room
 {
+    //Room info
     public Vector2Int bottomLeft;
     public Vector2Int topRight;
     public float size;
     public List<Door> Door = new List<Door>();
+    public bool isClear = false; //방을 클리어했는지
 
+    //Monster info
+    public List<MonsterController> monsterList = new List<MonsterController>(); //방에 있을 몬스터
 }
 public class MapManager : MonoBehaviour
 {
@@ -394,6 +398,21 @@ public class MapManager : MonoBehaviour
 
     }
 
+    public void AddRoomMonster(int _roomNumber, MonsterController _monster)
+    {
+        rooms[_roomNumber].monsterList.Add(_monster);
+    }
+
+    public void RemoveRoomMonster( MonsterController _monster)
+    {
+        rooms[playerRoom].monsterList.Remove(_monster);
+        if(rooms[playerRoom].monsterList.Count <= 0)
+        {
+            rooms[playerRoom].isClear = true;
+            AllDoorOpen();
+        }
+    }
+
     void RoomNumberSet()
     {    
         Room temp;
@@ -421,12 +440,12 @@ public class MapManager : MonoBehaviour
 
 
     //모든 방 정보 리턴
-    public List<Room> GetRoominfo()
+    public List<Room> GetRooms()
     {
         return rooms;
     }
     //특정 방 정보 리턴
-    public Room GetRoominfo(int _roomNumber)
+    public Room GetRoom(int _roomNumber)
     {
         return rooms[_roomNumber];
     }
@@ -470,13 +489,26 @@ public class MapManager : MonoBehaviour
         firstOutDoor = -1;
         secondOutDoor = firstOutDoor;
 
+
+        //이동한 방이 클리어한 체크
+        if (rooms[playerRoom].isClear)
+            return;
+
         //방문 열리고 다른 방은 닫기
-        //이동한 방이 클리어한 방인지 체크해야함
-        OpenDoor(playerRoom);
+
+            OpenDoor(playerRoom);
         CloseDoor(playerRoom);
-        MonsterManager.Instance.SetActiveMonster(playerRoom);
+        SetActiveMonster();
 
     }
+    void SetActiveMonster()
+    {
+        for(int i = 0; i<rooms[playerRoom].monsterList.Count; i++)
+        {
+            rooms[playerRoom].monsterList[i].gameObject.SetActive(true);
+        }
+    }
+
     public void AllDoorOpen()
     {
         for (int i = 0; i < rooms.Count; i++)

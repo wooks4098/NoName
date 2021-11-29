@@ -14,7 +14,7 @@ public class MonsterManager : MonoBehaviour
     private static MonsterManager instance;
     public static MonsterManager Instance { get { return instance; } }
 
-    [SerializeField] List<MapMonster> mapMonster = new List<MapMonster>();
+   // [SerializeField] List<MapMonster> mapMonster = new List<MapMonster>();
 
     [SerializeField] int roomMonsterCount;
 
@@ -33,15 +33,16 @@ public class MonsterManager : MonoBehaviour
         //MonsterSpawn();
     }
 
+    //몬스터 생성
     public void MonsterSpawn()
     {
-        List<Room> rooms = MapManager.Instance.GetRoominfo();
+        List<Room> rooms = MapManager.Instance.GetRooms();
         Vector3 SpawnPos;
         GameObject Monster;
 
         for (int i = 0; i<rooms.Count; i++)
         {
-            MapMonster newMapMonster = new MapMonster();
+            //MapMonster newMapMonster = new MapMonster();
             float minx = rooms[i].bottomLeft.x + 5;
             float maxx = rooms[i].topRight.x - 5;
             float miny = rooms[i].bottomLeft.y + 5;
@@ -51,44 +52,52 @@ public class MonsterManager : MonoBehaviour
             Monster = ObjectPoolManger.Instance.ReturnObject(ObjectType.Monster1);
             Monster.SetActive(true);
             Monster.transform.position = SpawnPos;
-
-            newMapMonster.monsterList.Add(Monster.GetComponent<MonsterController>());
+            MapManager.Instance.AddRoomMonster(i, Monster.GetComponent<MonsterController>());
+            
+            //newMapMonster.monsterList.Add(Monster.GetComponent<MonsterController>());
             SpawnPos = new Vector3(Random.Range(minx, maxx), 0, Random.Range(miny, maxy));
             Monster = ObjectPoolManger.Instance.ReturnObject(ObjectType.Monster2);
             Monster.SetActive(true);
             Monster.transform.position = SpawnPos;
-            newMapMonster.monsterList.Add(Monster.GetComponent<MonsterController>());
+            MapManager.Instance.AddRoomMonster(i, Monster.GetComponent<MonsterController>());
 
-            mapMonster.Add(newMapMonster);
+            //newMapMonster.monsterList.Add(Monster.GetComponent<MonsterController>());
+
+            // mapMonster.Add(newMapMonster);
+            
         }
-        for(int i = 0; i< mapMonster.Count; i++)
+        for(int i =0; i<rooms.Count; i++)
         {
-            for (int j = 0; j < mapMonster[i].monsterList.Count; j++)
-                mapMonster[i].monsterList[j].gameObject.SetActive(false);
+            for (int j = 0; j < rooms[i].monsterList.Count; j++)
+            {
+                rooms[i].monsterList[j].gameObject.SetActive(false);
+            }
         }
+
     }
 
-    public void SetActiveMonster(int _roomNumber)
-    {
+    //public void SetActiveMonster(int _roomNumber)
+    //{
 
-        MapMonster roomMonster = mapMonster[_roomNumber];
-        if (roomMonster.Clear)
-            return;
-        roomMonsterCount = roomMonster.monsterList.Count;
-        for (int i = 0; i< roomMonster.monsterList.Count; i++)
-        {
-            roomMonster.monsterList[i].gameObject.SetActive(true);
-        }
-    }
+    //    //MapMonster roomMonster = mapMonster[_roomNumber];
+    //    Room room = MapManager.Instance.GetRoom(_roomNumber);
+    //    if (room.isClear)
+    //        return;
+    //    roomMonsterCount = room.monsterList.Count;
+    //    for (int i = 0; i< room.monsterList.Count; i++)
+    //    {
+    //        room.monsterList[i].gameObject.SetActive(true);
+    //    }
+    //}
 
     //방에서 몬스터가 죽은경우 체크 -> 방을 클리어했는지 확인 용도
-    public void MonsterDieCheck()
-    {
-        roomMonsterCount--;
-        if (roomMonsterCount <= 0)
-        {
-            MapManager.Instance.AllDoorOpen();
-            mapMonster[MapManager.Instance.GetPlayerRoomNumber()].Clear = true;
-        }
-    }
+    //public void MonsterDieCheck()
+    //{
+    //    roomMonsterCount--;
+    //    if (roomMonsterCount <= 0)
+    //    {
+    //        MapManager.Instance.AllDoorOpen();
+    //        mapMonster[MapManager.Instance.GetPlayerRoomNumber()].Clear = true;
+    //    }
+    //}
 }
