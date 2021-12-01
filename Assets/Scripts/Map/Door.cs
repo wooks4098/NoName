@@ -51,7 +51,6 @@ public class Door : MonoBehaviour
             }
             yield return null;
         }
-        Debug.Log("Door End");
     }
     public void CloseDoor()
     {
