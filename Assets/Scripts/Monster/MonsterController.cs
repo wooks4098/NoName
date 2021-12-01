@@ -119,7 +119,7 @@ public class MonsterController : MonoBehaviour
                 break;
             case MonsterState.Die:
                 movementVector = Vector3.zero;
-                break;
+                return;
         }
 
         characterController.Move(movementVector * Time.deltaTime);
