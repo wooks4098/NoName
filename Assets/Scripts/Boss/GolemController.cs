@@ -15,16 +15,26 @@ public enum GolemState
 
 public class GolemController : MonoBehaviour
 {
-    [SerializeField] GolemState state;
+    [SerializeField] GolemState BossState; //현재 상태
+    [SerializeField] GolemState DongState; //해야할 상태
     [SerializeField] float WalkSpeed;
-    [Space] [Space]
+    [Space]
+    [Space]
 
+    //Attack
     [SerializeField] float attackRange;
-
-    Vector3 PlayerPos;
+    [SerializeField] float attackCoolTime;
+    [SerializeField] bool canAttack = true;
+    [SerializeField] bool isAttack = false;//공격중인지
+    //Vector3 PlayerPos;
 
     NavMeshAgent agent;
     Animator ani;
+
+    //test
+    [Space]
+    [Space]
+    [SerializeField] Transform PlayerPos;
 
     private void Awake()
     {
@@ -32,39 +42,49 @@ public class GolemController : MonoBehaviour
         ani = GetComponent<Animator>();
 
         //agent 자동 회전 종료
-        agent.updateRotation = false;
+        //agent.updateRotation = false;
         agent.speed = WalkSpeed;
 
-        state = GolemState.Wait;
-    }
-    private void Update()
-    {
-        PlayerPos = GameManager.Instance.GetPlayerPos();
+        BossState = GolemState.Wait;
 
-        switch (state)
+        ChangeState(GolemState.Attack);
+    }
+
+
+
+
+    private void FixedUpdate()
+    {
+        //PlayerPos = GameManager.Instance.GetPlayerPos();
+
+        switch (BossState)
         {
             case GolemState.Follow:
                 Follow();
                 break;
-            case GolemState.JumpAttack:
-                JumpAttack();
-                break;
             case GolemState.Attack:
                 Attack();
                 break;
-            case GolemState.Throw:
-                Throw();
-                break;
-            case GolemState.Rush:
-                Rush();
-                break;
         }
-        Rotation();
+        //Rotation();
     }
 
-    void TargetMove(Vector3 target)
+    void Follow()
     {
-        agent.SetDestination(target);
+        agent.SetDestination(PlayerPos.position);
+        switch(DongState)
+        {
+            case GolemState.Attack:
+                if (canAttack)
+                    ChangeState(GolemState.Attack);
+                break;
+        }
+    }
+
+    void TargetMove(bool hapathCheck, Vector3 target, float EndRange = 0.2f)
+    {
+        
+            agent.SetDestination(target);
     }
 
     void Rotation()
@@ -80,29 +100,30 @@ public class GolemController : MonoBehaviour
             //선형보간 함수를 이용해 부드러운 회전
             ani.transform.rotation = Quaternion.Slerp(ani.transform.rotation, targetangle, Time.deltaTime * 8.0f);
             ani.transform.eulerAngles = new Vector3(0, ani.transform.rotation.eulerAngles.y, 0);
-
         }
-
     }
-
-    void Follow()
-    {
-
-    }
-
-    void JumpAttack()
-    {
-
-    }    
-
     void Attack()
     {
-        if(agent.remainingDistance<= attackRange)
-        {
+        if (!agent.pathPending && agent.remainingDistance <= attackRange && canAttack)
+            StartCoroutine(AttackCoolTime());
+        else
+            ChangeState(GolemState.Follow);
 
-        }
+    }
 
-    }  
+    IEnumerator AttackCoolTime()
+    {
+        isAttack = true;
+        canAttack = false;
+        agent.isStopped = true;
+        ani.SetTrigger("Attack");
+        yield return new WaitForSeconds(1f);
+        isAttack = false;
+        //ChangeState(GolemState.Follow);
+        agent.isStopped = false;
+        yield return new WaitForSeconds(attackCoolTime-1);
+        canAttack = true;
+    }
 
     void Throw()
     {
@@ -117,13 +138,20 @@ public class GolemController : MonoBehaviour
 
     public void ChangeState(GolemState _golemState)
     {
-        state = _golemState;
-        switch(state)
+        BossState = _golemState;
+        switch (BossState)
         {
             case GolemState.Attack:
+                agent.SetDestination(PlayerPos.position);
+                break;
             case GolemState.Follow:
-                TargetMove(PlayerPos);
                 break;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
