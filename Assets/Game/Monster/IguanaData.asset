@@ -15,5 +15,6 @@ MonoBehaviour:
   animatorOverride: {fileID: 0}
   HP: 100
   AttackRange: 1.5
-  Damage: 5
+  Damage: 3
   MoveSpeed: 6
+  gravity: 0

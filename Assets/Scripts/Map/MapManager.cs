@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 [System.Serializable]
 public class Room
 {
@@ -378,6 +379,12 @@ public class MapManager : MonoBehaviour
     {
         RoomSizeSet(root);
         rooms.Sort((a, b) => (a.size < b.size) ? -1 : 1);
+        for (int i = 0; i < rooms.Count; i++)
+        {
+
+            rooms[playerRoom].isClear = false;
+
+        }
     }
 
    void RoomSizeSet(BSPNode _node)
@@ -409,8 +416,27 @@ public class MapManager : MonoBehaviour
         if(rooms[playerRoom].monsterList.Count <= 0)
         {
             rooms[playerRoom].isClear = true;
+            ClearCheck();
             AllDoorOpen();
         }
+    }
+    void ClearCheck()
+    {
+        bool clear = true;
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            if (!rooms[i].isClear)
+            {
+                clear = false;
+            }
+        }
+        if (clear)
+            StartCoroutine(Reload());
+    }
+    IEnumerator Reload()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(2);
     }
 
     void RoomNumberSet()

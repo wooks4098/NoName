@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632ea933ce4606b44b700cc7943216ec, type: 3}
   m_Name: TestMonster
   m_EditorClassIdentifier: 
+  animatorOverride: {fileID: 0}
   HP: 100
   AttackRange: 1.5
-  Damage: 5
+  Damage: 3
   MoveSpeed: 6
+  gravity: 0

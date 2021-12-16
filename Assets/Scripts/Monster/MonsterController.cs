@@ -484,7 +484,8 @@ public class MonsterController : MonoBehaviour
             //게임 메니저로 무기 종류 가져오기
             Weapon weapon = FindObjectOfType<Player_Attack>().GetWeapon();
             DamageCrowdControl(weapon);
-            mosnterStatusController.Die();
+            mosnterStatusController.Damage(35);
+            //mosnterStatusController.Die();
         }
     }
     private void OnTriggerExit(Collider other)

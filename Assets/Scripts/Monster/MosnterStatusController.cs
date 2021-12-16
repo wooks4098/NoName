@@ -25,7 +25,7 @@ public class MosnterStatusController : MonoBehaviour
         Hp = Mathf.Max(Hp - _Damage, 0);
 
         if (Hp <= 0)
-            monsterController.ChangeMonsterState(MonsterState.Die);
+            Die();
         //Debug.Log("플레이어" + _Damage + "만큼의 피해입음");
     }
     public float GetHp()
@@ -36,6 +36,5 @@ public class MosnterStatusController : MonoBehaviour
     {
         Hp = 0;
         monsterController.ChangeMonsterState(MonsterState.Die);
-
     }
 }

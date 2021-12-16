@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
@@ -13,8 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject Camera;
     [SerializeField] GameObject Monster;
     [SerializeField] GameObject Monster1;
-
-
+    [SerializeField] GameObject StartText;
+    [SerializeField] Hp hp;
     [SerializeField] Player_Controller playerController;
     bool IsplayerDie = false;
     bool test = false;
@@ -23,7 +24,7 @@ public class GameManager : MonoBehaviour
         if (null == instance)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else Destroy(gameObject);
 
@@ -38,6 +39,8 @@ public class GameManager : MonoBehaviour
             test = true;
             CreatePlayer();
             MonsterManager.Instance.MonsterSpawn();
+            StartText.SetActive(false);
+            hp.SetStatus(Player.GetComponent<Player_StatuController>());
             //MonsterManager.Instance.SetActiveMonster(0);
 
         }
@@ -69,7 +72,13 @@ public class GameManager : MonoBehaviour
     {
         IsplayerDie = true;
         playerController.Die();
+        StartCoroutine(Reload());
+    }
 
+    IEnumerator Reload()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(1);
     }
 
     public void PlayerDieChange(bool _Die)
