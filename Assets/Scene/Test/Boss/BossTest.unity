@@ -201,11 +201,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 173988459839111978, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 5.08952e-40
+      value: -1e-45
       objectReference: {fileID: 0}
     - target: {fileID: 173988459839111978, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -2.30242e-40
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4359299229965242932, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -309,11 +309,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8979326830364815819, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000017996323
+      value: -0.000000017715799
       objectReference: {fileID: 0}
     - target: {fileID: 8979326830364815819, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000020425173
+      value: 0.0000000020106787
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
@@ -395,7 +395,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117904883}
-  m_LocalRotation: {x: 0.11277237, y: -0.00000003465185, z: 0.00000000393286, w: 0.9936209}
+  m_LocalRotation: {x: 0.11277237, y: -0.000000034506996, z: 0.000000003916419, w: 0.9936209}
   m_LocalPosition: {x: -1.2, y: 2.5, z: 0.6700001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -701,6 +701,7 @@ GameObject:
   - component: {fileID: 95380086015746077}
   - component: {fileID: 1067924894816055}
   - component: {fileID: 1067924894816054}
+  - component: {fileID: 1067924894816056}
   m_Layer: 0
   m_Name: GolemBoss
   m_TagString: Untagged
@@ -721,12 +722,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BossState: 0
-  DongState: 3
   WalkSpeed: 5
-  attackRange: 3.5
+  attackRange: 3.31
   attackCoolTime: 4
   canAttack: 1
-  isAttack: 0
   PlayerPos: {fileID: 276527876}
 --- !u!195 &1067924894816055
 NavMeshAgent:
@@ -739,7 +738,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 50
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -750,6 +749,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &1067924894816056
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067924894816053}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.5
+  m_Height: 3.0030816
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.0015408, z: 0}
 --- !u!1 &1088258310891997
 GameObject:
   m_ObjectHideFlags: 0

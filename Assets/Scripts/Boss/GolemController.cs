@@ -16,7 +16,6 @@ public enum GolemState
 public class GolemController : MonoBehaviour
 {
     [SerializeField] GolemState BossState; //현재 상태
-    [SerializeField] GolemState DongState; //해야할 상태
     [SerializeField] float WalkSpeed;
     [Space]
     [Space]
@@ -25,7 +24,6 @@ public class GolemController : MonoBehaviour
     [SerializeField] float attackRange;
     [SerializeField] float attackCoolTime;
     [SerializeField] bool canAttack = true;
-    [SerializeField] bool isAttack = false;//공격중인지
     //Vector3 PlayerPos;
 
     NavMeshAgent agent;
@@ -42,7 +40,7 @@ public class GolemController : MonoBehaviour
         ani = GetComponent<Animator>();
 
         //agent 자동 회전 종료
-        //agent.updateRotation = false;
+        agent.updateRotation = false;
         agent.speed = WalkSpeed;
 
         BossState = GolemState.Wait;
@@ -56,36 +54,22 @@ public class GolemController : MonoBehaviour
     private void FixedUpdate()
     {
         //PlayerPos = GameManager.Instance.GetPlayerPos();
-
+       
         switch (BossState)
         {
             case GolemState.Follow:
                 Follow();
                 break;
             case GolemState.Attack:
-                Attack();
+                if (!agent.pathPending)
+                    Attack();
                 break;
         }
-        //Rotation();
+
     }
 
-    void Follow()
-    {
-        agent.SetDestination(PlayerPos.position);
-        switch(DongState)
-        {
-            case GolemState.Attack:
-                if (canAttack)
-                    ChangeState(GolemState.Attack);
-                break;
-        }
-    }
 
-    void TargetMove(bool hapathCheck, Vector3 target, float EndRange = 0.2f)
-    {
-        
-            agent.SetDestination(target);
-    }
+
 
     void Rotation()
     {
@@ -102,38 +86,74 @@ public class GolemController : MonoBehaviour
             ani.transform.eulerAngles = new Vector3(0, ani.transform.rotation.eulerAngles.y, 0);
         }
     }
-    void Attack()
+
+
+    #region Follow
+    void StartFollow()
     {
-        if (!agent.pathPending && agent.remainingDistance <= attackRange && canAttack)
-            StartCoroutine(AttackCoolTime());
-        else
-            ChangeState(GolemState.Follow);
+        agent.SetDestination(PlayerPos.position);
+
+    }
+    void Follow()
+    {
+        agent.SetDestination(PlayerPos.position);
 
     }
 
-    IEnumerator AttackCoolTime()
+    void EndFollow()
     {
-        isAttack = true;
-        canAttack = false;
-        agent.isStopped = true;
-        ani.SetTrigger("Attack");
-        yield return new WaitForSeconds(1f);
-        isAttack = false;
-        //ChangeState(GolemState.Follow);
-        agent.isStopped = false;
-        yield return new WaitForSeconds(attackCoolTime-1);
+
+    }
+
+    #endregion
+
+
+    #region Attack
+    void StartAttack()
+    {
+        agent.SetDestination(PlayerPos.position);
         canAttack = true;
     }
-
-    void Throw()
+    void Attack()
     {
-
+        //Debug.Log(agent.remainingDistance);
+        //플레이어를 따라가다 공격가능 범위면 공격해야한다
+        if (agent.remainingDistance <= attackRange)
+        {
+            if(canAttack)
+            {
+                Debug.Log("공격");
+                agent.speed = 0;
+                canAttack = false;
+                ani.SetTrigger("Attack");
+                StartCoroutine(AttackCooltime());
+            }
+        }
+        else
+        {
+            agent.SetDestination(PlayerPos.position);
+            Rotation();
+        }
     }
 
-    void Rush()
+    IEnumerator AttackCooltime()
     {
+        yield return new WaitForSeconds(4f);
+        Debug.Log("공격쿨타임 끝");
 
+        canAttack = true;
+        agent.speed = WalkSpeed;
+        EndAttack();
     }
+
+    void EndAttack()
+    {
+        SelectState();
+    }
+
+    #endregion
+
+
 
 
     public void ChangeState(GolemState _golemState)
@@ -142,11 +162,20 @@ public class GolemController : MonoBehaviour
         switch (BossState)
         {
             case GolemState.Attack:
-                agent.SetDestination(PlayerPos.position);
+                StartAttack();
                 break;
             case GolemState.Follow:
+                StartFollow();
                 break;
         }
+    }
+
+    //어떤 상태를 할지 정하는 함수
+    void SelectState()
+    {
+        GolemState changeState = GolemState.Attack;
+
+        ChangeState(changeState);
     }
 
     private void OnDrawGizmosSelected()
