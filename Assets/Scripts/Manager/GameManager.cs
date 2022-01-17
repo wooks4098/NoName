@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Player_Controller playerController;
     bool IsplayerDie = false;
     bool test = false;
+    bool HasMap = false;
+    bool HasMonster = false;
     private void Awake()
     {
         if (null == instance)
@@ -37,25 +39,36 @@ public class GameManager : MonoBehaviour
         {
             test = true;
             CreatePlayer();
-            MonsterManager.Instance.MonsterSpawn();
-            //MonsterManager.Instance.SetActiveMonster(0);
+            if(HasMonster)
+             MonsterManager.Instance.MonsterSpawn();
 
         }
     }
 
     void CreatePlayer()
     {
-        Room spawnRoom = MapManager.Instance.GetRoom(0);
-        float minx = spawnRoom.bottomLeft.x + 5;
-        float maxx = spawnRoom.topRight.x - 5;
-        float miny = spawnRoom.bottomLeft.y + 5;
-        float maxy = spawnRoom.topRight.y - 5;
-        Vector3 spawnPos = new Vector3(Random.Range(minx, maxx), 0.3f, Random.Range(miny, maxy));
-        playerController = Instantiate(PlayerRootPrefab, spawnPos, Quaternion.identity);
-        //플레이어가 있는 방 번호 입력
-        MapManager.Instance.SetPlayerRoomNumber(0);
-        Player = playerController.transform.GetChild(0);
-        playerController.gameObject.SetActive(true);    
+        if(HasMap)
+        {
+            Room spawnRoom = MapManager.Instance.GetRoom(0);
+            float minx = spawnRoom.bottomLeft.x + 5;
+            float maxx = spawnRoom.topRight.x - 5;
+            float miny = spawnRoom.bottomLeft.y + 5;
+            float maxy = spawnRoom.topRight.y - 5;
+            Vector3 spawnPos = new Vector3(Random.Range(minx, maxx), 0.3f, Random.Range(miny, maxy));
+            playerController = Instantiate(PlayerRootPrefab, spawnPos, Quaternion.identity);
+            //플레이어가 있는 방 번호 입력
+            MapManager.Instance.SetPlayerRoomNumber(0);
+            Player = playerController.transform.GetChild(0);
+            playerController.gameObject.SetActive(true);
+        }
+        else
+        {
+            
+            playerController = Instantiate(PlayerRootPrefab, new Vector3(0,0,5), Quaternion.identity);
+            Player = playerController.transform.GetChild(0);
+            playerController.gameObject.SetActive(true);
+        }
+       
     }
 
     public void PlayerDamage(float _Damage, bool isStrun)

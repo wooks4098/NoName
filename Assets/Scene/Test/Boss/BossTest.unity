@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: e3afc962568f67e43be9e9d1f647a431, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 567e5605152eda949822d8c94209ad9a, type: 2}
---- !u!4 &276527876 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5791562699424846226, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
-  m_PrefabInstance: {fileID: 575918795}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &409936777
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,13 +133,14 @@ GameObject:
   m_Component:
   - component: {fileID: 409936778}
   - component: {fileID: 409936779}
+  - component: {fileID: 409936780}
   m_Layer: 0
   m_Name: AttackCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &409936778
 Transform:
   m_ObjectHideFlags: 0
@@ -168,10 +164,22 @@ BoxCollider:
   m_GameObject: {fileID: 409936777}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.1502666, y: 2.6537182, z: 4.946711}
   m_Center: {x: 0.55043364, y: 0.8268591, z: -0.3389895}
+--- !u!114 &409936780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409936777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526ef2f7aa99b3041b65d706155c870f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &575918795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -225,7 +233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4359299229965242932, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.13082719
+      value: 0.13082716
       objectReference: {fileID: 0}
     - target: {fileID: 6971669008466236655, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -285,7 +293,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6971669009939462341, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8979326830364815819, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -309,14 +317,64 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8979326830364815819, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000017715799
+      value: 0.000000017622785
       objectReference: {fileID: 0}
     - target: {fileID: 8979326830364815819, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000020106787
+      value: -0.0000000020001218
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
+--- !u!1 &698131675
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 698131677}
+  - component: {fileID: 698131676}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &698131676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698131675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94a752ffeaa7854cb253fc1c2b2e704, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerRootPrefab: {fileID: 6971669009939462339, guid: a0c0a5e96835a8240abdbdc1d5bdddb7, type: 3}
+  PlayerRoot: {fileID: 0}
+  Player: {fileID: 0}
+  Camera: {fileID: 0}
+  Monster: {fileID: 0}
+  Monster1: {fileID: 0}
+  playerController: {fileID: 0}
+--- !u!4 &698131677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698131675}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1117904883
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +453,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117904883}
-  m_LocalRotation: {x: 0.11277237, y: -0.000000034506996, z: 0.000000003916419, w: 0.9936209}
+  m_LocalRotation: {x: 0.11277237, y: 0.000000034459333, z: -0.0000000039110093, w: 0.9936209}
   m_LocalPosition: {x: -1.2, y: 2.5, z: 0.6700001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -726,7 +784,8 @@ MonoBehaviour:
   attackRange: 3.31
   attackCoolTime: 4
   canAttack: 1
-  PlayerPos: {fileID: 276527876}
+  AttackHitBox: {fileID: 409936777}
+  PlayerPos: {x: 0, y: 0, z: 0}
 --- !u!195 &1067924894816055
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -758,8 +817,8 @@ CapsuleCollider:
   m_GameObject: {fileID: 1067924894816053}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5
+  m_Enabled: 1
+  m_Radius: 0.77
   m_Height: 3.0030816
   m_Direction: 1
   m_Center: {x: 0, y: 1.0015408, z: 0}

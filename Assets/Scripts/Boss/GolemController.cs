@@ -19,11 +19,12 @@ public class GolemController : MonoBehaviour
     [SerializeField] float WalkSpeed;
     [Space]
     [Space]
-
+    
     //Attack
     [SerializeField] float attackRange;
     [SerializeField] float attackCoolTime;
     [SerializeField] bool canAttack = true;
+    [SerializeField] GameObject AttackHitBox;
     //Vector3 PlayerPos;
 
     NavMeshAgent agent;
@@ -32,7 +33,7 @@ public class GolemController : MonoBehaviour
     //test
     [Space]
     [Space]
-    [SerializeField] Transform PlayerPos;
+    [SerializeField] Vector3 PlayerPos;
 
     private void Awake()
     {
@@ -45,16 +46,26 @@ public class GolemController : MonoBehaviour
 
         BossState = GolemState.Wait;
 
-        ChangeState(GolemState.Attack);
+
     }
 
+    private void OnEnable()
+    {
+        StartCoroutine(StartState());
+    }
 
+    IEnumerator StartState()
+    {
+        yield return new WaitForSeconds(2f);
+        ChangeState(GolemState.Attack);
 
+    }
 
     private void FixedUpdate()
     {
-        //PlayerPos = GameManager.Instance.GetPlayerPos();
-       
+        PlayerPos = GameManager.Instance.GetPlayerPos();
+        if (PlayerPos == null)
+            return;
         switch (BossState)
         {
             case GolemState.Follow:
@@ -91,17 +102,19 @@ public class GolemController : MonoBehaviour
     #region Follow
     void StartFollow()
     {
-        agent.SetDestination(PlayerPos.position);
+        ani.SetBool("IsWalk", true);
+        agent.SetDestination(PlayerPos);
 
     }
     void Follow()
     {
-        agent.SetDestination(PlayerPos.position);
+        agent.SetDestination(PlayerPos);
 
     }
 
     void EndFollow()
     {
+        ani.SetBool("IsWalk", false);
 
     }
 
@@ -111,7 +124,7 @@ public class GolemController : MonoBehaviour
     #region Attack
     void StartAttack()
     {
-        agent.SetDestination(PlayerPos.position);
+        agent.SetDestination(PlayerPos);
         canAttack = true;
     }
     void Attack()
@@ -127,15 +140,33 @@ public class GolemController : MonoBehaviour
                 canAttack = false;
                 ani.SetTrigger("Attack");
                 StartCoroutine(AttackCooltime());
+                StartCoroutine(AttackRotation());
             }
+            else
+                ani.SetBool("IsWalk", false);
+
         }
         else
         {
-            agent.SetDestination(PlayerPos.position);
+            ani.SetBool("IsWalk", true);
+            agent.SetDestination(PlayerPos);
             Rotation();
         }
     }
-
+    //공격시 플레이어 바라보도록
+    IEnumerator AttackRotation()
+    {
+        float time = 0;
+        while(time <0.5f)
+        {
+            time += Time.deltaTime;
+            Vector3 TargetVector = PlayerPos - transform.position;
+            //선형보간 함수를 이용해 부드러운 회전
+            ani.transform.rotation = Quaternion.Slerp(ani.transform.rotation, Quaternion.LookRotation(TargetVector).normalized, 1f);
+            yield return null;
+        }
+       
+    }
     IEnumerator AttackCooltime()
     {
         yield return new WaitForSeconds(4f);
@@ -148,8 +179,23 @@ public class GolemController : MonoBehaviour
 
     void EndAttack()
     {
+        ani.SetBool("IsWalk", false);
         SelectState();
     }
+
+
+    #region 공격 hitbox
+
+    public void OpenHitbox()
+    {
+        AttackHitBox.SetActive(true);
+    }
+
+    public void CloseHitBox()
+    {
+        AttackHitBox.SetActive(false);
+    }
+    #endregion
 
     #endregion
 
@@ -177,6 +223,10 @@ public class GolemController : MonoBehaviour
 
         ChangeState(changeState);
     }
+
+
+
+
 
     private void OnDrawGizmosSelected()
     {
