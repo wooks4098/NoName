@@ -25,10 +25,18 @@ public class GolemController : MonoBehaviour
     [SerializeField] float attackCoolTime;
     [SerializeField] bool canAttack = true;
     [SerializeField] GameObject AttackHitBox;
-    //Vector3 PlayerPos;
+    [Space]
+    [Space]
+    //Rush
 
+    Vector3 RushDir;
+    [SerializeField] float RushRange;
+    [SerializeField] float RushSpeed;
+    //[SerializeField] bool IsEndRushReady = false;
+    [SerializeField] bool IsEndRush = false;
     NavMeshAgent agent;
     Animator ani;
+    [SerializeField] GameObject testCube;
 
     //test
     [Space]
@@ -57,7 +65,7 @@ public class GolemController : MonoBehaviour
     IEnumerator StartState()
     {
         yield return new WaitForSeconds(2f);
-        ChangeState(GolemState.Attack);
+        ChangeState(GolemState.Rush);
 
     }
 
@@ -74,6 +82,10 @@ public class GolemController : MonoBehaviour
             case GolemState.Attack:
                 if (!agent.pathPending)
                     Attack();
+                break;
+            case GolemState.Rush:
+                if (!agent.pathPending)
+                    Rush();
                 break;
         }
 
@@ -140,7 +152,7 @@ public class GolemController : MonoBehaviour
                 canAttack = false;
                 ani.SetTrigger("Attack");
                 StartCoroutine(AttackCooltime());
-                StartCoroutine(AttackRotation());
+                StartCoroutine(AttackLookAtPlayer());
             }
             else
                 ani.SetBool("IsWalk", false);
@@ -154,6 +166,18 @@ public class GolemController : MonoBehaviour
         }
     }
     //공격시 플레이어 바라보도록
+    IEnumerator AttackLookAtPlayer()
+    {
+        float time = 0;
+        while (time <= 0.3)
+        {
+            time += Time.deltaTime;
+            LookPlayer();
+            yield return null;
+
+        }
+        yield break;
+    }
     IEnumerator AttackRotation()
     {
         float time = 0;
@@ -180,7 +204,8 @@ public class GolemController : MonoBehaviour
     void EndAttack()
     {
         ani.SetBool("IsWalk", false);
-        SelectState();
+        ChangeState(GolemState.Rush);
+        //SelectState();
     }
 
 
@@ -200,6 +225,74 @@ public class GolemController : MonoBehaviour
     #endregion
 
 
+    #region Rush
+
+    void StartRush()
+    {
+        //Debug.Log("시작");
+
+        agent.ResetPath();
+        IsEndRush = false;
+        ani.SetTrigger("Rush");
+        StartCoroutine(ReadyRushDir());
+    }
+
+    void Rush()
+    {
+        if (!IsEndRush && (agent.velocity.sqrMagnitude >= 0.1f * 0.1f && agent.remainingDistance <= 0.1f))//이동종료
+        {
+            
+            IsEndRush = true;
+            EndRush();
+        }
+    }
+
+    void EndRush()
+    {
+        Debug.Log("끝");
+        agent.ResetPath();
+        ani.SetTrigger("EndRush");
+        agent.speed = WalkSpeed;
+        ChangeState(GolemState.Rush);
+    }
+
+    IEnumerator ReadyRushDir()
+    {
+        float time = 0;
+        while(time < 3f)
+        {
+            time += Time.deltaTime;
+            //Debug.Log("측정중");
+
+            LookPlayer();
+            RushDir = (PlayerPos - transform.position).normalized * RushRange + transform.position;
+            testCube.transform.position = RushDir;
+            yield return null;
+        }
+        agent.speed = RushSpeed;
+        if (SetDestination(RushDir))
+            agent.SetDestination(RushDir);
+        else
+            agent.SetDestination(PlayerPos);
+    }
+
+    //public void AniStartRush()
+    //{
+    //    IsEndRushReady = true;
+    //}
+
+
+    private bool SetDestination(Vector3 targetDestination)
+    {
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(targetDestination, out hit, 1f, NavMesh.AllAreas))
+        {
+            agent.SetDestination(hit.position);
+            return true;
+        }
+        return false;
+    }
+    #endregion
 
 
     public void ChangeState(GolemState _golemState)
@@ -212,6 +305,9 @@ public class GolemController : MonoBehaviour
                 break;
             case GolemState.Follow:
                 StartFollow();
+                break;
+            case GolemState.Rush:
+                StartRush();
                 break;
         }
     }
@@ -226,7 +322,15 @@ public class GolemController : MonoBehaviour
 
 
 
-
+    void LookPlayer()
+    {
+        //에이전트의 이동방향
+        Vector3 direction = PlayerPos - transform.position;
+        //회전각도(쿼터니언)산출
+        Quaternion targetangle = Quaternion.LookRotation(direction);
+        //선형보간 함수를 이용해 부드러운 회전
+        ani.transform.rotation = Quaternion.Slerp(ani.transform.rotation, targetangle, Time.deltaTime * 8.0f);
+    }
 
     private void OnDrawGizmosSelected()
     {
