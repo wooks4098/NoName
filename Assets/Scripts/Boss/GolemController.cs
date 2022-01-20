@@ -15,57 +15,64 @@ public enum GolemState
 
 public class GolemController : MonoBehaviour
 {
+    Rigidbody rigid;
+
     [SerializeField] GolemState BossState; //현재 상태
     [SerializeField] float WalkSpeed;
-    [Space]
-    [Space]
-    
+
+    [Header("Follow")]
+    [SerializeField] float FollowTime;//따라가기 시간
+    [SerializeField] float FollowSpeed;//따라가기 속도
+    [SerializeField] bool isFollow; //따라가는 중인지
     //Attack
+    [Header("Attack")]
     [SerializeField] float attackRange;
     [SerializeField] float attackCoolTime;
     [SerializeField] bool canAttack = true;
     [SerializeField] GameObject AttackHitBox;
-    [Space]
-    [Space]
-    //Rush
 
-    Vector3 RushDir;
+    //Rush
+    [Header("Rush")]
     [SerializeField] float RushRange;
     [SerializeField] float RushSpeed;
-    //[SerializeField] bool IsEndRushReady = false;
+    Vector3 RushDir;
     [SerializeField] bool IsEndRush = false;
+
+    [Header("JumpAttack")]
+    [SerializeField] float JumpUpPower;
+    [SerializeField] float JumpDownPower;
     NavMeshAgent agent;
     Animator ani;
+    [Space]
+    [Space]
     [SerializeField] GameObject testCube;
 
     //test
-    [Space]
-    [Space]
     [SerializeField] Vector3 PlayerPos;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         ani = GetComponent<Animator>();
-
+        rigid = GetComponent<Rigidbody>();
         //agent 자동 회전 종료
         agent.updateRotation = false;
         agent.speed = WalkSpeed;
 
-        BossState = GolemState.Wait;
+       BossState = GolemState.Wait;
 
 
     }
 
     private void OnEnable()
     {
-        StartCoroutine(StartState());
+       StartCoroutine(StartState());
     }
 
     IEnumerator StartState()
     {
-        yield return new WaitForSeconds(2f);
-        ChangeState(GolemState.Rush);
+        yield return new WaitForSeconds(3f);
+        ChangeState(GolemState.JumpAttack);
 
     }
 
@@ -116,19 +123,33 @@ public class GolemController : MonoBehaviour
     {
         ani.SetBool("IsWalk", true);
         agent.SetDestination(PlayerPos);
-
+        agent.speed = FollowSpeed;
+        StartCoroutine(FollowTimeCheck());
+        isFollow = true;
     }
     void Follow()
     {
-        agent.SetDestination(PlayerPos);
-
+        if(isFollow)
+        {
+            agent.SetDestination(PlayerPos);
+            Rotation();
+        }
     }
 
     void EndFollow()
     {
+        agent.speed = WalkSpeed;
         ani.SetBool("IsWalk", false);
-
+        ChangeState(GolemState.Rush);
+        isFollow = false;
     }
+
+    IEnumerator FollowTimeCheck()
+    {
+        yield return new WaitForSeconds(FollowTime);
+        EndFollow();
+    }
+    
 
     #endregion
 
@@ -165,6 +186,12 @@ public class GolemController : MonoBehaviour
             Rotation();
         }
     }
+    void EndAttack()
+    {
+        ani.SetBool("IsWalk", false);
+        ChangeState(GolemState.Rush);
+    }
+
     //공격시 플레이어 바라보도록
     IEnumerator AttackLookAtPlayer()
     {
@@ -201,12 +228,7 @@ public class GolemController : MonoBehaviour
         EndAttack();
     }
 
-    void EndAttack()
-    {
-        ani.SetBool("IsWalk", false);
-        ChangeState(GolemState.Rush);
-        //SelectState();
-    }
+    
 
 
     #region 공격 hitbox
@@ -229,19 +251,17 @@ public class GolemController : MonoBehaviour
 
     void StartRush()
     {
-        //Debug.Log("시작");
+        Debug.Log("Rush시작");
 
         agent.ResetPath();
-        IsEndRush = false;
         ani.SetTrigger("Rush");
         StartCoroutine(ReadyRushDir());
     }
 
     void Rush()
     {
-        if (!IsEndRush && (agent.velocity.sqrMagnitude >= 0.1f * 0.1f && agent.remainingDistance <= 0.1f))//이동종료
+        if (!IsEndRush && (agent.velocity.sqrMagnitude >= 0.5f * 0.5f && agent.remainingDistance <= 0.5f))//이동종료
         {
-            
             IsEndRush = true;
             EndRush();
         }
@@ -253,7 +273,7 @@ public class GolemController : MonoBehaviour
         agent.ResetPath();
         ani.SetTrigger("EndRush");
         agent.speed = WalkSpeed;
-        ChangeState(GolemState.Rush);
+        ChangeState(GolemState.Follow);
     }
 
     IEnumerator ReadyRushDir()
@@ -269,6 +289,7 @@ public class GolemController : MonoBehaviour
             testCube.transform.position = RushDir;
             yield return null;
         }
+        IsEndRush = false;
         agent.speed = RushSpeed;
         if (SetDestination(RushDir))
             agent.SetDestination(RushDir);
@@ -295,6 +316,42 @@ public class GolemController : MonoBehaviour
     #endregion
 
 
+    #region JumpAttack
+
+    void StartJumpAttack()
+    {
+        
+        Debug.Log("점프");
+        agent.ResetPath();
+        agent.enabled = false;
+        rigid.isKinematic = false;
+        ani.SetTrigger("JumpAttack");
+    }
+
+    void JumpAttack()
+    {
+
+    }
+
+    public void EndJumpAttack()
+    {
+        agent.enabled = true;
+        rigid.isKinematic = true;
+    }
+
+    public void  AniJump()
+    {
+        Debug.Log("점프");
+       rigid.AddForce(transform.up * JumpUpPower, ForceMode.Impulse);
+    }
+    //최고점일 때 아래로 힘 주는 함수
+    public void AniJumpDown()
+    {
+        rigid.AddForce(-transform.up * JumpDownPower, ForceMode.Impulse);
+
+    }
+    #endregion
+
     public void ChangeState(GolemState _golemState)
     {
         BossState = _golemState;
@@ -309,14 +366,27 @@ public class GolemController : MonoBehaviour
             case GolemState.Rush:
                 StartRush();
                 break;
+            case GolemState.JumpAttack:
+                StartJumpAttack();
+                break;
         }
     }
 
     //어떤 상태를 할지 정하는 함수
     void SelectState()
     {
-        GolemState changeState = GolemState.Attack;
 
+        GolemState changeState = GolemState.Follow;
+        switch (Random.Range(0,2))
+        {
+            case 0:
+                changeState = GolemState.Attack;
+                break;
+            case 1:
+                changeState = GolemState.Rush;
+                break;
+        }
+        changeState = GolemState.Rush;
         ChangeState(changeState);
     }
 
