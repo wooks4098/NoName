@@ -45,7 +45,7 @@ public class GolemController : MonoBehaviour
     Animator ani;
     [Space]
     [Space]
-    [SerializeField] GameObject testCube;
+    [SerializeField] GameObject RushMovePos;
 
     //test
     [SerializeField] Vector3 PlayerPos;
@@ -91,8 +91,8 @@ public class GolemController : MonoBehaviour
                     Attack();
                 break;
             case GolemState.Rush:
-                if (!agent.pathPending)
-                    Rush();
+                //if (!agent.pathPending)
+                //    Rush();
                 break;
         }
 
@@ -252,7 +252,7 @@ public class GolemController : MonoBehaviour
     void StartRush()
     {
         Debug.Log("Rush시작");
-
+        RushMovePos.GetComponent<RushEndCollider>().ColliderOn();
         agent.ResetPath();
         ani.SetTrigger("Rush");
         StartCoroutine(ReadyRushDir());
@@ -260,16 +260,18 @@ public class GolemController : MonoBehaviour
 
     void Rush()
     {
-        if (!IsEndRush && (agent.velocity.sqrMagnitude >= 0.5f * 0.5f && agent.remainingDistance <= 0.5f))//이동종료
-        {
-            IsEndRush = true;
-            EndRush();
-        }
+        //Debug.Log("rush측정");
+        //if (!IsEndRush && (agent.velocity.sqrMagnitude >= 0.5f * 0.5f && agent.remainingDistance <= 0.5f))//이동종료
+        //{
+        //    IsEndRush = true;
+        //    EndRush();
+        //}
     }
 
-    void EndRush()
+    public void EndRush()
     {
         Debug.Log("끝");
+        IsEndRush = true;
         agent.ResetPath();
         ani.SetTrigger("EndRush");
         agent.speed = WalkSpeed;
@@ -286,9 +288,11 @@ public class GolemController : MonoBehaviour
 
             LookPlayer();
             RushDir = (PlayerPos - transform.position).normalized * RushRange + transform.position;
-            testCube.transform.position = RushDir;
+            RushMovePos.transform.position = RushDir;
             yield return null;
         }
+        Debug.Log("rush끝");
+
         IsEndRush = false;
         agent.speed = RushSpeed;
         if (SetDestination(RushDir))
@@ -401,6 +405,7 @@ public class GolemController : MonoBehaviour
         //선형보간 함수를 이용해 부드러운 회전
         ani.transform.rotation = Quaternion.Slerp(ani.transform.rotation, targetangle, Time.deltaTime * 8.0f);
     }
+
 
     private void OnDrawGizmosSelected()
     {

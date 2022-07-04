@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Weapon
   - Monster
+  - Golem
   layers:
   - Default
   - TransparentFX
