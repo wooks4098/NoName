@@ -20,6 +20,11 @@ public class RushEndCollider : MonoBehaviour
     {
         boxCollider.enabled = true;
     }
+
+    public void ColliderOff()
+    {
+        boxCollider.enabled = false;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Golem")

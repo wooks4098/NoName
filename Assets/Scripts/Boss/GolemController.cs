@@ -74,7 +74,8 @@ public class GolemController : MonoBehaviour
     IEnumerator StartState()
     {
         yield return new WaitForSeconds(3f);
-        ChangeState(GolemState.JumpAttack);
+        SelectState();
+        //ChangeState(SelectState());
 
     }
 
@@ -146,7 +147,8 @@ public class GolemController : MonoBehaviour
     {
         agent.speed = WalkSpeed;
         ani.SetBool("IsWalk", false);
-        ChangeState(GolemState.Rush);
+        //ChangeState(GolemState.Rush);
+        SelectState();
         isFollow = false;
     }
 
@@ -195,7 +197,7 @@ public class GolemController : MonoBehaviour
     void EndAttack()
     {
         ani.SetBool("IsWalk", false);
-        ChangeState(GolemState.Rush);
+        SelectState();
     }
 
     //공격시 플레이어 바라보도록
@@ -277,11 +279,12 @@ public class GolemController : MonoBehaviour
     public void EndRush()
     {
         Debug.Log("끝");
+        RushMovePos.GetComponent<RushEndCollider>().ColliderOn();
         IsEndRush = true;
         agent.ResetPath();
         ani.SetTrigger("EndRush");
         agent.speed = WalkSpeed;
-        ChangeState(GolemState.Follow);
+        Invoke("SelectState", 0.5f);
     }
 
     IEnumerator ReadyRushDir()
@@ -361,6 +364,7 @@ public class GolemController : MonoBehaviour
     {
         agent.enabled = true;
         rigid.isKinematic = true;
+        SelectState();
     }
 
     public void  AniJump()
@@ -401,9 +405,8 @@ public class GolemController : MonoBehaviour
     //어떤 상태를 할지 정하는 함수
     void SelectState()
     {
-
         GolemState changeState = GolemState.Follow;
-        switch (Random.Range(0,2))
+        switch (Random.Range(0,3))
         {
             case 0:
                 changeState = GolemState.Attack;
@@ -411,8 +414,12 @@ public class GolemController : MonoBehaviour
             case 1:
                 changeState = GolemState.Rush;
                 break;
+            case 2:
+                changeState = GolemState.JumpAttack;
+                    break;
         }
         changeState = GolemState.Rush;
+
         ChangeState(changeState);
     }
 
