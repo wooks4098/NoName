@@ -16,7 +16,7 @@ public enum GolemState
 public class GolemController : MonoBehaviour
 {
     Rigidbody rigid;
-
+    public float TestRange;
     [SerializeField] GolemState BossState; //현재 상태
     [SerializeField] float WalkSpeed;
 
@@ -39,10 +39,12 @@ public class GolemController : MonoBehaviour
     [SerializeField] bool IsEndRush = false;
 
     [Header("JumpAttack")]
+    [SerializeField] bool isDown = false;
     [SerializeField] float JumpUpPower;
     [SerializeField] float JumpDownPower;
     NavMeshAgent agent;
     Animator ani;
+    [SerializeField] GolemJumpAttack golemJumpAttack;
     [Space]
     [Space]
     [SerializeField] GameObject RushMovePos;
@@ -94,6 +96,10 @@ public class GolemController : MonoBehaviour
                 //if (!agent.pathPending)
                 //    Rush();
                 break;
+            case GolemState.JumpAttack:
+                JumpAttack();
+                break;
+
         }
 
     }
@@ -325,16 +331,30 @@ public class GolemController : MonoBehaviour
     void StartJumpAttack()
     {
         
-        Debug.Log("점프");
+        Debug.Log("점프시작");
         agent.ResetPath();
         agent.enabled = false;
         rigid.isKinematic = false;
         ani.SetTrigger("JumpAttack");
+
     }
 
     void JumpAttack()
     {
+        if(isDown == true)
+        {
+            RaycastHit hit; 
+            Debug.DrawRay(transform.position, Vector3.down * 0.9f, Color.red); 
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, 0.9f)) 
+            { 
+                if(hit.transform.tag == "Ground")
+                {
+                    isDown = false;
+                    golemJumpAttack.StartJump();
+                }
+            }
 
+        }
     }
 
     public void EndJumpAttack()
@@ -345,13 +365,15 @@ public class GolemController : MonoBehaviour
 
     public void  AniJump()
     {
-        Debug.Log("점프");
-       rigid.AddForce(transform.up * JumpUpPower, ForceMode.Impulse);
+        Debug.Log("점프rigid");
+        rigid.AddForce(transform.up * JumpUpPower, ForceMode.Impulse);
+
     }
     //최고점일 때 아래로 힘 주는 함수
     public void AniJumpDown()
     {
         rigid.AddForce(-transform.up * JumpDownPower, ForceMode.Impulse);
+        isDown = true;
 
     }
     #endregion
@@ -409,7 +431,10 @@ public class GolemController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawWireSphere(transform.position, attackRange);
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(transform.position, TestRange);
     }
 }
