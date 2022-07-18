@@ -27,9 +27,17 @@ public class Player_StatuController : MonoBehaviour
         player_Attack = GetComponent<Player_Attack>();
     }
 
-    public void Damage(float _Damage, bool isStrun)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+            Damage(-10);
+    }
+    public void Damage(float _Damage, bool isStrun = false)
     {
         Hp = Mathf.Max(Hp - _Damage,0);
+
+        UIController.Instance.ChangeHp(_Damage);
+
         //Hp = 0;
         if(Hp <=0)
         {

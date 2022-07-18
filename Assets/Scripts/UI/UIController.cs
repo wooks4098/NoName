@@ -11,6 +11,7 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         //if (null == instance)
         //{
         //    instance = this;
