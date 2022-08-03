@@ -18,6 +18,9 @@ public class GolemController : MonoBehaviour
     Rigidbody rigid;
     public float TestRange;
     [SerializeField] GolemState BossState; //현재 상태
+    [SerializeField] float MaxHp;
+    [SerializeField] float Hp;
+
     [SerializeField] float WalkSpeed;
 
     [Header("Follow")]
@@ -62,6 +65,7 @@ public class GolemController : MonoBehaviour
         agent.updateRotation = false;
         agent.speed = WalkSpeed;
        BossState = GolemState.Wait;
+        Hp = MaxHp;
     }
 
     private void OnEnable()
@@ -437,6 +441,17 @@ public class GolemController : MonoBehaviour
         Quaternion targetangle = Quaternion.LookRotation(direction);
         //선형보간 함수를 이용해 부드러운 회전
         ani.transform.rotation = Quaternion.Slerp(ani.transform.rotation, targetangle, Time.deltaTime * 8.0f);
+    }
+
+
+    public void Damage(float _Damage)
+    {
+        Hp += _Damage;
+        if(Hp <= 0)
+        {
+            Hp = 0;
+            ani.SetTrigger("Die");
+        }
     }
 
 

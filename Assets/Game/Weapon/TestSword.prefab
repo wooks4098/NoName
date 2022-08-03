@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 5306216563398929250}
   - component: {fileID: 9082823993410512071}
   - component: {fileID: 6478528143130890253}
+  - component: {fileID: 2141282417258490894}
   - component: {fileID: 8298384276119932739}
+  - component: {fileID: 458620727491027022}
   m_Layer: 0
   m_Name: TestSword
   m_TagString: Weapon
@@ -82,6 +84,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2141282417258490894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821287523263164888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89c5edaff32e98f40987e06b55d5a4a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &8298384276119932739
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -95,3 +109,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.4, y: 1.8, z: 0.2}
   m_Center: {x: 0, y: 1.08, z: 0}
+--- !u!54 &458620727491027022
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821287523263164888}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

@@ -15821,8 +15821,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117904883}
-  m_LocalRotation: {x: 0.11277237, y: 0.000000034459333, z: -0.0000000039110093, w: 0.9936209}
-  m_LocalPosition: {x: -1.2, y: 2.5, z: 0.6700001}
+  m_LocalRotation: {x: 0.11277237, y: -0.000000034459337, z: 0.0000000039110097, w: 0.9936209}
+  m_LocalPosition: {x: 0, y: 2.5, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -16225,6 +16225,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TestRange: 9
   BossState: 0
+  MaxHp: 100
+  Hp: 0
   WalkSpeed: 5
   FollowTime: 1.5
   FollowSpeed: 3
@@ -16804,8 +16806,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826561793488617}
-  m_LocalRotation: {x: -0.36172855, y: 0.60757923, z: -0.36172864, w: 0.6075792}
-  m_LocalPosition: {x: 0.00000007264316, y: 1.148059, z: -0.081188776}
+  m_LocalRotation: {x: -0.36172852, y: 0.60757923, z: -0.36172864, w: 0.6075791}
+  m_LocalPosition: {x: 0.000000081025064, y: 1.1480589, z: -0.08118876}
   m_LocalScale: {x: 0.009999999, y: 0.009999999, z: 0.01}
   m_Children:
   - {fileID: 4432020441327529}
