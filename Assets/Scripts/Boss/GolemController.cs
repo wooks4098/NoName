@@ -37,6 +37,7 @@ public class GolemController : MonoBehaviour
     [SerializeField] float RushSpeed;
     Vector3 RushDir;
     [SerializeField] bool IsEndRush = false;
+    [SerializeField] GameObject RushHitbox;
 
     [Header("JumpAttack")]
     [SerializeField] bool isDown = false;
@@ -60,10 +61,7 @@ public class GolemController : MonoBehaviour
         //agent 자동 회전 종료
         agent.updateRotation = false;
         agent.speed = WalkSpeed;
-
        BossState = GolemState.Wait;
-
-
     }
 
     private void OnEnable()
@@ -197,7 +195,10 @@ public class GolemController : MonoBehaviour
     void EndAttack()
     {
         ani.SetBool("IsWalk", false);
-        SelectState();
+        BossState = GolemState.Follow;
+
+        BossState = GolemState.Follow;
+        Invoke("SelectState", 0.3f);
     }
 
     //공격시 플레이어 바라보도록
@@ -284,13 +285,15 @@ public class GolemController : MonoBehaviour
         agent.ResetPath();
         ani.SetTrigger("EndRush");
         agent.speed = WalkSpeed;
-        Invoke("SelectState", 0.5f);
+        BossState = GolemState.Follow;
+        Invoke("SelectState", 0.3f);
     }
 
     IEnumerator ReadyRushDir()
     {
         float time = 0;
-        while(time < 3f)
+        RushHitbox.SetActive(true);
+        while (time < 3f)
         {
             time += Time.deltaTime;
             //Debug.Log("측정중");
@@ -301,7 +304,7 @@ public class GolemController : MonoBehaviour
             yield return null;
         }
         Debug.Log("rush끝");
-
+        RushHitbox.SetActive(false);
         IsEndRush = false;
         agent.speed = RushSpeed;
         if (SetDestination(RushDir))
@@ -364,7 +367,8 @@ public class GolemController : MonoBehaviour
     {
         agent.enabled = true;
         rigid.isKinematic = true;
-        SelectState();
+        BossState = GolemState.Follow;
+        Invoke("SelectState", 0.3f);
     }
 
     public void  AniJump()
@@ -418,7 +422,7 @@ public class GolemController : MonoBehaviour
                 changeState = GolemState.JumpAttack;
                     break;
         }
-        changeState = GolemState.Rush;
+        //changeState = GolemState.Rush;
 
         ChangeState(changeState);
     }

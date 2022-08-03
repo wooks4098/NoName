@@ -7,7 +7,7 @@ using UnityEngine;
 public class GolemJumpAttack : MonoBehaviour
 {
     [SerializeField] ParticleSystem[] CircleParticle;
-
+    [SerializeField] float Damage;
     public void StartJump()
     {
         StartCoroutine(Startparticle());
@@ -34,15 +34,15 @@ public class GolemJumpAttack : MonoBehaviour
         {
             case 0:
                 if (Distance < 5)
-                    Debug.Log("플레이어 데미지");
+                    GameManager.Instance.PlayerDamage(Damage,false);
                 break;
             case 1:
                 if (Distance > 5.5f && Distance < 9)
-                    Debug.Log("플레이어 데미지");
+                    GameManager.Instance.PlayerDamage(Damage,false);
                 break;
             case 2:
                 if (Distance > 10 && Distance < 13)
-                    Debug.Log("플레이어 데미지");
+                    GameManager.Instance.PlayerDamage(Damage, false);
                 break;
         }
     }

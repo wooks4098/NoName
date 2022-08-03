@@ -173,6 +173,7 @@ MonoBehaviour:
   - {fileID: 740127126}
   - {fileID: 961970498}
   - {fileID: 562571571}
+  Damage: -10
 --- !u!1 &124555372
 GameObject:
   m_ObjectHideFlags: 0
@@ -597,6 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 526ef2f7aa99b3041b65d706155c870f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Damage: -10
 --- !u!1 &424996394
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +617,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &424996395
 Transform:
   m_ObjectHideFlags: 0
@@ -642,6 +644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1532d56b31c79c468c56affc1c1bd4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Damage: -10
 --- !u!54 &424996397
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16207,7 +16210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1067924894816054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16233,6 +16236,7 @@ MonoBehaviour:
   RushRange: 15
   RushSpeed: 30
   IsEndRush: 0
+  RushHitbox: {fileID: 0}
   isDown: 0
   JumpUpPower: 20
   JumpDownPower: 30
@@ -16271,10 +16275,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.77
-  m_Height: 2.95
+  m_Radius: 1.1610436
+  m_Height: 3.7197688
   m_Direction: 1
-  m_Center: {x: 0, y: 1.37, z: 0}
+  m_Center: {x: 0, y: 1.7548844, z: 0.3910437}
 --- !u!54 &1067924894816057
 Rigidbody:
   m_ObjectHideFlags: 0
