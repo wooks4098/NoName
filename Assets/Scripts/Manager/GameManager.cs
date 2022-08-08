@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject Camera;
     [SerializeField] GameObject Monster;
     [SerializeField] GameObject Monster1;
-
+    [SerializeField] Transform PlayerSpawnPos;
 
     [SerializeField] Player_Controller playerController;
     bool IsplayerDie = false;
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         else
         {
             
-            playerController = Instantiate(PlayerRootPrefab, new Vector3(0,0,5), Quaternion.identity);
+            playerController = Instantiate(PlayerRootPrefab, PlayerSpawnPos.position, Quaternion.identity);
             Player = playerController.transform.GetChild(0);
             playerController.gameObject.SetActive(true);
         }
