@@ -26,7 +26,7 @@ public class MonsterDamage : MonoBehaviour
             Debug.Log(other.name);
             attackCollider.enabled = false;
             //gameObject.SetActive(false);
-            GameManager.Instance.PlayerDamage(monsterStatusController.monsterData.Damage, false);   
+            GameManager.Instance.PlayerDamage(-monsterStatusController.monsterData.Damage, false);   
         }
     }
 }

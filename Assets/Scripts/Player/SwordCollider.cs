@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwordCollider : MonoBehaviour
 {
-    [SerializeField] float Damage;
+    [SerializeField] int Damage;
 
 
     private void OnTriggerEnter(Collider other)
@@ -14,6 +14,11 @@ public class SwordCollider : MonoBehaviour
             other.GetComponent<GolemController>().Damage(-Damage);
             Debug.Log("triggerµ¥¹ÌÁö");
         }
+    }
+
+    public int GetDamage()
+    {
+        return Damage;
     }
 
     //private void OnCollisionEnter(Collision collision)

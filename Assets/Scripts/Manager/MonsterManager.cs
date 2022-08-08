@@ -42,6 +42,11 @@ public class MonsterManager : MonoBehaviour
 
         for (int i = 0; i<rooms.Count; i++)
         {
+            //if (i == 0)
+            //{
+
+            //    continue;
+            //}
             //MapMonster newMapMonster = new MapMonster();
             float minx = rooms[i].bottomLeft.x + 5;
             float maxx = rooms[i].topRight.x - 5;

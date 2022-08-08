@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     bool IsplayerDie = false;
     bool test = false;
     bool HasMap = false;
-    bool HasMonster = false;
+    [SerializeField] bool HasMonster = false;
     private void Awake()
     {
         if (null == instance)

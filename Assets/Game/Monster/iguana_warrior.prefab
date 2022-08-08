@@ -534,7 +534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterData: {fileID: 11400000, guid: 2f929156e65f1df47a2c5fdeed1bce24, type: 2}
-  Hp: 0
+  Hp: 50
 --- !u!143 &5036807448159010087
 CharacterController:
   m_ObjectHideFlags: 0
